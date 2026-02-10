@@ -1,17 +1,20 @@
 #include <iomanip>
 #include <thread>
-#include "Quicksort_NR.h"
+#include <condition_variable>
+#include <mutex>
+#include <stack>
+#include "Quicksort_MT.h"
 
 using namespace std;
 
-void Quicksort_NR::swap_values_at(const int index1, const int index2)
+void Quicksort_MT::swap_values_at(const int index1, const int index2)
 {
     int temp = data[index1];
     data[index1] = data[index2];
     data[index2] = temp;
 }
 
-int Quicksort_NR::partition(const int left_index, const int right_index)
+int Quicksort_MT::partition(const int left_index, const int right_index)
 {
     // Choose the pivot value.
     int middle_index = (left_index + right_index)/2;
@@ -48,7 +51,7 @@ int Quicksort_NR::partition(const int left_index, const int right_index)
     return i;
 }
 
-void Quicksort_NR::sort_NR()
+void Quicksort_MT::sort_MT()
 {
     stack<pair<int,int>> subarray_stack;
 
@@ -74,7 +77,7 @@ void Quicksort_NR::sort_NR()
     }
 }
 
-bool Quicksort_NR::verify_sorted()
+bool Quicksort_MT::verify_sorted()
 {
     for (int i = 0; i < size - 1; i++)
     {

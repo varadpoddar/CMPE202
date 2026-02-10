@@ -1,14 +1,14 @@
-#ifndef QUICKSORT_NR_H_
-#define QUICKSORT_NR_H_
+#ifndef QUICKSORT_MT_H_
+#define QUICKSORT_MT_H_
 
 #include <iomanip>
 
 using namespace std;
 
-class Quicksort_NR
+class Quicksort_MT
 {
 public:
-    Quicksort_NR(int * const d, const int s) : data(d), size(s) {};
+    Quicksort_MT(int * const d, const int s, const int tread_MT) : data(d), size(s), tread_MT(tread_MT) {};
 
     void sort() { sort_NR(); }
 
@@ -17,6 +17,7 @@ public:
 private:
     int *data;
     int size;
+    int tread_MT;
 
     void swap_values_at(const int index1, const int index2);
     int partition(const int left_index, const int right_index);

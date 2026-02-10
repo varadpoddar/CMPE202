@@ -5,7 +5,7 @@
 #include <chrono>
 
 
-#include "Quicksort_NR.h"
+#include "Quicksort_MT.h"
 
 using namespace std;
 using namespace std::chrono;

@@ -4,7 +4,6 @@
 #include <time.h>
 #include <chrono>
 
-
 #include "Quicksort_MT.h"
 
 using namespace std;
@@ -14,19 +13,25 @@ int main()
 {
     const int DATA_SIZE = 1000000;
     int *data = new int[DATA_SIZE];
+	int max_thread = 24;
 
     srand(time(0));
     for (int i = 0; i < DATA_SIZE; i++) data[i] = rand();
 
-    Quicksort_NR qsorter(data, DATA_SIZE);
+	for (int thread_MT = 1; thread_MT <= max_thread; thread_MT++) {
+    	int *datacopy = new int[DATA_SIZE];
+		for(int j=0;j<DATA_SIZE;j++) {datacopy[j]=data[j]}
 
-    auto start_time = steady_clock::now();
-    qsorter.sort();
-    auto end_time = steady_clock::now();
+		Quicksort_MT qsorter(data, DATA_SIZE, thread_MT);
 
-    cout << (qsorter.verify_sorted() ? "SORTED" : "ERROR") << endl;
-    long ms = duration_cast<milliseconds>(end_time - start_time).count();
-    printf("%20ld ms\n", ms);
+    	auto start_time = steady_clock::now();
+   	    qsorter.sort();
+    	auto end_time = steady_clock::now();
+
+    	cout << (qsorter.verify_sorted() ? "SORTED" : "ERROR") << endl;
+    	long ms = duration_cast<milliseconds>(end_time - start_time).count();
+    	printf("%20ld ms\n", ms);
+	}
 
     delete[] data;
     return 0;

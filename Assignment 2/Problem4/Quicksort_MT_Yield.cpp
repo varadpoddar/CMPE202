@@ -72,9 +72,6 @@ void Quicksort_MT_Yield::worker_thread()
         int left = 0;
         int right = -1;
 
-        // Yield wait: spin-yield loop until work is available or sorting is done.
-        auto idle_start = clk::now();
-        while (true)
         {
             auto lock_start = clk::now();
             std::unique_lock<std::mutex> lock(mtx);
@@ -82,32 +79,30 @@ void Quicksort_MT_Yield::worker_thread()
             total_lock_wait_us += std::chrono::duration_cast<std::chrono::microseconds>(
                                       lock_end - lock_start).count();
 
+            // Idle wait: block on condition variable until work is available
+            // or all work is complete.
+            auto idle_start = clk::now();
+            cv.wait(lock, [this]()
+                    { return done || !subarray_stack.empty(); });
+            auto idle_end = clk::now();
+            total_idle_wait_us += std::chrono::duration_cast<std::chrono::microseconds>(
+                                      idle_end - idle_start).count();
+
             if (done && subarray_stack.empty())
-            {
-                total_idle_wait_us += std::chrono::duration_cast<std::chrono::microseconds>(
-                                          clk::now() - idle_start).count();
                 return;
-            }
 
-            if (!subarray_stack.empty())
-            {
-                total_idle_wait_us += std::chrono::duration_cast<std::chrono::microseconds>(
-                                          clk::now() - idle_start).count();
-                std::pair<int, int> bounds = subarray_stack.top();
-                subarray_stack.pop();
-                left = bounds.first;
-                right = bounds.second;
-                ++active_workers;
-                break;
-            }
-
-            lock.unlock();
-            std::this_thread::yield(); // Yield wait: give up time slice and retry.
+            std::pair<int, int> bounds = subarray_stack.top();
+            subarray_stack.pop();
+            left = bounds.first;
+            right = bounds.second;
+            ++active_workers;
         }
 
         if (left < right)
         {
             int pivot_index = partition(left, right);
+            bool pushed_any = false;
+            bool done_set = false;
 
             auto lock_start = clk::now();
             std::unique_lock<std::mutex> lock(mtx);
@@ -116,16 +111,34 @@ void Quicksort_MT_Yield::worker_thread()
                                       lock_end - lock_start).count();
 
             if (left < pivot_index - 1)
+            {
                 subarray_stack.push({left, pivot_index - 1});
+                pushed_any = true;
+            }
             if (pivot_index + 1 < right)
+            {
                 subarray_stack.push({pivot_index + 1, right});
+                pushed_any = true;
+            }
 
             --active_workers;
             if (subarray_stack.empty() && active_workers == 0)
+            {
                 done = true;
+                done_set = true;
+            }
+            lock.unlock();
+
+            if (pushed_any)
+            {
+                // Strategic yield for Problem 4 after publishing new work.
+                std::this_thread::yield();
+            }
+            if (pushed_any || done_set) cv.notify_all();
         }
         else
         {
+            bool done_set = false;
             auto lock_start = clk::now();
             std::unique_lock<std::mutex> lock(mtx);
             auto lock_end = clk::now();
@@ -134,7 +147,13 @@ void Quicksort_MT_Yield::worker_thread()
 
             --active_workers;
             if (subarray_stack.empty() && active_workers == 0)
+            {
                 done = true;
+                done_set = true;
+            }
+            lock.unlock();
+
+            if (done_set) cv.notify_all();
         }
     }
 }
@@ -162,6 +181,11 @@ void Quicksort_MT_Yield::sort_MT_with_yield()
     for (int i = 0; i < thread_count; i++)
     {
         workers.emplace_back(&Quicksort_MT_Yield::worker_thread, this);
+    }
+
+    {
+        std::lock_guard<std::mutex> lock(mtx);
+        cv.notify_all();
     }
 
     for (std::thread &t : workers)

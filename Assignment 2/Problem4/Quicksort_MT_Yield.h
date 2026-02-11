@@ -3,6 +3,7 @@
 
 #include <atomic>
 #include <chrono>
+#include <condition_variable>
 #include <mutex>
 #include <stack>
 #include <stdexcept>
@@ -35,6 +36,7 @@ private:
     // Shared resources among worker threads.
     std::stack<std::pair<int, int>> subarray_stack;
     std::mutex mtx;
+    std::condition_variable cv;
     int active_workers;
     bool done;
 

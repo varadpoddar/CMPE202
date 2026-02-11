@@ -1,0 +1,143 @@
+#include "Quicksort_MT_Yield.h"
+
+void Quicksort_MT_Yield::swap_values_at(const int index1, const int index2)
+{
+    int temp = data[index1];
+    data[index1] = data[index2];
+    data[index2] = temp;
+}
+
+int Quicksort_MT_Yield::partition(const int left_index, const int right_index)
+{
+    int middle_index = (left_index + right_index) / 2;
+    int pivot_value = data[middle_index];
+
+    swap_values_at(middle_index, right_index);
+
+    int i = left_index - 1;
+    int j = right_index;
+
+    while (i < j)
+    {
+        do
+        {
+            i++;
+        } while ((i < right_index) && (data[i] < pivot_value));
+
+        do
+        {
+            j--;
+        } while ((j >= left_index) && (data[j] > pivot_value));
+
+        if (i < j)
+            swap_values_at(i, j);
+    }
+
+    swap_values_at(i, right_index);
+    return i;
+}
+
+void Quicksort_MT_Yield::worker_thread()
+{
+    while (true)
+    {
+        int left = 0;
+        int right = -1;
+
+        {
+            std::unique_lock<std::mutex> lock(mtx);
+            cv.wait(lock, [this]()
+                    { return done || !subarray_stack.empty(); });
+
+            if (done && subarray_stack.empty())
+                return;
+
+            std::pair<int, int> bounds = subarray_stack.top();
+            subarray_stack.pop();
+            left = bounds.first;
+            right = bounds.second;
+            ++active_workers;
+        }
+
+        // Strategic yield: hand CPU to another ready worker before partitioning.
+        std::this_thread::yield();
+
+        if (left < right)
+        {
+            int pivot_index = partition(left, right);
+
+            // Strategic yield: after partitioning, before publishing new tasks.
+            std::this_thread::yield();
+
+            std::unique_lock<std::mutex> lock(mtx);
+            if (left < pivot_index - 1)
+                subarray_stack.push({left, pivot_index - 1});
+            if (pivot_index + 1 < right)
+                subarray_stack.push({pivot_index + 1, right});
+
+            --active_workers;
+            if (subarray_stack.empty() && active_workers == 0)
+                done = true;
+
+            cv.notify_all();
+        }
+        else
+        {
+            std::unique_lock<std::mutex> lock(mtx);
+            --active_workers;
+
+            if (subarray_stack.empty() && active_workers == 0)
+                done = true;
+
+            cv.notify_all();
+        }
+
+        // Strategic yield: allow another worker to consume queued subarrays.
+        std::this_thread::yield();
+    }
+}
+
+void Quicksort_MT_Yield::sort_MT_with_yield()
+{
+    if (size <= 1)
+        return;
+
+    {
+        std::lock_guard<std::mutex> lock(mtx);
+        done = false;
+        active_workers = 0;
+
+        while (!subarray_stack.empty())
+            subarray_stack.pop();
+        subarray_stack.push({0, size - 1});
+    }
+
+    std::vector<std::thread> workers;
+    workers.reserve(thread_count);
+
+    for (int i = 0; i < thread_count; i++)
+    {
+        workers.emplace_back(&Quicksort_MT_Yield::worker_thread, this);
+    }
+
+    {
+        std::lock_guard<std::mutex> lock(mtx);
+        cv.notify_all();
+    }
+
+    for (std::thread &t : workers)
+    {
+        t.join();
+    }
+}
+
+bool Quicksort_MT_Yield::verify_sorted() const
+{
+    for (int i = 0; i < size - 1; i++)
+    {
+        if (data[i] > data[i + 1])
+            return false;
+    }
+
+    return true;
+}

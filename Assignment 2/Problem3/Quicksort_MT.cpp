@@ -2,6 +2,29 @@
 
 using namespace std;
 
+/*
+ *
+ * Shared resources:
+ * - subarray_stack: global work queue of subarray bounds (left, right).
+ * - active_workers: number of threads currently processing a popped task.
+ * - done: global completion flag that tells workers to stop.
+ * - data array: shared container being sorted; threads work on disjoint subarrays.
+ *
+ * Critical regions:
+ * - Any push/pop on subarray_stack.
+ * - Any read/write of active_workers.
+ * - Any read/write of when done is set to true.
+ *
+ * How critical regions are protected:
+ * - A single unique mutex (mtx) guards all accesses to subarray_stack, active_workers, and when done is set to true.
+ * - Partitioning work is done outside the lock to reduce friction.
+ *
+ * Synchronization approach:
+ * - condition_variable (cv) blocks idle workers until work appears or sorting is complete.
+ * - Workers call notify_all() after publishing new tasks or setting done=true.
+ * - Completion is detected when subarray_stack is empty and active_workers == 0.
+ */
+
 void Quicksort_MT::swap_values_at(const int index1, const int index2)
 {
     int temp = data[index1];

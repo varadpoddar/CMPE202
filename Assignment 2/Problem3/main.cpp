@@ -23,6 +23,12 @@ int main()
     for (int i = 0; i < DATA_SIZE; i++)
         data[i] = rand();
 
+    cout << "Problem 3: Multithreaded Quicksort \n";
+    cout << left << setw(10) << "Threads"
+         << setw(15) << "Time(ms)"
+         << setw(20) << "% change vs 1T" << '\n';
+    cout << string(45, '-') << '\n';
+
     for (int threads = 1; threads <= max_thread_MT; threads++)
     {
         int *data_copy = new int[DATA_SIZE];

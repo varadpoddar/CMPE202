@@ -26,8 +26,10 @@ int main()
     cout << "Problem 3: Multithreaded Quicksort \n";
     cout << left << setw(10) << "Threads"
          << setw(15) << "Time(ms)"
+         << setw(18) << "Lock Wait(ms)"
+         << setw(18) << "Idle Wait(ms)"
          << setw(20) << "% change vs 1T" << '\n';
-    cout << string(45, '-') << '\n';
+    cout << string(81, '-') << '\n';
 
     for (int threads = 1; threads <= max_thread_MT; threads++)
     {
@@ -56,8 +58,13 @@ int main()
             pct_change = 100.0 * (static_cast<double>(ms - baseline_ms) / baseline_ms);
         }
 
+        long long lock_ms = qsorter.get_lock_wait_us() / 1000;
+        long long idle_ms = qsorter.get_idle_wait_us() / 1000;
+
         cout << left << setw(10) << threads
              << setw(15) << ms
+             << setw(18) << lock_ms
+             << setw(18) << idle_ms
              << fixed << showpos << setprecision(2) << pct_change << "%" << noshowpos << '\n';
 
         delete[] data_copy;

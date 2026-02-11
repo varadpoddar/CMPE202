@@ -1,6 +1,8 @@
 #ifndef QUICKSORT_MT_H_
 #define QUICKSORT_MT_H_
 
+#include <atomic>
+#include <chrono>
 #include <condition_variable>
 #include <mutex>
 #include <stack>
@@ -22,6 +24,10 @@ public:
     void sort() { sort_MT(); }
     bool verify_sorted() const;
 
+    // Timing accessors (microseconds).
+    long long get_lock_wait_us() const { return total_lock_wait_us.load(); }
+    long long get_idle_wait_us() const { return total_idle_wait_us.load(); }
+
 private:
     int *data;
     int size;
@@ -33,6 +39,10 @@ private:
     std::condition_variable cv;
     int active_workers;
     bool done;
+
+    // Accumulated timing counters across all threads.
+    std::atomic<long long> total_lock_wait_us{0};  // time waiting to acquire mutex
+    std::atomic<long long> total_idle_wait_us{0};  // time waiting for work (cv.wait)
 
     void swap_values_at(int index1, int index2);
     int partition(int left_index, int right_index);

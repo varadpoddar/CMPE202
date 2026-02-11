@@ -72,18 +72,28 @@ int Quicksort_MT::partition(const int left_index, const int right_index)
 
 void Quicksort_MT::worker_thread()
 {
+    using clk = std::chrono::steady_clock;
+
     while (true)
     {
         int left = 0;
         int right = -1;
 
         {
+            // Measure time to acquire the lock.
+            auto lock_start = clk::now();
             std::unique_lock<std::mutex> lock(mtx);
+            auto lock_end = clk::now();
+            total_lock_wait_us += std::chrono::duration_cast<std::chrono::microseconds>(
+                                      lock_end - lock_start).count();
 
-            // Synchronization:
-            // Wait until there is work, or sorting is complete.
+            // Measure time waiting for work (cv.wait).
+            auto idle_start = clk::now();
             cv.wait(lock, [this]()
                     { return done || !subarray_stack.empty(); });
+            auto idle_end = clk::now();
+            total_idle_wait_us += std::chrono::duration_cast<std::chrono::microseconds>(
+                                      idle_end - idle_start).count();
 
             if (done && subarray_stack.empty())
                 return;
@@ -99,10 +109,13 @@ void Quicksort_MT::worker_thread()
         {
             int pivot_index = partition(left, right);
 
+            // Measure time to acquire the lock after partitioning.
+            auto lock_start = clk::now();
             std::unique_lock<std::mutex> lock(mtx);
+            auto lock_end = clk::now();
+            total_lock_wait_us += std::chrono::duration_cast<std::chrono::microseconds>(
+                                      lock_end - lock_start).count();
 
-            // Critical region:
-            // Push new subarray tasks to shared stack.
             if (left < pivot_index - 1)
                 subarray_stack.push({left, pivot_index - 1});
             if (pivot_index + 1 < right)
@@ -116,7 +129,13 @@ void Quicksort_MT::worker_thread()
         }
         else
         {
+            // Measure time to acquire the lock.
+            auto lock_start = clk::now();
             std::unique_lock<std::mutex> lock(mtx);
+            auto lock_end = clk::now();
+            total_lock_wait_us += std::chrono::duration_cast<std::chrono::microseconds>(
+                                      lock_end - lock_start).count();
+
             --active_workers;
 
             if (subarray_stack.empty() && active_workers == 0)
@@ -135,6 +154,8 @@ void Quicksort_MT::sort_MT()
         std::lock_guard<std::mutex> lock(mtx);
         done = false;
         active_workers = 0;
+        total_lock_wait_us = 0;
+        total_idle_wait_us = 0;
 
         while (!subarray_stack.empty())
             subarray_stack.pop();

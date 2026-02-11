@@ -1,7 +1,8 @@
 #ifndef QUICKSORT_MT_YIELD_H_
 #define QUICKSORT_MT_YIELD_H_
 
-#include <condition_variable>
+#include <atomic>
+#include <chrono>
 #include <mutex>
 #include <stack>
 #include <stdexcept>
@@ -22,6 +23,10 @@ public:
     void sort() { sort_MT_with_yield(); }
     bool verify_sorted() const;
 
+    // Timing accessors (microseconds).
+    long long get_lock_wait_us() const { return total_lock_wait_us.load(); }
+    long long get_idle_wait_us() const { return total_idle_wait_us.load(); }
+
 private:
     int *data;
     int size;
@@ -30,9 +35,12 @@ private:
     // Shared resources among worker threads.
     std::stack<std::pair<int, int>> subarray_stack;
     std::mutex mtx;
-    std::condition_variable cv;
     int active_workers;
     bool done;
+
+    // Accumulated timing counters across all threads.
+    std::atomic<long long> total_lock_wait_us{0};  // time waiting to acquire mutex
+    std::atomic<long long> total_idle_wait_us{0};  // time in yield loop waiting for work
 
     void swap_values_at(int index1, int index2);
     int partition(int left_index, int right_index);

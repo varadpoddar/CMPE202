@@ -1,5 +1,9 @@
 #include "Quicksort_MT_Yield.h"
 
+/*
+ *
+ */
+
 void Quicksort_MT_Yield::swap_values_at(const int index1, const int index2)
 {
     int temp = data[index1];
@@ -59,27 +63,36 @@ void Quicksort_MT_Yield::worker_thread()
             ++active_workers;
         }
 
-        // Strategic yield: hand CPU to another ready worker before partitioning.
-        std::this_thread::yield();
-
         if (left < right)
         {
             int pivot_index = partition(left, right);
 
-            // Strategic yield: after partitioning, before publishing new tasks.
-            std::this_thread::yield();
+            bool pushed_any = false;
 
             std::unique_lock<std::mutex> lock(mtx);
             if (left < pivot_index - 1)
+            {
                 subarray_stack.push({left, pivot_index - 1});
+                pushed_any = true;
+            }
             if (pivot_index + 1 < right)
+            {
                 subarray_stack.push({pivot_index + 1, right});
+                pushed_any = true;
+            }
 
             --active_workers;
             if (subarray_stack.empty() && active_workers == 0)
                 done = true;
 
             cv.notify_all();
+            lock.unlock();
+
+            // Strategic yield: yield only after publishing new work.
+            if (pushed_any)
+            {
+                std::this_thread::yield();
+            }
         }
         else
         {
@@ -91,9 +104,6 @@ void Quicksort_MT_Yield::worker_thread()
 
             cv.notify_all();
         }
-
-        // Strategic yield: allow another worker to consume queued subarrays.
-        std::this_thread::yield();
     }
 }
 

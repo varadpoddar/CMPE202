@@ -1,27 +1,43 @@
 #ifndef QUICKSORT_MT_H_
 #define QUICKSORT_MT_H_
 
-#include <iomanip>
-
-using namespace std;
+#include <condition_variable>
+#include <mutex>
+#include <stack>
+#include <stdexcept>
+#include <thread>
+#include <utility>
+#include <vector>
 
 class Quicksort_MT
 {
 public:
-    Quicksort_MT(int *const d, const int s, const int thread_MT) : data(d), size(s), thread_MT(thread_MT) {};
+    Quicksort_MT(int *const d, const int s, const int t)
+        : data(d), size(s), thread_count(t), active_workers(0), done(false)
+    {
+        if (thread_count < 1)
+            throw std::invalid_argument("thread_count must be >= 1");
+    }
 
-    void sort() { sort_NR(); }
-
-    bool verify_sorted();
+    void sort() { sort_MT(); }
+    bool verify_sorted() const;
 
 private:
     int *data;
     int size;
-    int thread_MT;
+    int thread_count;
 
-    void swap_values_at(const int index1, const int index2);
-    int partition(const int left_index, const int right_index);
-    void sort_NR();
+    // Shared resources among worker threads.
+    std::stack<std::pair<int, int>> subarray_stack;
+    std::mutex mtx;
+    std::condition_variable cv;
+    int active_workers;
+    bool done;
+
+    void swap_values_at(int index1, int index2);
+    int partition(int left_index, int right_index);
+    void sort_MT();
+    void worker_thread();
 };
 
 #endif

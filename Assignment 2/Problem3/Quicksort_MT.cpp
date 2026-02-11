@@ -1,8 +1,3 @@
-#include <iomanip>
-#include <thread>
-#include <condition_variable>
-#include <mutex>
-#include <stack>
 #include "Quicksort_MT.h"
 
 using namespace std;
@@ -17,8 +12,8 @@ void Quicksort_MT::swap_values_at(const int index1, const int index2)
 int Quicksort_MT::partition(const int left_index, const int right_index)
 {
     // Choose the pivot value.
-    int middle_index = (left_index + right_index)/2;
-    int pivot_value  = data[middle_index];
+    int middle_index = (left_index + right_index) / 2;
+    int pivot_value = data[middle_index];
 
     // Swap out the pivot value to the right end.
     swap_values_at(middle_index, right_index);
@@ -42,7 +37,8 @@ int Quicksort_MT::partition(const int left_index, const int right_index)
         } while ((j >= left_index) && (data[j] > pivot_value));
 
         // Swap values after i and j stopped moving;
-        if (i < j) swap_values_at(i, j);
+        if (i < j)
+            swap_values_at(i, j);
     }
 
     // Swap the pivot value back in.
@@ -51,37 +47,100 @@ int Quicksort_MT::partition(const int left_index, const int right_index)
     return i;
 }
 
-void Quicksort_MT::sort_MT()
+void Quicksort_MT::worker_thread()
 {
-    stack<pair<int,int>> subarray_stack;
-
-    // Start with the whole array bounds.
-    subarray_stack.push({0, size - 1});
-
-    while (!subarray_stack.empty())
+    while (true)
     {
-        auto [left, right] = subarray_stack.top();
-        subarray_stack.pop();
+        int left = 0;
+        int right = -1;
 
-        if (left >= right) continue;
+        {
+            std::unique_lock<std::mutex> lock(mtx);
 
-        int pivot_index = partition(left, right);
+            // Synchronization:
+            // Wait until there is work, or sorting is complete.
+            cv.wait(lock, [this]()
+                    { return done || !subarray_stack.empty(); });
 
-        // Push bounds of left subarray
-        if (left < pivot_index - 1)
-            subarray_stack.push({left, pivot_index - 1});
+            if (done && subarray_stack.empty())
+                return;
 
-        // Push bounds of right subarray
-        if (pivot_index + 1 < right)
-            subarray_stack.push({pivot_index + 1, right});
+            std::pair<int, int> bounds = subarray_stack.top();
+            subarray_stack.pop();
+            left = bounds.first;
+            right = bounds.second;
+            ++active_workers;
+        }
+
+        if (left < right)
+        {
+            int pivot_index = partition(left, right);
+
+            std::unique_lock<std::mutex> lock(mtx);
+
+            // Critical region:
+            // Push new subarray tasks to shared stack.
+            if (left < pivot_index - 1)
+                subarray_stack.push({left, pivot_index - 1});
+            if (pivot_index + 1 < right)
+                subarray_stack.push({pivot_index + 1, right});
+
+            --active_workers;
+            if (subarray_stack.empty() && active_workers == 0)
+                done = true;
+
+            cv.notify_all();
+        }
+        else
+        {
+            std::unique_lock<std::mutex> lock(mtx);
+            --active_workers;
+
+            if (subarray_stack.empty() && active_workers == 0)
+                done = true;
+            cv.notify_all();
+        }
     }
 }
 
-bool Quicksort_MT::verify_sorted()
+void Quicksort_MT::sort_MT()
+{
+    if (size <= 1)
+        return;
+
+    {
+        std::lock_guard<std::mutex> lock(mtx);
+        done = false;
+        active_workers = 0;
+
+        while (!subarray_stack.empty())
+            subarray_stack.pop();
+        subarray_stack.push({0, size - 1});
+    }
+
+    std::vector<std::thread> workers;
+    workers.reserve(thread_count);
+
+    for (int i = 0; i < thread_count; i++)
+    {
+        workers.emplace_back(&Quicksort_MT::worker_thread, this);
+    }
+
+    {
+        std::lock_guard<std::mutex> lock(mtx);
+        cv.notify_all();
+    }
+
+    for (std::thread &t : workers)
+        t.join();
+}
+
+bool Quicksort_MT::verify_sorted() const
 {
     for (int i = 0; i < size - 1; i++)
     {
-        if (data[i] > data[i+1]) return false;
+        if (data[i] > data[i + 1])
+            return false;
     }
 
     return true;

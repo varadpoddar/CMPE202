@@ -25,8 +25,8 @@ int main()
     cout << "Problem 4: Multithreaded Quicksort with yields\n";
     cout << left << setw(10) << "Threads"
          << setw(15) << "Time(ms)"
-         << setw(18) << "Lock Wait(ms)"
-         << setw(18) << "Yield Wait(ms)"
+         << setw(18) << "Lock Wait(mcs)"
+         << setw(18) << "Yield Wait(mcs)"
          << setw(20) << "% change vs 1T" << '\n';
     cout << string(81, '-') << '\n';
 

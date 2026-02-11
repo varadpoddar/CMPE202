@@ -8,7 +8,7 @@ using namespace std;
 class Quicksort_MT
 {
 public:
-    Quicksort_MT(int * const d, const int s, const int tread_MT) : data(d), size(s), tread_MT(tread_MT) {};
+    Quicksort_MT(int *const d, const int s, const int thread_MT) : data(d), size(s), thread_MT(thread_MT) {};
 
     void sort() { sort_NR(); }
 
@@ -17,7 +17,7 @@ public:
 private:
     int *data;
     int size;
-    int tread_MT;
+    int thread_MT;
 
     void swap_values_at(const int index1, const int index2);
     int partition(const int left_index, const int right_index);

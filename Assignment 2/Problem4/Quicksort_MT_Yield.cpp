@@ -14,17 +14,16 @@
  * - Any read/write of when done is set to true.
  *
  * How critical regions are protected:
- * - A single mutex (mtx) guards all accesses to subarray_stack, active_workers, and done.
- * - Partitioning work is done outside the lock to reduce contention.
+ * - A single unique mutex (mtx) guards all accesses to subarray_stack, active_workers, and when done is set to true.
+ * - Partitioning work is done outside the lock to reduce friction.
  *
- * Synchronization approach (Yield Wait):
- * - Instead of blocking on a condition_variable, idle workers spin in a
- *   yield loop: lock the mutex, check for work, unlock, then yield().
- * - std::this_thread::yield() surrenders the current time slice so the OS
- *   can schedule other threads, but the thread remains runnable and retries
- *   immediately when rescheduled.
+ * Synchronization approach:
+ * - condition_variable (cv) blocks idle workers until work appears or sorting is complete.
+ * - Workers call notify_all() after publishing new tasks or setting done=true.
  * - Completion is detected when subarray_stack is empty and active_workers == 0.
- * - Trade-off vs lock wait: lower wake-up latency but higher CPU usage while idle.
+ *
+ * Yielding strategy:
+ * - After a worker thread partitions a subarray and pushes new tasks, it yields to allow
  */
 
 void Quicksort_MT_Yield::swap_values_at(const int index1, const int index2)

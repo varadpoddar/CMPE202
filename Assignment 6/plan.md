@@ -169,7 +169,15 @@ Play multiple `--smart` games and watch the computer improve as `frequencies.dat
 - [ ] All `.h` / `.cpp` files compile cleanly with `make`
 - [ ] `--random` mode: 20-round game works correctly
 - [ ] `--smart` mode: `frequencies.dat` written after each game, read at start
+- [ ] CLI invalid-argument handling works (`--random`/`--smart` misuse, invalid `--n`)
+- [ ] `--smart` default uses `N=5`, and `--smart --n=<value>` correctly overrides N
+- [ ] Human input accepts only `R` / `P` / `S` and reprompts on invalid input
 - [ ] Computer visibly improves over multiple `--smart` games
+- [ ] Final score is displayed after exactly 20 rounds
 - [ ] `GameEngine` has no `#include` of `RandomStrategy` or `SmartStrategy`
+- [ ] Template Method is verifiable: fixed game flow in `playGame()` with output only via overridable hooks
+- [ ] Report explicitly states major iterations and whether significant backtracking occurred
+- [ ] UML/report clearly explains class relationships (dependency/aggregation/inheritance) and naming choices
 - [ ] Report covers: iterations, UML diagram, design principles, design patterns
 - [ ] Zip file named after team
+- [ ] Team zip includes all C++ source files and the short report

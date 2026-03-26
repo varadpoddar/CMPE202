@@ -9,6 +9,7 @@
 Build a C++ Rock-Paper-Scissors game (human vs. computer, 20 rounds) demonstrating iterative development, good class design, and design patterns.
 
 - Algorithm selection via **command-line argument** (`--random` / `--smart`)
+- Game rounds use a **configurable variable** (default `20`) shared by both modes
 - Smart algorithm sequence length **N is configurable** (default N=5)
 - Use **both** Strategy and Template Method design patterns (full credit)
 
@@ -168,14 +169,16 @@ Play multiple `--smart` games and watch the computer improve as `frequencies.dat
 
 - [ ] All `.h` / `.cpp` files compile cleanly with `make`
 - [ ] `--random` mode: 20-round game works correctly
-- [ ] `--smart` mode: `frequencies.dat` written after each game, read at start
-- [ ] CLI invalid-argument handling works (`--random`/`--smart` misuse, invalid `--n`)
-- [ ] `--smart` default uses `N=5`, and `--smart --n=<value>` correctly overrides N
+- [ ] Both `--random` and `--smart` use the same configurable rounds variable (default `20`)
+- [ ] Each round displays human win / computer win / tie result
+- [ ] Final score is displayed after configured rounds (default `20`)
 - [ ] Human input accepts only `R` / `P` / `S` and reprompts on invalid input
-- [ ] Computer visibly improves over multiple `--smart` games
-- [ ] Final score is displayed after exactly 20 rounds
 - [ ] `GameEngine` has no `#include` of `RandomStrategy` or `SmartStrategy`
 - [ ] Template Method is verifiable: fixed game flow in `playGame()` with output only via overridable hooks
+- [ ] `--smart` mode: `frequencies.dat` written after each game, read at start
+- [ ] Computer visibly improves over multiple `--smart` games
+- [ ] CLI invalid-argument handling works (`--random`/`--smart` misuse, invalid `--n`)
+- [ ] `--smart` default uses `N=5`, and `--smart --n=<value>` correctly overrides N
 - [ ] Report explicitly states major iterations and whether significant backtracking occurred
 - [ ] UML/report clearly explains class relationships (dependency/aggregation/inheritance) and naming choices
 - [ ] Report covers: iterations, UML diagram, design principles, design patterns

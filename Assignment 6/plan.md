@@ -167,13 +167,13 @@ Play multiple `--smart` games and watch the computer improve as `frequencies.dat
 
 ## Submission Checklist
 
-- [ ] All `.h` / `.cpp` files compile cleanly with `make`
+- [x] All `.h` / `.cpp` files compile cleanly with `make`
 - [ ] `--random` mode: 20-round game works correctly
 - [ ] Both `--random` and `--smart` use the same configurable rounds variable (default `20`)
-- [ ] Each round displays human win / computer win / tie result
-- [ ] Final score is displayed after configured rounds (default `20`)
-- [ ] Human input accepts only `R` / `P` / `S` and reprompts on invalid input
-- [ ] `GameEngine` has no `#include` of `RandomStrategy` or `SmartStrategy`
+- [x] Each round displays human win / computer win / tie result
+- [x] Final score is displayed after configured rounds (default `20`)
+- [x] Human input accepts only `R` / `P` / `S` and reprompts on invalid input
+- [x] `GameEngine` has no `#include` of `RandomStrategy` or `SmartStrategy`
 - [ ] Template Method is verifiable: fixed game flow in `playGame()` with output only via overridable hooks
 - [ ] `--smart` mode: `frequencies.dat` written after each game, read at start
 - [ ] Computer visibly improves over multiple `--smart` games

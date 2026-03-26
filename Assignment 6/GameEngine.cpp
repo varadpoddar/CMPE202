@@ -10,6 +10,8 @@ void GameEngine::play() {
     int computerScore = 0;
     int ties = 0;
 
+    computerPlayer.load();
+
     std::cout << "Starting Rock-Paper-Scissors for " << rounds << " rounds.\n\n";
 
     for (int round = 1; round <= rounds; ++round) {
@@ -17,6 +19,7 @@ void GameEngine::play() {
 
         Choice humanChoice = humanPlayer.getChoice();
         Choice computerChoice = computerPlayer.getChoice();
+        computerPlayer.updateHistory(humanChoice, computerChoice);
         RoundOutcome outcome = determineOutcome(humanChoice, computerChoice);
 
         std::cout << "You: " << choiceToString(humanChoice)
@@ -38,4 +41,6 @@ void GameEngine::play() {
     std::cout << "Human: " << humanScore << "\n";
     std::cout << "Computer: " << computerScore << "\n";
     std::cout << "Ties: " << ties << "\n";
+
+    computerPlayer.save();
 }

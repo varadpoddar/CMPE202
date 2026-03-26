@@ -2,17 +2,20 @@
 #define COMPUTER_PLAYER_H
 
 #include "Choice.h"
+#include "Strategy.h"
 
-#include <random>
+#include <memory>
 
 class ComputerPlayer {
 public:
-    ComputerPlayer();
+    explicit ComputerPlayer(std::unique_ptr<Strategy> strategy);
     Choice getChoice();
+    void updateHistory(Choice humanChoice, Choice computerChoice);
+    void load();
+    void save();
 
 private:
-    std::mt19937 randomEngine;
-    std::uniform_int_distribution<int> distribution;
+    std::unique_ptr<Strategy> strategy;
 };
 
 #endif

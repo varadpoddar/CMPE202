@@ -1,22 +1,30 @@
 #include "ComputerPlayer.h"
 
-#include <chrono>
-
-ComputerPlayer::ComputerPlayer()
-    : randomEngine(static_cast<unsigned int>(
-          std::chrono::high_resolution_clock::now().time_since_epoch().count())),
-      distribution(0, 2) {}
+ComputerPlayer::ComputerPlayer(std::unique_ptr<Strategy> strategyPtr)
+    : strategy(std::move(strategyPtr)) {}
 
 Choice ComputerPlayer::getChoice() {
-    int value = distribution(randomEngine);
-
-    if (value == 0) {
+    if (!strategy) {
         return Choice::ROCK;
     }
 
-    if (value == 1) {
-        return Choice::PAPER;
-    }
+    return strategy->getChoice();
+}
 
-    return Choice::SCISSORS;
+void ComputerPlayer::updateHistory(Choice humanChoice, Choice computerChoice) {
+    if (strategy) {
+        strategy->updateHistory(humanChoice, computerChoice);
+    }
+}
+
+void ComputerPlayer::load() {
+    if (strategy) {
+        strategy->load();
+    }
+}
+
+void ComputerPlayer::save() {
+    if (strategy) {
+        strategy->save();
+    }
 }

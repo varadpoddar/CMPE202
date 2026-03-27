@@ -168,7 +168,7 @@ Play multiple `--smart` games and watch the computer improve as `frequencies.dat
 ## Submission Checklist
 
 - [x] All `.h` / `.cpp` files compile cleanly with `make`
-- [ ] `--random` mode: 20-round game works correctly
+- [x] `--random` mode: 20-round game works correctly
 - [ ] Both `--random` and `--smart` use the same configurable rounds variable (default `20`)
 - [x] Each round displays human win / computer win / tie result
 - [x] Final score is displayed after configured rounds (default `20`)

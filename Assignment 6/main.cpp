@@ -1,4 +1,4 @@
-#include "GameEngine.h"
+#include "ConsoleGameEngine.h"
 #include "RandomStrategy.h"
 
 #include <iostream>
@@ -84,8 +84,8 @@ int main(int argc, char* argv[]) {
     }
 
     ComputerPlayer computerPlayer(std::move(strategy));
-    GameEngine gameEngine(humanPlayer, computerPlayer, config.rounds);
+    ConsoleGameEngine gameEngine(humanPlayer, computerPlayer, config.rounds);
 
-    gameEngine.play();
+    gameEngine.playGame();
     return 0;
 }

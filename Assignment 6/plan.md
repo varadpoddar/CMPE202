@@ -174,7 +174,7 @@ Play multiple `--smart` games and watch the computer improve as `frequencies.dat
 - [x] Final score is displayed after configured rounds (default `20`)
 - [x] Human input accepts only `R` / `P` / `S` and reprompts on invalid input
 - [x] `GameEngine` has no `#include` of `RandomStrategy` or `SmartStrategy`
-- [ ] Template Method is verifiable: fixed game flow in `playGame()` with output only via overridable hooks
+- [x] Template Method is verifiable: fixed game flow in `playGame()` with output only via overridable hooks
 - [ ] `--smart` mode: `frequencies.dat` written after each game, read at start
 - [ ] Computer visibly improves over multiple `--smart` games
 - [ ] CLI invalid-argument handling works (`--random`/`--smart` misuse, invalid `--n`)

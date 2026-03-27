@@ -1,46 +1,47 @@
 #include "GameEngine.h"
 
-#include <iostream>
-
 GameEngine::GameEngine(HumanPlayer& humanPlayerRef, ComputerPlayer& computerPlayerRef, int roundCount)
-    : humanPlayer(humanPlayerRef), computerPlayer(computerPlayerRef), rounds(roundCount) {}
+    : humanPlayer(humanPlayerRef), computerPlayer(computerPlayerRef), rounds(roundCount), humanScore(0), computerScore(0), ties(0) {}
 
-void GameEngine::play() {
-    int humanScore = 0;
-    int computerScore = 0;
-    int ties = 0;
+void GameEngine::playGame() {
+    humanScore = 0;
+    computerScore = 0;
+    ties = 0;
 
     computerPlayer.load();
 
-    std::cout << "Starting Rock-Paper-Scissors for " << rounds << " rounds.\n\n";
+    displayGameStart();
 
     for (int round = 1; round <= rounds; ++round) {
-        std::cout << "Round " << round << " / " << rounds << "\n";
-
-        Choice humanChoice = humanPlayer.getChoice();
-        Choice computerChoice = computerPlayer.getChoice();
-        computerPlayer.updateHistory(humanChoice, computerChoice);
-        RoundOutcome outcome = determineOutcome(humanChoice, computerChoice);
-
-        std::cout << "You: " << choiceToString(humanChoice)
-                  << " | Computer: " << choiceToString(computerChoice) << "\n";
-
-        if (outcome == RoundOutcome::HUMAN_WIN) {
-            ++humanScore;
-            std::cout << "Result: Human wins this round.\n\n";
-        } else if (outcome == RoundOutcome::COMPUTER_WIN) {
-            ++computerScore;
-            std::cout << "Result: Computer wins this round.\n\n";
-        } else {
-            ++ties;
-            std::cout << "Result: Tie.\n\n";
-        }
+        displayRoundHeader(round);
+        RoundResult result = playRound();
+        applyRoundResult(result);
+        displayRoundResult(round, result);
     }
 
-    std::cout << "Final Score after " << rounds << " rounds:\n";
-    std::cout << "Human: " << humanScore << "\n";
-    std::cout << "Computer: " << computerScore << "\n";
-    std::cout << "Ties: " << ties << "\n";
+    displayFinalScore(humanScore, computerScore, ties);
 
     computerPlayer.save();
+}
+
+RoundResult GameEngine::playRound() {
+    Choice humanChoice = humanPlayer.getChoice();
+    Choice computerChoice = computerPlayer.getChoice();
+    computerPlayer.updateHistory(humanChoice, computerChoice);
+
+    RoundResult result;
+    result.humanChoice = humanChoice;
+    result.computerChoice = computerChoice;
+    result.outcome = determineOutcome(humanChoice, computerChoice);
+    return result;
+}
+
+void GameEngine::applyRoundResult(const RoundResult& result) {
+    if (result.outcome == RoundOutcome::HUMAN_WIN) {
+        ++humanScore;
+    } else if (result.outcome == RoundOutcome::COMPUTER_WIN) {
+        ++computerScore;
+    } else {
+        ++ties;
+    }
 }

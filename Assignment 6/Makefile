@@ -5,7 +5,9 @@ TARGET := rps
 SOURCES := \
 	main.cpp \
 	Choice.cpp \
+	FrequencyStore.cpp \
 	RandomStrategy.cpp \
+	SmartStrategy.cpp \
 	HumanPlayer.cpp \
 	ComputerPlayer.cpp \
 	GameEngine.cpp \

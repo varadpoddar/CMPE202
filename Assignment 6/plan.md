@@ -169,16 +169,16 @@ Play multiple `--smart` games and watch the computer improve as `frequencies.dat
 
 - [x] All `.h` / `.cpp` files compile cleanly with `make`
 - [x] `--random` mode: 20-round game works correctly
-- [ ] Both `--random` and `--smart` use the same configurable rounds variable (default `20`)
+- [x] Both `--random` and `--smart` use the same configurable rounds variable (default `20`)
 - [x] Each round displays human win / computer win / tie result
 - [x] Final score is displayed after configured rounds (default `20`)
 - [x] Human input accepts only `R` / `P` / `S` and reprompts on invalid input
 - [x] `GameEngine` has no `#include` of `RandomStrategy` or `SmartStrategy`
 - [x] Template Method is verifiable: fixed game flow in `playGame()` with output only via overridable hooks
-- [ ] `--smart` mode: `frequencies.dat` written after each game, read at start
+- [x] `--smart` mode: `frequencies.dat` written after each game, read at start
 - [ ] Computer visibly improves over multiple `--smart` games
-- [ ] CLI invalid-argument handling works (`--random`/`--smart` misuse, invalid `--n`)
-- [ ] `--smart` default uses `N=5`, and `--smart --n=<value>` correctly overrides N
+- [x] CLI invalid-argument handling works (`--random`/`--smart` misuse, invalid `--n`)
+- [x] `--smart` default uses `N=5`, and `--smart --n=<value>` correctly overrides N
 - [ ] Report explicitly states major iterations and whether significant backtracking occurred
 - [ ] UML/report clearly explains class relationships (dependency/aggregation/inheritance) and naming choices
 - [ ] Report covers: iterations, UML diagram, design principles, design patterns

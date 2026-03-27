@@ -1,5 +1,6 @@
 #include "ConsoleGameEngine.h"
 #include "RandomStrategy.h"
+#include "SmartStrategy.h"
 
 #include <iostream>
 #include <memory>
@@ -7,39 +8,61 @@
 
 namespace {
 constexpr int DEFAULT_ROUNDS = 20;
+constexpr int DEFAULT_SMART_N = 5;
 
 struct CliConfig {
     int rounds = DEFAULT_ROUNDS;
-    bool useRandom = true;
+    int smartN = DEFAULT_SMART_N;
+    enum class Mode {
+        RANDOM,
+        SMART
+    };
+    Mode mode = Mode::RANDOM;
 };
 
 void printUsage(const char* executableName) {
     std::cout << "Usage:\n"
-              << "  " << executableName << " --random [--rounds=<positive_int>]\n"
+              << "  " << executableName << " [--random|--smart] [--rounds=<positive_int>] [--n=<positive_int>]\n"
               << "\n"
-              << "Note: --smart will be added in a later iteration.\n";
+              << "  --random             Play with random strategy (default).\n"
+              << "  --smart              Play with smart strategy.\n"
+              << "  --rounds=<value>     Number of rounds (default 20).\n"
+              << "  --n=<value>          Smart sequence length N (default 5, only with --smart).\n";
 }
 
 bool parseCliConfig(int argc, char* argv[], CliConfig& outConfig) {
     bool modeSpecified = false;
+    bool nSpecified = false;
 
     for (int index = 1; index < argc; ++index) {
         std::string argument = argv[index];
-        const std::string prefix = "--rounds=";
+        const std::string roundsPrefix = "--rounds=";
+        const std::string nPrefix = "--n=";
 
         if (argument == "--random") {
-            outConfig.useRandom = true;
+            if (modeSpecified && outConfig.mode != CliConfig::Mode::RANDOM) {
+                std::cout << "Error: choose either --random or --smart, not both.\n";
+                return false;
+            }
+
+            outConfig.mode = CliConfig::Mode::RANDOM;
             modeSpecified = true;
             continue;
         }
 
         if (argument == "--smart") {
-            std::cout << "Error: --smart is not implemented in this iteration yet.\n";
-            return false;
+            if (modeSpecified && outConfig.mode != CliConfig::Mode::SMART) {
+                std::cout << "Error: choose either --random or --smart, not both.\n";
+                return false;
+            }
+
+            outConfig.mode = CliConfig::Mode::SMART;
+            modeSpecified = true;
+            continue;
         }
 
-        if (argument.rfind(prefix, 0) == 0) {
-            std::string value = argument.substr(prefix.size());
+        if (argument.rfind(roundsPrefix, 0) == 0) {
+            std::string value = argument.substr(roundsPrefix.size());
             try {
                 int parsed = std::stoi(value);
                 if (parsed > 0) {
@@ -56,13 +79,37 @@ bool parseCliConfig(int argc, char* argv[], CliConfig& outConfig) {
             continue;
         }
 
+        if (argument.rfind(nPrefix, 0) == 0) {
+            std::string value = argument.substr(nPrefix.size());
+            try {
+                int parsed = std::stoi(value);
+                if (parsed > 0) {
+                    outConfig.smartN = parsed;
+                    nSpecified = true;
+                } else {
+                    std::cout << "Error: --n must be a positive integer.\n";
+                    return false;
+                }
+            } catch (...) {
+                std::cout << "Error: invalid n value '" << value << "'.\n";
+                return false;
+            }
+
+            continue;
+        }
+
         std::cout << "Error: unknown argument '" << argument << "'.\n";
         return false;
     }
 
     if (!modeSpecified) {
         std::cout << "No mode specified. Defaulting to --random.\n";
-        outConfig.useRandom = true;
+        outConfig.mode = CliConfig::Mode::RANDOM;
+    }
+
+    if (nSpecified && outConfig.mode != CliConfig::Mode::SMART) {
+        std::cout << "Error: --n can only be used with --smart.\n";
+        return false;
     }
 
     return true;
@@ -79,8 +126,10 @@ int main(int argc, char* argv[]) {
     HumanPlayer humanPlayer;
 
     std::unique_ptr<Strategy> strategy;
-    if (config.useRandom) {
+    if (config.mode == CliConfig::Mode::RANDOM) {
         strategy = std::make_unique<RandomStrategy>();
+    } else {
+        strategy = std::make_unique<SmartStrategy>(config.smartN);
     }
 
     ComputerPlayer computerPlayer(std::move(strategy));

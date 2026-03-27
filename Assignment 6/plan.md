@@ -179,8 +179,8 @@ Play multiple `--smart` games and watch the computer improve as `frequencies.dat
 - [ ] Computer visibly improves over multiple `--smart` games
 - [x] CLI invalid-argument handling works (`--random`/`--smart` misuse, invalid `--n`)
 - [x] `--smart` default uses `N=5`, and `--smart --n=<value>` correctly overrides N
-- [ ] Report explicitly states major iterations and whether significant backtracking occurred
-- [ ] UML/report clearly explains class relationships (dependency/aggregation/inheritance) and naming choices
-- [ ] Report covers: iterations, UML diagram, design principles, design patterns
+- [x] Report explicitly states major iterations and whether significant backtracking occurred
+- [x] UML/report clearly explains class relationships (dependency/aggregation/inheritance) and naming choices
+- [x] Report covers: iterations, UML diagram, design principles, design patterns
 - [ ] Zip file named after team
 - [ ] Team zip includes all C++ source files and the short report

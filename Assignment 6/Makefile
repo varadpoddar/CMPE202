@@ -8,7 +8,8 @@ SOURCES := \
 	RandomStrategy.cpp \
 	HumanPlayer.cpp \
 	ComputerPlayer.cpp \
-	GameEngine.cpp
+	GameEngine.cpp \
+	ConsoleGameEngine.cpp
 
 OBJECTS := $(SOURCES:.cpp=.o)
 

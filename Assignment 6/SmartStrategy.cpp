@@ -47,9 +47,10 @@ Choice SmartStrategy::getChoice() {
 }
 
 void SmartStrategy::updateHistory(Choice humanChoice, Choice computerChoice) {
-    // Record human then computer so the next unseen token is the next human choice.
-    history.push_back(choiceToToken(humanChoice));
+    // Record computer then human so stored sequences end with the human's choice.
+    // This aligns with getChoice() which looks up sequences by predicting the next human move.
     history.push_back(choiceToToken(computerChoice));
+    history.push_back(choiceToToken(humanChoice));
 
     while (static_cast<int>(history.size()) > sequenceLength) {
         history.pop_front();

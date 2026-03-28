@@ -182,5 +182,5 @@ Play multiple `--smart` games and watch the computer improve as `frequencies.dat
 - [x] Report explicitly states major iterations and whether significant backtracking occurred
 - [x] UML/report clearly explains class relationships (dependency/aggregation/inheritance) and naming choices
 - [x] Report covers: iterations, UML diagram, design principles, design patterns
-- [ ] Zip file named after team
-- [ ] Team zip includes all C++ source files and the short report
+- [x] Zip file named after team
+- [x] Team zip includes all C++ source files and the short report

@@ -1,0 +1,11 @@
+# macOS
+.DS_Store
+
+# Assignment 6 build artifacts
+Assignment 6/*.o
+Assignment 6/rps
+Assignment 6/frequencies.dat
+
+# Assignment 7 build
+Assignment7/build/
+Assignment7/frequencies.dat

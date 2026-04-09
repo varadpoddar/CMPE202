@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect><x>0</x><y>0</y><width>780</width><height>680</height></rect>
+  </property>
+  <property name="minimumSize">
+   <size><width>780</width><height>680</height></size>
+  </property>
+  <property name="windowTitle">
+   <string>Rock Paper Scissors — Fantastic 4</string>
+  </property>
+
+  <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string>QWidget#centralwidget { background-color: #2e4a3e; }
+QGroupBox {
+    font-weight: bold; font-size: 13px;
+    border: 1px solid #a8d5b5; border-radius: 8px;
+    margin-top: 8px; padding-top: 8px;
+    color: #ffffff; background-color: #3a6b52;
+}
+QGroupBox::title { subcontrol-origin: margin; left: 10px; padding: 0 4px; color: #d4edda; }
+QLabel { color: #eaf5ec; }
+QLabel#titleLabel { font-size: 24px; font-weight: bold; color: #ffffff; }
+QLabel#teamLabel { font-size: 12px; color: #95d5b2; font-style: italic; letter-spacing: 1px; }
+QLabel#statusLabel { font-size: 12px; color: #c8e6c9; font-style: italic; }
+QLabel#vsLabel { font-size: 22px; font-weight: bold; color: #ffffff; }
+QLabel#humanHandLabel, QLabel#computerHandLabel {
+    background-color: #ffffff; border-radius: 10px; border: 3px solid #a8d5b5;
+}
+QLabel#humanNameLabel, QLabel#computerNameLabel { font-size: 12px; color: #d4edda; font-weight: bold; }
+QLabel#winnerLabel { font-size: 16px; font-weight: bold; }
+QPushButton#rockButton, QPushButton#paperButton, QPushButton#scissorsButton {
+    font-size: 13px; font-weight: bold; min-height: 60px;
+    border-radius: 10px; border: 2px solid #6aab82;
+    background-color: #3a6b52; color: #aaaaaa;
+}
+QPushButton#rockButton:enabled, QPushButton#paperButton:enabled, QPushButton#scissorsButton:enabled {
+    background-color: #4e8c6a; border-color: #a8d5b5; color: #ffffff;
+}
+QPushButton#rockButton:hover, QPushButton#paperButton:hover, QPushButton#scissorsButton:hover {
+    background-color: #5fa37c; border-color: #ffffff;
+}
+QPushButton#rockButton:disabled, QPushButton#paperButton:disabled, QPushButton#scissorsButton:disabled {
+    color: #6aab82; border-color: #3a6b52; background-color: #2e4a3e;
+}
+QPushButton#startButton {
+    font-size: 13px; font-weight: bold; min-height: 34px;
+    background-color: #5cb85c; color: #ffffff;
+    border-radius: 8px; border: none; padding: 4px 24px;
+}
+QPushButton#startButton:hover { background-color: #4cae4c; }
+QPushButton#startButton:disabled { background-color: #6aab82; color: #c8e6c9; }
+QPushButton#resetLearningButton {
+    font-size: 12px; min-height: 34px;
+    background-color: #7a3a3a; color: #f5c6c6;
+    border-radius: 8px; border: none; padding: 4px 14px;
+}
+QPushButton#resetLearningButton:hover { background-color: #a04444; }
+QPushButton#resetLearningButton:disabled { background-color: #4a2a2a; color: #7a5a5a; }
+QPushButton#viewDataButton {
+    font-size: 12px; min-height: 34px;
+    background-color: #2a4a6a; color: #c6ddf5;
+    border-radius: 8px; border: none; padding: 4px 14px;
+}
+QPushButton#viewDataButton:hover { background-color: #3a6a9a; }
+QComboBox, QSpinBox {
+    background-color: #4e8c6a; color: #ffffff;
+    border: 1px solid #a8d5b5; border-radius: 4px; padding: 2px 6px;
+}
+QComboBox QAbstractItemView { background-color: #4e8c6a; color: #ffffff; }
+QLabel#humanScoreLabel, QLabel#computerScoreLabel, QLabel#tiesLabel {
+    font-size: 24px; font-weight: bold; color: #ffffff;
+}
+QLabel#humanScoreTitleLbl, QLabel#computerScoreTitleLbl, QLabel#tiesTitleLbl {
+    font-size: 12px; color: #c8e6c9;
+}
+QScrollArea { border: none; background-color: transparent; }
+QWidget#historyContainer { background-color: transparent; }
+</string>
+   </property>
+
+   <layout class="QHBoxLayout" name="rootLayout">
+    <property name="spacing"><number>10</number></property>
+    <property name="leftMargin"><number>12</number></property>
+    <property name="topMargin"><number>12</number></property>
+    <property name="rightMargin"><number>12</number></property>
+    <property name="bottomMargin"><number>12</number></property>
+
+    <!-- LEFT: game panel -->
+    <item>
+     <layout class="QVBoxLayout" name="leftPanel">
+      <property name="spacing"><number>10</number></property>
+
+      <item>
+       <widget class="QLabel" name="titleLabel">
+        <property name="text"><string>Rock  ·  Paper  ·  Scissors</string></property>
+        <property name="alignment"><set>Qt::AlignCenter</set></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="teamLabel">
+        <property name="text"><string>by  Fantastic 4</string></property>
+        <property name="alignment"><set>Qt::AlignCenter</set></property>
+       </widget>
+      </item>
+
+      <item>
+       <widget class="QGroupBox" name="setupGroup">
+        <property name="title"><string>Game Setup</string></property>
+        <layout class="QVBoxLayout" name="setupVLayout">
+         <property name="spacing"><number>8</number></property>
+         <item>
+          <layout class="QHBoxLayout" name="setupRow1">
+           <item>
+            <widget class="QLabel" name="algoLabel">
+             <property name="text"><string>Algorithm:</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="algorithmCombo">
+             <property name="minimumWidth"><number>110</number></property>
+             <item><property name="text"><string>Random</string></property></item>
+             <item><property name="text"><string>Smart</string></property></item>
+            </widget>
+           </item>
+           <item>
+            <spacer name="setupSp1">
+             <property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="sizeHint" stdset="0"><size><width>20</width><height>0</height></size></property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="roundsLabel">
+             <property name="text"><string>Rounds:</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="roundsSpinBox">
+             <property name="minimum"><number>1</number></property>
+             <property name="maximum"><number>100</number></property>
+             <property name="value"><number>10</number></property>
+             <property name="minimumWidth"><number>60</number></property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="setupRow2">
+           <item>
+            <spacer name="setupSp2">
+             <property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="sizeHint" stdset="0"><size><width>40</width><height>0</height></size></property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="startButton">
+             <property name="text"><string>Start Game</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="resetLearningButton">
+             <property name="text"><string>Reset Learning</string></property>
+             <property name="toolTip"><string>Delete saved frequency data so the Smart algorithm starts fresh</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="viewDataButton">
+             <property name="text"><string>View Data</string></property>
+             <property name="toolTip"><string>Show current frequency learning data</string></property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="setupSp3">
+             <property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="sizeHint" stdset="0"><size><width>40</width><height>0</height></size></property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+
+      <item>
+       <widget class="QGroupBox" name="roundGroup">
+        <property name="title"><string>Round</string></property>
+        <layout class="QVBoxLayout" name="roundVLayout">
+         <property name="spacing"><number>6</number></property>
+         <item>
+          <layout class="QHBoxLayout" name="handsRow">
+           <item>
+            <layout class="QVBoxLayout" name="humanCol">
+             <item>
+              <widget class="QLabel" name="humanNameLabel">
+               <property name="text"><string>You</string></property>
+               <property name="alignment"><set>Qt::AlignCenter</set></property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="humanHandLabel">
+               <property name="text"><string></string></property>
+               <property name="minimumSize"><size><width>130</width><height>130</height></size></property>
+               <property name="maximumSize"><size><width>130</width><height>130</height></size></property>
+               <property name="alignment"><set>Qt::AlignCenter</set></property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="handsSp1">
+             <property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="sizeHint" stdset="0"><size><width>10</width><height>0</height></size></property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="vsLabel">
+             <property name="text"><string>VS</string></property>
+             <property name="alignment"><set>Qt::AlignCenter</set></property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="handsSp2">
+             <property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="sizeHint" stdset="0"><size><width>10</width><height>0</height></size></property>
+            </spacer>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="computerCol">
+             <item>
+              <widget class="QLabel" name="computerNameLabel">
+               <property name="text"><string>Computer</string></property>
+               <property name="alignment"><set>Qt::AlignCenter</set></property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="computerHandLabel">
+               <property name="text"><string></string></property>
+               <property name="minimumSize"><size><width>130</width><height>130</height></size></property>
+               <property name="maximumSize"><size><width>130</width><height>130</height></size></property>
+               <property name="alignment"><set>Qt::AlignCenter</set></property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QLabel" name="winnerLabel">
+           <property name="text"><string>—</string></property>
+           <property name="alignment"><set>Qt::AlignCenter</set></property>
+           <property name="font"><font><bold>true</bold></font></property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="roundDetailsGrid">
+           <property name="verticalSpacing"><number>4</number></property>
+           <property name="horizontalSpacing"><number>12</number></property>
+           <item row="0" column="0">
+            <widget class="QLabel" name="roundTitleLbl">
+             <property name="text"><string>Round:</string></property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="roundLabel">
+             <property name="text"><string>—</string></property>
+             <property name="font"><font><bold>true</bold></font></property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="predictionTitleLbl">
+             <property name="text"><string>Computer predicted:</string></property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="predictionLabel">
+             <property name="text"><string>—</string></property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+
+      <item>
+       <widget class="QLabel" name="statusLabel">
+        <property name="text"><string>Click "Start Game" to begin.</string></property>
+        <property name="alignment"><set>Qt::AlignCenter</set></property>
+       </widget>
+      </item>
+
+      <item>
+       <layout class="QHBoxLayout" name="choiceLayout">
+        <property name="spacing"><number>10</number></property>
+        <item>
+         <widget class="QPushButton" name="rockButton">
+          <property name="text"><string>Rock</string></property>
+          <property name="enabled"><bool>false</bool></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="paperButton">
+          <property name="text"><string>Paper</string></property>
+          <property name="enabled"><bool>false</bool></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="scissorsButton">
+          <property name="text"><string>Scissors</string></property>
+          <property name="enabled"><bool>false</bool></property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+
+      <item>
+       <widget class="QGroupBox" name="scoreGroup">
+        <property name="title"><string>Score</string></property>
+        <layout class="QHBoxLayout" name="scoreLayout">
+         <item>
+          <layout class="QVBoxLayout" name="humanScoreCol">
+           <item>
+            <widget class="QLabel" name="humanScoreTitleLbl">
+             <property name="text"><string>You</string></property>
+             <property name="alignment"><set>Qt::AlignCenter</set></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="humanScoreLabel">
+             <property name="text"><string>0</string></property>
+             <property name="alignment"><set>Qt::AlignCenter</set></property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <spacer name="scoreSp1">
+           <property name="orientation"><enum>Qt::Horizontal</enum></property>
+           <property name="sizeHint" stdset="0"><size><width>20</width><height>0</height></size></property>
+          </spacer>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="computerScoreCol">
+           <item>
+            <widget class="QLabel" name="computerScoreTitleLbl">
+             <property name="text"><string>Computer</string></property>
+             <property name="alignment"><set>Qt::AlignCenter</set></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="computerScoreLabel">
+             <property name="text"><string>0</string></property>
+             <property name="alignment"><set>Qt::AlignCenter</set></property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <spacer name="scoreSp2">
+           <property name="orientation"><enum>Qt::Horizontal</enum></property>
+           <property name="sizeHint" stdset="0"><size><width>20</width><height>0</height></size></property>
+          </spacer>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="tiesCol">
+           <item>
+            <widget class="QLabel" name="tiesTitleLbl">
+             <property name="text"><string>Ties</string></property>
+             <property name="alignment"><set>Qt::AlignCenter</set></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="tiesLabel">
+             <property name="text"><string>0</string></property>
+             <property name="alignment"><set>Qt::AlignCenter</set></property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+
+     </layout>
+    </item>
+
+    <!-- RIGHT: history panel -->
+    <item>
+     <widget class="QGroupBox" name="historyGroup">
+      <property name="title"><string>Round History</string></property>
+      <property name="minimumWidth"><number>200</number></property>
+      <property name="maximumWidth"><number>220</number></property>
+      <layout class="QVBoxLayout" name="historyGroupLayout">
+       <property name="spacing"><number>0</number></property>
+       <property name="leftMargin"><number>4</number></property>
+       <property name="topMargin"><number>4</number></property>
+       <property name="rightMargin"><number>4</number></property>
+       <property name="bottomMargin"><number>4</number></property>
+       <item>
+        <widget class="QScrollArea" name="historyScrollArea">
+         <property name="widgetResizable"><bool>true</bool></property>
+         <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+         <widget class="QWidget" name="historyContainer">
+          <property name="objectName"><string>historyContainer</string></property>
+          <layout class="QVBoxLayout" name="historyLayout">
+           <property name="spacing"><number>6</number></property>
+           <property name="leftMargin"><number>4</number></property>
+           <property name="topMargin"><number>4</number></property>
+           <property name="rightMargin"><number>4</number></property>
+           <property name="bottomMargin"><number>4</number></property>
+           <item>
+            <spacer name="historySpacer">
+             <property name="orientation"><enum>Qt::Vertical</enum></property>
+             <property name="sizeHint" stdset="0"><size><width>0</width><height>40</height></size></property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+
+   </layout>
+  </widget>
+ </widget>
+</ui>

@@ -7,6 +7,7 @@
 #include <QString>
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QTimer>
 
 // Handles all TCP communication for both server and client roles.
 // Uses a simple newline-delimited text protocol.
@@ -85,6 +86,7 @@ private:
     QTcpServer* tcpServer  = nullptr;
     QTcpSocket* clientSocket = nullptr;  // server side: connected client
     QTcpSocket* serverSocket = nullptr;  // client side: connection to server
+    QTimer*     connectTimer = nullptr;  // client side: connection timeout
 
     QString localName;
     QString remoteName;

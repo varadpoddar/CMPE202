@@ -569,9 +569,10 @@ void MainWindow::onNetGameFinished(int p1Score, int p2Score, int ties) {
     QMessageBox::information(this, "Network Game Over", msg);
     ui->netStatusLabel->setText("Game over. You can host a new game.");
     setNetworkControlsEnabled(true);
+    // Reset engine first so its slots don't fire during NetworkManager teardown
+    netEngine.reset();
     serverNm.reset();
     serverNm2.reset();
-    netEngine.reset();
 }
 
 void MainWindow::onNetStatusMessage(const QString& msg) {
@@ -758,8 +759,14 @@ void MainWindow::onNetGameOverReceived(int myScore, int oppScore, int ties) {
 
     ui->netStatusLabel->setText("Game over. Connect again to play another.");
     setNetworkControlsEnabled(true);
-    clientNm.reset();
     isNetworkClient = false;
+    if (clientNm) {
+        // Disconnect before reset to prevent onDisconnectedFromServer firing
+        // during ~NetworkManager() and calling clientNm.reset() a second time.
+        disconnect(clientNm.get(), &NetworkManager::disconnectedFromServer,
+                   this, &MainWindow::onDisconnectedFromServer);
+        clientNm.reset();
+    }
 }
 
 void MainWindow::addNetHistoryEntry(int round, Choice myChoice, Choice oppChoice,

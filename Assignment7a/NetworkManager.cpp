@@ -121,8 +121,19 @@ void NetworkManager::connectToServer(const QString& host, quint16 port, const QS
     connect(serverSocket, &QTcpSocket::disconnected, this, &NetworkManager::onServerSocketDisconnected);
     connect(serverSocket, &QAbstractSocket::errorOccurred, this, &NetworkManager::onSocketError);
     connect(serverSocket, &QTcpSocket::connected, this, [this]() {
+        if (connectTimer) { connectTimer->stop(); connectTimer->deleteLater(); connectTimer = nullptr; }
         sendToServer("JOIN:" + localName);
     });
+
+    // 8-second timeout so the UI doesn't hang silently if the host is unreachable
+    connectTimer = new QTimer(this);
+    connectTimer->setSingleShot(true);
+    connect(connectTimer, &QTimer::timeout, this, [this]() {
+        connectTimer->deleteLater(); connectTimer = nullptr;
+        serverSocket->abort();
+        emit connectionFailed("Connection timed out. Check the host IP, port, and firewall.");
+    });
+    connectTimer->start(8000);
 
     serverSocket->connectToHost(host, port);
 }
@@ -250,6 +261,7 @@ void NetworkManager::onSocketError(QAbstractSocket::SocketError error) {
     if (!sock) return;
 
     if (sock == serverSocket) {
+        if (connectTimer) { connectTimer->stop(); connectTimer->deleteLater(); connectTimer = nullptr; }
         emit connectionFailed(sock->errorString());
     }
     // client socket errors are handled via disconnected signal

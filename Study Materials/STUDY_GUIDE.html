@@ -252,6 +252,48 @@ tr:nth-child(even) td { background: #f8f9fa; }
   .tip, .warn { padding: 4px 8px; font-size: 8px; border-width: 1px; }
   pre, .compare, table, .explain, .card { page-break-inside: avoid; break-inside: avoid; }
   a { color: inherit; text-decoration: none; }
+
+  /* ── Monochrome overrides ── */
+  * { color: #000 !important; background: #fff !important;
+      border-color: #555 !important; box-shadow: none !important; }
+  h2.section {
+    background: #111 !important;
+    color: #fff !important;
+    border: none !important;
+  }
+  h3.concept {
+    border-left: 3px solid #000 !important;
+    color: #000 !important;
+  }
+  .explain {
+    border-left: 3px solid #555 !important;
+    background: #f2f2f2 !important;
+  }
+  .explain strong { color: #000 !important; }
+  pre {
+    background: #f4f4f4 !important;
+    border: 1px solid #999 !important;
+  }
+  .col-bad  .col-label { background: #ddd !important; color: #000 !important; }
+  .col-good .col-label { background: #ddd !important; color: #000 !important; }
+  .col-bad  pre { border-top: 2px solid #555 !important; }
+  .col-good pre { border-top: 2px solid #000 !important; }
+  th { background: #222 !important; color: #fff !important; }
+  tr:nth-child(even) td { background: #f0f0f0 !important; }
+  .tip, .warn {
+    background: #f4f4f4 !important;
+    border: 1px solid #888 !important;
+  }
+  .card { border: 1px solid #888 !important; }
+  .card h4 { color: #000 !important; }
+  .exam-box {
+    background: #eee !important;
+    border: 2px solid #555 !important;
+    color: #000 !important;
+  }
+  .cover { border-bottom: 2px solid #000 !important; }
+  .toc { background: #f4f4f4 !important; border: 1px solid #888 !important; }
+  .page-header { background: #000 !important; color: #fff !important; }
 }
 </style>
 </head>

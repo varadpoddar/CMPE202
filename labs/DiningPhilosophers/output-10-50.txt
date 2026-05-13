@@ -1,0 +1,63 @@
+/Users/rmak/CLionProjects/DiningPhilosophers-timeline/cmake-build-debug/DiningPhilosophers_timeline
+Time  Servings  Philosopher 0  Philosopher 1  Philosopher 2  Philosopher 3  Philosopher 4  Philosopher 5  Philosopher 6  Philosopher 7  Philosopher 8  Philosopher 9
+  0      50       Thinking       Thinking       Thinking       Thinking       Thinking       Arrived        Arrived        Arrived        Arrived        Arrived
+  1      50       Thinking       Thinking       Thinking       Thinking       Thinking       Thinking       Thinking       Thinking       Thinking       Thinking
+  2      50       Thinking       Thinking       Thinking       Thinking       Thinking       Thinking       Thinking       Thinking       Thinking       Thinking
+  3      48       Thinking       Thinking       Thinking       Thinking       Thinking       *Filling*      *Filling*      Thinking       Thinking       Thinking
+  4      46       Thinking       Thinking       Thinking       *Filling*      Waiting        *Eating*       *Eating*       Thinking       Thinking       *Filling*
+  5      45       Waiting        *Filling*      Thinking       *Eating*       Waiting        *Eating*       *Eating*       Waiting        Thinking       *Eating*
+  6      44       Waiting        *Eating*       Waiting        *Eating*       Waiting        *Eating*       Thinking       *Filling*      Waiting        *Eating*
+  7      44       Waiting        *Eating*       Waiting        Thinking       Waiting        *Eating*       Thinking       *Eating*       Waiting        *Eating*
+  8      42       Waiting        Thinking       *Filling*      Thinking       *Filling*      Thinking       Thinking       *Eating*       Waiting        *Eating*
+  9      41       *Filling*      Thinking       *Eating*       Thinking       *Eating*       Thinking       Thinking       *Eating*       Waiting        Thinking
+ 10      40       *Eating*       Thinking       *Eating*       Thinking       *Eating*       Thinking       Thinking       Thinking       *Filling*      Thinking
+ 11      39       *Eating*       Waiting        *Eating*       Thinking       Thinking       *Filling*      Thinking       Thinking       *Eating*       Thinking
+ 12      39       *Eating*       Waiting        Thinking       Thinking       Thinking       *Eating*       Waiting        Thinking       *Eating*       Thinking
+ 13      38       Thinking       Waiting        Thinking       *Filling*      Thinking       *Eating*       Waiting        Thinking       Thinking       Waiting
+ 14      37       Thinking       Waiting        Thinking       *Eating*       Thinking       *Eating*       Waiting        *Filling*      Thinking       Waiting
+ 15      37       Thinking       Waiting        Thinking       *Eating*       Thinking       *Eating*       Waiting        *Eating*       Thinking       Waiting
+ 16      37       Thinking       Waiting        Thinking       *Eating*       Thinking       Thinking       Waiting        *Eating*       Thinking       Waiting
+ 17      36       *Filling*      Waiting        Waiting        *Eating*       Waiting        Thinking       Waiting        *Eating*       Thinking       Waiting
+ 18      34       *Eating*       Waiting        *Filling*      Thinking       *Filling*      Thinking       Waiting        *Eating*       Thinking       Waiting
+ 19      32       *Eating*       Waiting        *Eating*       Thinking       *Eating*       Thinking       *Filling*      Thinking       *Filling*      Waiting
+ 20      32       Thinking       Waiting        *Eating*       Thinking       *Eating*       Thinking       *Eating*       Thinking       *Eating*       Waiting
+ 21      32       Thinking       Waiting        *Eating*       Thinking       *Eating*       Thinking       *Eating*       Thinking       *Eating*       Waiting
+ 22      30       Thinking       *Filling*      Thinking       Thinking       Thinking       *Filling*      Thinking       Thinking       *Eating*       Waiting
+ 23      28       Waiting        *Eating*       Thinking       *Filling*      Thinking       *Eating*       Thinking       Thinking       Thinking       *Filling*
+ 24      28       Waiting        *Eating*       Thinking       *Eating*       Thinking       *Eating*       Thinking       Thinking       Thinking       *Eating*
+ 25      27       Waiting        *Eating*       Waiting        *Eating*       Thinking       *Eating*       Thinking       *Filling*      Thinking       *Eating*
+ 26      26       Waiting        *Eating*       Waiting        Thinking       *Filling*      Thinking       Waiting        *Eating*       Waiting        *Eating*
+ 27      24       *Filling*      Thinking       *Filling*      Thinking       *Eating*       Thinking       Waiting        *Eating*       Waiting        Thinking
+ 28      24       *Eating*       Thinking       *Eating*       Thinking       *Eating*       Thinking       Waiting        *Eating*       Waiting        Thinking
+ 29      24       *Eating*       Thinking       *Eating*       Thinking       *Eating*       Waiting        Waiting        *Eating*       Waiting        Thinking
+ 30      22       *Eating*       Waiting        Thinking       Waiting        *Eating*       Waiting        *Filling*      Thinking       *Filling*      Waiting
+ 31      21       *Eating*       Waiting        Thinking       *Filling*      Thinking       Waiting        *Eating*       Thinking       *Eating*       Waiting
+ 32      20       Thinking       *Filling*      Thinking       *Eating*       Thinking       Waiting        *Eating*       Thinking       *Eating*       Waiting
+ 33      20       Thinking       *Eating*       Thinking       *Eating*       Thinking       Waiting        *Eating*       Thinking       *Eating*       Waiting
+ 34      18       Thinking       *Eating*       Thinking       *Eating*       Thinking       *Filling*      Thinking       Thinking       Thinking       *Filling*
+ 35      18       Thinking       *Eating*       Waiting        *Eating*       Waiting        *Eating*       Thinking       Thinking       Thinking       *Eating*
+ 36      16       Waiting        Thinking       *Filling*      Thinking       Waiting        *Eating*       Thinking       *Filling*      Thinking       *Eating*
+ 37      15       Waiting        Thinking       *Eating*       Thinking       *Filling*      Thinking       Waiting        *Eating*       Thinking       *Eating*
+ 38      14       *Filling*      Thinking       *Eating*       Thinking       *Eating*       Thinking       Waiting        *Eating*       Waiting        Thinking
+ 39      14       *Eating*       Thinking       Thinking       Thinking       *Eating*       Thinking       Waiting        *Eating*       Waiting        Thinking
+ 40      12       *Eating*       Waiting        Thinking       Thinking       *Eating*       Thinking       *Filling*      Thinking       *Filling*      Thinking
+ 41      11       Thinking       *Filling*      Thinking       Waiting        *Eating*       Waiting        *Eating*       Thinking       *Eating*       Thinking
+ 42      10       Thinking       *Eating*       Thinking       *Filling*      Thinking       Waiting        *Eating*       Thinking       *Eating*       Thinking
+ 43       9       Thinking       *Eating*       Waiting        *Eating*       Thinking       *Filling*      Thinking       Thinking       *Eating*       Waiting
+ 44       7       Thinking       *Eating*       Waiting        *Eating*       Thinking       *Eating*       Thinking       *Filling*      Thinking       *Filling*
+ 45       6       Waiting        Thinking       *Filling*      Thinking       Thinking       *Eating*       Thinking       *Eating*       Thinking       *Eating*
+ 46       5       Waiting        Thinking       *Eating*       Thinking       *Filling*      Thinking       Thinking       *Eating*       Thinking       *Eating*
+ 47       3       *Filling*      Thinking       *Eating*       Thinking       *Eating*       Thinking       Thinking       Thinking       *Filling*      Thinking
+ 48       3       *Eating*       Thinking       Thinking       Thinking       *Eating*       Thinking       Thinking       Thinking       *Eating*       Thinking
+ 49       2       *Eating*       Waiting        Thinking       Thinking       Thinking       Thinking       *Filling*      Thinking       *Eating*       Thinking
+ 50       1       Thinking       *Filling*      Thinking       Thinking       Thinking       Thinking       *Eating*       Thinking       *Eating*       Waiting
+ 51       0       Thinking       *Eating*       Thinking       *Filling*      Thinking       --Left--       *Eating*       Thinking       *Eating*       --Left--
+ 52       0       Thinking       *Eating*       --Left--       *Eating*       Thinking       --Left--       *Eating*       --Left--       --Left--       --Left--
+ 53       0       --Left--       *Eating*       --Left--       *Eating*       --Left--       --Left--       *Eating*       --Left--       --Left--       --Left--
+ 54       0       --Left--       *Eating*       --Left--       *Eating*       --Left--       --Left--       --Left--       --Left--       --Left--       --Left--
+ 55       0       --Left--       --Left--       --Left--       *Eating*       --Left--       --Left--       --Left--       --Left--       --Left--       --Left--
+ 56       0       --Left--       --Left--       --Left--       --Left--       --Left--       --Left--       --Left--       --Left--       --Left--       --Left--
+
+Servings eaten       5              5              5              6              5              5              5              5              5              4
+
+Process finished with exit code 0

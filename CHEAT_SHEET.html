@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CMPE 202 — Cheat Sheet</title>
+<style>
+/* ── Reset & base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 7.5px;
+  line-height: 1.35;
+  color: #111;
+  background: #fff;
+}
+
+/* ── Page layout: two sides, letter size ── */
+.page {
+  width: 8.5in;
+  height: 11in;
+  padding: 0.28in 0.3in;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto 1fr;
+  column-gap: 6px;
+  overflow: hidden;
+  page-break-after: always;
+}
+.page-header {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #1a3a6b;
+  color: #fff;
+  padding: 3px 8px;
+  border-radius: 3px;
+  margin-bottom: 5px;
+  font-size: 8.5px;
+  font-weight: bold;
+}
+.page-header .right { font-size: 7px; font-weight: normal; opacity: 0.85; }
+
+/* ── Column ── */
+.col { display: flex; flex-direction: column; gap: 4px; }
+
+/* ── Section ── */
+.sec {
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.sec-head {
+  background: #1a3a6b;
+  color: #fff;
+  padding: 2px 6px;
+  font-size: 7.5px;
+  font-weight: bold;
+  letter-spacing: 0.3px;
+}
+.sec-head.green  { background: #1a5c35; }
+.sec-head.purple { background: #4a1a7a; }
+.sec-head.orange { background: #7a3d00; }
+.sec-head.red    { background: #7a1a1a; }
+.sec-body { padding: 4px 6px; }
+
+/* ── Pattern entry ── */
+.pat {
+  margin-bottom: 3px;
+  padding-bottom: 3px;
+  border-bottom: 1px dotted #ddd;
+}
+.pat:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.pat-name { font-weight: bold; color: #1a3a6b; font-size: 7.5px; }
+.pat-tag {
+  display: inline-block;
+  background: #e8edf5;
+  color: #444;
+  border-radius: 2px;
+  padding: 0 3px;
+  font-size: 6.5px;
+  margin-left: 2px;
+  vertical-align: middle;
+}
+.pat-tag.beh { background: #e8f5e9; color: #1a5c35; }
+.pat-tag.str { background: #fff3e0; color: #7a3d00; }
+.pat-tag.cre { background: #f3e8ff; color: #4a1a7a; }
+.pat-desc { color: #333; margin: 1px 0; }
+.pat-rule { color: #555; font-style: italic; }
+
+/* ── Code snippet ── */
+pre {
+  background: #f5f6f7;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  padding: 3px 5px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 6.8px;
+  line-height: 1.4;
+  white-space: pre;
+  overflow: hidden;
+  margin: 2px 0;
+}
+
+/* ── Table ── */
+table { width: 100%; border-collapse: collapse; font-size: 7px; margin: 2px 0; }
+th { background: #1a3a6b; color: #fff; padding: 2px 4px; text-align: left; font-size: 6.8px; }
+td { padding: 2px 4px; border-bottom: 1px solid #e8e8e8; vertical-align: top; }
+tr:nth-child(even) td { background: #f8f8f8; }
+
+/* ── Bullet list ── */
+ul { padding-left: 10px; margin: 2px 0; }
+li { margin: 1px 0; }
+.bad  { color: #900; }
+.good { color: #060; }
+b { color: #1a3a6b; }
+
+/* ── Divider ── */
+.divider { border: none; border-top: 1px solid #ccc; margin: 3px 0; }
+
+/* ── Print ── */
+@media print {
+  body { font-size: 7.5px; }
+  .page { width: 8.5in; height: 11in; padding: 0.22in 0.25in; }
+  pre { font-size: 6.5px; }
+  @page { size: letter; margin: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     PAGE 1 — FRONT
+═══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span>CMPE 202 — Final Exam Cheat Sheet &nbsp;·&nbsp; Spring 2026</span>
+    <span class="right">Instructor: Ronald Mak &nbsp;|&nbsp; Exam: Wed May 13, 5:30–7:30 PM, BBC 130 &nbsp;|&nbsp; PAGE 1 OF 2</span>
+  </div>
+
+  <!-- ── COL 1 ── -->
+  <div class="col">
+
+    <!-- OOP Principles -->
+    <div class="sec">
+      <div class="sec-head orange">OOP DESIGN PRINCIPLES</div>
+      <div class="sec-body">
+        <div class="pat">
+          <div class="pat-name">Single Responsibility Principle (SRP)</div>
+          <div class="pat-desc">A class should have <b>only one reason to change</b>.</div>
+          <div class="pat-rule">Smell: one class does storage + logic + formatting.</div>
+          <div class="pat-rule">Fix: extract a class per responsibility.</div>
+          <div class="pat-rule">Lab: Program2.1 (bad) → Program2.5 (good)</div>
+        </div>
+        <div class="pat">
+          <div class="pat-name">Open-Closed Principle (OCP)</div>
+          <div class="pat-desc"><b>Open for extension, closed for modification.</b></div>
+          <div class="pat-rule">Smell: adding a new type requires editing existing if/switch.</div>
+          <div class="pat-rule">Fix: define abstract interface; add new subclass.</div>
+          <div class="pat-rule">Lab: Program4.1 (bad) → Program4.4 (interface)</div>
+        </div>
+        <div class="pat">
+          <div class="pat-name">Law of Demeter (Least Knowledge)</div>
+          <div class="pat-desc">Only talk to <b>immediate friends</b> — not strangers.</div>
+          <div class="pat-rule">Smell: <span class="bad">a.getB().getC().doThing()</span> — chain of dots.</div>
+          <div class="pat-rule">Fix: <span class="good">a.doThing()</span> — delegate.</div>
+          <div class="pat-rule">Returning raw pointer = exposing internal state.</div>
+          <div class="pat-rule">Fix: return a copy (<code>new Date(*birthdate)</code>).</div>
+          <div class="pat-rule">Lab: Program5.7, 5.8, 5.9</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recursion -->
+    <div class="sec">
+      <div class="sec-head">RECURSION</div>
+      <div class="sec-body">
+        <div class="pat-desc"><b>Base case</b> = smallest input, solved directly. <b>Recursive case</b> = shrink + recurse + combine.</div>
+<pre>
+int largest(vector&lt;int&gt; v) {
+  if (v.size()==1) return v[0];   // base
+  int first = v[0];
+  v.erase(v.begin());
+  return max(first, largest(v));  // recurse
+}
+</pre>
+        <div class="pat-rule"><b>Towers of Hanoi:</b> Move n-1 out of way → move big disk → move n-1 back. Cost = 2ⁿ−1 moves.</div>
+        <div class="pat-rule"><b>Quicksort:</b> Partition around pivot → sort left → sort right. Base: size &lt; 2.</div>
+      </div>
+    </div>
+
+    <!-- Backtracking -->
+    <div class="sec">
+      <div class="sec-head">BACKTRACKING</div>
+      <div class="sec-body">
+        <div class="pat-desc">Recursion + <b>undo step</b>. Try a choice → recurse → undo if it fails.</div>
+<pre>
+// Universal template
+for each candidate:
+  if valid(candidate):
+    apply(candidate)       // PLACE
+    recurse()              // GO DEEPER
+    undo(candidate)        // BACKTRACK
+</pre>
+        <div class="pat-rule"><b>N-Queens:</b> Place queen → recurse to next col → <code>occupied[r][c]=false</code> on return.</div>
+        <div class="pat-rule"><b>Sudoku:</b> Try digits 1–9 → recurse → <code>grid[r][c]=0</code> if all fail → return false.</div>
+      </div>
+    </div>
+
+    <!-- Multithreading -->
+    <div class="sec">
+      <div class="sec-head green">MULTITHREADING</div>
+      <div class="sec-body">
+        <div class="pat-rule"><b>Race condition:</b> Two threads modify shared data with no sync → garbled result.</div>
+        <div class="pat-rule"><b>thread t(fn, arg);</b> then <b>t.join()</b> — always join or program crashes.</div>
+        <hr class="divider">
+        <div class="pat-name">mutex + lock_guard (RAII) ← preferred</div>
+<pre>
+mutex m;
+void fn() {
+  lock_guard&lt;mutex&gt; g(m); // auto-unlock on scope exit
+  /* critical section */
+}
+</pre>
+        <div class="pat-rule"><b>Manual lock/unlock:</b> risky — exception skips unlock → deadlock.</div>
+        <div class="pat-rule"><b>yield():</b> hint to OS to run another thread. NOT a lock. Does not release mutex.</div>
+        <hr class="divider">
+        <div class="pat-name">Reader-Writer: shared_mutex</div>
+<pre>
+shared_mutex m;
+// Writer (exclusive):
+unique_lock&lt;shared_mutex&gt; wl(m);
+// Reader (shared — concurrent OK):
+shared_lock&lt;shared_mutex&gt; rl(m);
+</pre>
+        <hr class="divider">
+        <div class="pat-name">Deadlock — 4 conditions (break any 1 to prevent)</div>
+        <ul>
+          <li>Mutual exclusion</li>
+          <li>Hold and wait</li>
+          <li>No preemption</li>
+          <li>Circular wait ← break this: always acquire locks in fixed order</li>
+        </ul>
+        <div class="pat-rule"><b>Producer-Consumer:</b> mutex-protected queue; check is_full before push, is_empty before pop.</div>
+        <div class="pat-rule"><b>atomic&lt;T&gt;:</b> thread-safe read/write without a mutex (used in DiningPhilosophers).</div>
+      </div>
+    </div>
+
+  </div><!-- end col1 -->
+
+  <!-- ── COL 2 ── -->
+  <div class="col">
+
+    <!-- Behavioral Patterns -->
+    <div class="sec">
+      <div class="sec-head purple">BEHAVIORAL PATTERNS</div>
+      <div class="sec-body">
+
+        <div class="pat">
+          <div class="pat-name">Template Method <span class="pat-tag beh">Behavioral</span> · Inheritance</div>
+          <div class="pat-desc">Base class defines <b>fixed algorithm sequence</b>. Pure virtual steps = subclasses fill in.</div>
+          <div class="pat-rule">Concrete steps (header/footer) same for all. Abstract steps (acquire/analyze/print) vary.</div>
+          <div class="pat-rule">vs Strategy: Template Method = inheritance, can't swap at runtime. Strategy = composition, can.</div>
+<pre>
+class GameReport {
+  void generate() {     // fixed skeleton
+    print_header();     // concrete
+    acquire_data();     // pure virtual
+    analyze_data();     // pure virtual
+    print_report();     // pure virtual
+    print_footer();     // concrete
+  }
+};
+</pre>
+          <div class="pat-rule">Lab: Program8.2</div>
+        </div>
+
+        <div class="pat">
+          <div class="pat-name">Strategy <span class="pat-tag beh">Behavioral</span> · Composition</div>
+          <div class="pat-desc">Context holds a <b>pointer to strategy interface</b>. Algorithm swappable at runtime.</div>
+          <div class="pat-rule">Add new algorithm = new strategy class. No change to context.</div>
+<pre>
+class Sport {
+  PlayerStrategy* ps;
+  VenueStrategy*  vs;
+  void set_player_strategy(PlayerStrategy* s)
+    { ps = s; } // runtime swap
+  string recruit() { return ps-&gt;strategy(); }
+};
+</pre>
+          <div class="pat-rule">Lab: Program8.4</div>
+        </div>
+
+        <div class="pat">
+          <div class="pat-name">Observer <span class="pat-tag beh">Behavioral</span></div>
+          <div class="pat-desc">Subject notifies all registered Observers when state changes. 1-to-many. Observers are decoupled.</div>
+          <div class="pat-rule"><b>attach / detach / notify</b> in Subject. <b>update()</b> in Observer.</div>
+          <div class="pat-rule"><b>Push:</b> subject sends data in update() args. <b>Pull:</b> observer queries subject after notification.</div>
+<pre>
+class Subject {
+  vector&lt;Observer*&gt; obs;
+  void notify(...) {
+    for(auto* o:obs) o-&gt;update(...);
+  }
+};
+</pre>
+          <div class="pat-rule">Lab: Program12.2</div>
+        </div>
+
+        <div class="pat">
+          <div class="pat-name">State <span class="pat-tag beh">Behavioral</span></div>
+          <div class="pat-desc">Object delegates all behavior to current <b>State object</b>. State transitions return the next state.</div>
+          <div class="pat-rule">Replaces giant switch(state) in every method. Each state class is self-contained.</div>
+<pre>
+class TicketMachine {
+  State* current = new READY();
+  void insert_card() {
+    current = current-&gt;insert_card();
+  } // current state decides what happens
+};
+class READY : public State {
+  State* insert_card() override {
+    return new VALIDATING(); // transition
+  }
+};
+</pre>
+          <div class="pat-rule">Lab: Program13.2</div>
+        </div>
+
+        <div class="pat">
+          <div class="pat-name">Iterator <span class="pat-tag beh">Behavioral</span></div>
+          <div class="pat-desc">Uniform <b>has_next() / next()</b> interface over any collection type (array, vector, map).</div>
+          <div class="pat-rule">Client traversal code never changes regardless of collection type.</div>
+          <div class="pat-rule">Lab: Program11.2</div>
+        </div>
+
+        <div class="pat">
+          <div class="pat-name">Visitor <span class="pat-tag beh">Behavioral</span></div>
+          <div class="pat-desc">Add operations to stable class hierarchy without modifying it. New operation = new Visitor class.</div>
+          <div class="pat-rule"><b>Double dispatch:</b> node.accept(v) → v.visit_NodeType(this).</div>
+          <div class="pat-rule">Use when: hierarchy stable, operations change often. Don't use when: hierarchy changes often.</div>
+          <div class="pat-rule">Lab: Program11.4</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- end col2 -->
+
+  <!-- ── COL 3 ── -->
+  <div class="col">
+
+    <!-- Structural Patterns -->
+    <div class="sec">
+      <div class="sec-head purple">STRUCTURAL PATTERNS</div>
+      <div class="sec-body">
+
+        <div class="pat">
+          <div class="pat-name">Adapter <span class="pat-tag str">Structural</span></div>
+          <div class="pat-desc">Converts one interface to another. Wraps an incompatible object.</div>
+          <div class="pat-rule">Inner adapter class inherits expected interface, wraps the foreign object, translates method calls.</div>
+<pre>
+class ConvertedData : public AttendanceData {
+  ConvertedData(FootballInfo* f);
+  int get_attendance() override
+    { return f-&gt;get_fans(); } // translate
+};
+</pre>
+          <div class="pat-rule">Lab: Program10.2 · vs Decorator: Adapter changes interface, Decorator adds behavior.</div>
+        </div>
+
+        <div class="pat">
+          <div class="pat-name">Facade <span class="pat-tag str">Structural</span></div>
+          <div class="pat-desc">Single simplified entry point to a complex subsystem.</div>
+          <div class="pat-rule">Client only knows the Facade. Subsystem classes are hidden.</div>
+<pre>
+class FundRaiser {           // Facade
+  void do_fund_raising() {
+    Alumni a;    a.send_solicitations();
+    BoosterClubs b; b.schedule_meetings();
+    Students s;  s.collect_fees();
+  }
+};
+</pre>
+          <div class="pat-rule">Lab: Program10.5</div>
+        </div>
+
+        <div class="pat">
+          <div class="pat-name">Composite <span class="pat-tag str">Structural</span></div>
+          <div class="pat-desc">Tree of leaf + group objects. Client uses <b>uniform interface</b> on both.</div>
+          <div class="pat-rule">Group's get_cost() recursively sums children. Client doesn't know if it's a leaf or tree.</div>
+<pre>
+class ProvisionItem { virtual double get_cost()=0; };
+class ProvisionGroup : public ProvisionItem {
+  vector&lt;ProvisionItem*&gt; children;
+  double get_cost() override {
+    double t=0;
+    for(auto* c:children) t+=c-&gt;get_cost();
+    return t; // recursive sum
+  }
+};
+</pre>
+          <div class="pat-rule">Lab: Program14.4</div>
+        </div>
+
+        <div class="pat">
+          <div class="pat-name">Decorator <span class="pat-tag str">Structural</span></div>
+          <div class="pat-desc">Adds behavior dynamically by wrapping. <b>Inherits AND holds</b> same base type → enables chaining.</div>
+          <div class="pat-rule">vs Subclassing: N features × M base types = N+M classes (not N×M subclasses).</div>
+<pre>
+class Decorator : public Ticket { // inherits
+  Ticket* wrapped;                // holds same type
+  double get_cost() override {
+    return my_price + wrapped-&gt;get_cost();
+  }
+};
+Ticket* t = new VIP(new Party(new BaseTicket()));
+</pre>
+          <div class="pat-rule">Lab: Program14.6</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Creational Patterns -->
+    <div class="sec">
+      <div class="sec-head purple">CREATIONAL PATTERNS</div>
+      <div class="sec-body">
+
+        <div class="pat">
+          <div class="pat-name">Factory Method <span class="pat-tag cre">Creational</span></div>
+          <div class="pat-desc">Creator defines virtual <b>create_X()</b>. Subclass overrides to instantiate the right product. Caller never names concrete class.</div>
+<pre>
+// Form 1 — static
+static Toy* make(Kind k) { switch(k) { ... } }
+
+// Form 2 — virtual
+class AthleticsDept {
+  virtual Sport* create_sport(Type) = 0; // factory method
+};
+class VarsityDept : public AthleticsDept {
+  Sport* create_sport(Type t) override { return new VarsitySport(t); }
+};
+</pre>
+          <div class="pat-rule">Lab: Program7.7, Program9.2</div>
+        </div>
+
+        <div class="pat">
+          <div class="pat-name">Abstract Factory <span class="pat-tag cre">Creational</span></div>
+          <div class="pat-desc">Creates a <b>family of related objects</b>. Swap factory = swap entire family.</div>
+          <div class="pat-rule">vs Factory Method: one product vs whole family. Abstract Factory has multiple make_X() methods.</div>
+<pre>
+class ProvisionsFactory {
+  virtual PlayerStrategy* make_players(Type)=0;
+  virtual VenueStrategy*  make_venue()=0;
+};
+// VarsityFactory → DraftPlayers + Stadium
+// IntramuralFactory → OpenTryouts + Gym
+</pre>
+          <div class="pat-rule">Lab: Program9.3</div>
+        </div>
+
+        <div class="pat">
+          <div class="pat-name">Singleton <span class="pat-tag cre">Creational</span></div>
+          <div class="pat-desc">Exactly <b>one instance</b>. Private constructor. Static get_instance(). Delete copy/assign.</div>
+<pre>
+class Logger {
+public:
+  static Logger&amp; get_instance() {
+    static Logger inst; // created once
+    return inst;
+  }
+  Logger(const Logger&amp;) = delete;
+  Logger&amp; operator=(const Logger&amp;) = delete;
+private:
+  Logger() {}
+};
+</pre>
+          <div class="pat-rule">Lab: Program14.1</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- end col3 -->
+
+</div><!-- end page 1 -->
+
+<!-- ═══════════════════════════════════════════════
+     PAGE 2 — BACK
+═══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span>CMPE 202 — Final Exam Cheat Sheet &nbsp;·&nbsp; Spring 2026</span>
+    <span class="right">Three design problems + MCQ &nbsp;|&nbsp; No programming &nbsp;|&nbsp; Closed book &nbsp;|&nbsp; PAGE 2 OF 2</span>
+  </div>
+
+  <!-- ── COL 1 ── -->
+  <div class="col">
+
+    <!-- Pattern selection guide -->
+    <div class="sec">
+      <div class="sec-head">HOW TO IDENTIFY THE RIGHT PATTERN</div>
+      <div class="sec-body">
+        <table>
+          <tr><th>If the problem says…</th><th>Use…</th></tr>
+          <tr><td>"same steps, different implementations"</td><td>Template Method</td></tr>
+          <tr><td>"swap algorithms at runtime"</td><td>Strategy</td></tr>
+          <tr><td>"notify multiple objects on change"</td><td>Observer</td></tr>
+          <tr><td>"object behavior changes per state"</td><td>State</td></tr>
+          <tr><td>"traverse without knowing collection type"</td><td>Iterator</td></tr>
+          <tr><td>"new operation, don't touch classes"</td><td>Visitor</td></tr>
+          <tr><td>"incompatible interfaces, can't modify either"</td><td>Adapter</td></tr>
+          <tr><td>"hide complexity of many subsystems"</td><td>Facade</td></tr>
+          <tr><td>"part-whole tree, uniform interface"</td><td>Composite</td></tr>
+          <tr><td>"add features dynamically, avoid subclass explosion"</td><td>Decorator</td></tr>
+          <tr><td>"centralize object creation, hide class names"</td><td>Factory Method</td></tr>
+          <tr><td>"create families of related objects together"</td><td>Abstract Factory</td></tr>
+          <tr><td>"only one instance ever"</td><td>Singleton</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Pattern comparison -->
+    <div class="sec">
+      <div class="sec-head">EASILY CONFUSED PATTERNS</div>
+      <div class="sec-body">
+        <div class="pat">
+          <div class="pat-name">Template Method vs Strategy</div>
+          <ul>
+            <li>TM: uses <b>inheritance</b>. Skeleton fixed at compile time.</li>
+            <li>Strategy: uses <b>composition</b>. Swappable at runtime.</li>
+            <li>TM: subclass overrides steps. Strategy: inject strategy object.</li>
+          </ul>
+        </div>
+        <div class="pat">
+          <div class="pat-name">Factory Method vs Abstract Factory</div>
+          <ul>
+            <li>FM: <b>one product</b>, one virtual create_X().</li>
+            <li>AF: <b>family of products</b>, multiple factory methods in one factory object.</li>
+            <li>AF: swap factory → swap entire product family consistently.</li>
+          </ul>
+        </div>
+        <div class="pat">
+          <div class="pat-name">Adapter vs Decorator</div>
+          <ul>
+            <li>Adapter: <b>changes interface</b> to match expected. Wraps incompatible object.</li>
+            <li>Decorator: <b>adds behavior</b>. Same interface in and out. Chainable.</li>
+            <li>Decorator: inherits AND holds same base type.</li>
+          </ul>
+        </div>
+        <div class="pat">
+          <div class="pat-name">Composite vs Decorator</div>
+          <ul>
+            <li>Composite: <b>tree</b>, 0-to-many children, aggregation.</li>
+            <li>Decorator: <b>chain</b>, exactly one wrapped object, adds behavior.</li>
+          </ul>
+        </div>
+        <div class="pat">
+          <div class="pat-name">Observer vs State</div>
+          <ul>
+            <li>Observer: external listeners notified of subject's change.</li>
+            <li>State: object's OWN behavior changes based on internal state.</li>
+          </ul>
+        </div>
+        <div class="pat">
+          <div class="pat-name">Visitor vs Iterator</div>
+          <ul>
+            <li>Iterator: <b>traversal</b> only — has_next/next.</li>
+            <li>Visitor: <b>operations</b> on each element — type-specific behavior.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end col1 -->
+
+  <!-- ── COL 2 ── -->
+  <div class="col">
+
+    <!-- UML / Design Problem tips -->
+    <div class="sec">
+      <div class="sec-head orange">DESIGN PROBLEM APPROACH</div>
+      <div class="sec-body">
+        <div class="pat-name">Step 1 — Identify the problem type</div>
+        <ul>
+          <li>Is there duplicated logic across classes? → Template Method or Strategy</li>
+          <li>Does adding a new type require editing existing code? → OCP violation → Factory or interface</li>
+          <li>Does one class do too many things? → SRP violation</li>
+          <li>Is there a chain of method calls? → Demeter violation</li>
+          <li>Does object behavior depend on internal state? → State pattern</li>
+          <li>Do multiple objects need to react to one object's changes? → Observer</li>
+          <li>Are features being added via flags/conditionals? → Decorator</li>
+          <li>Is there a complex subsystem the client shouldn't see? → Facade</li>
+          <li>Are two incompatible interfaces involved? → Adapter</li>
+        </ul>
+        <div class="pat-name" style="margin-top:4px;">Step 2 — Draw the class hierarchy</div>
+        <ul>
+          <li>Abstract base = defines the interface / skeleton</li>
+          <li>Concrete classes = the implementations</li>
+          <li>Composition (has-a) vs Inheritance (is-a)</li>
+          <li>Composition preferred for flexibility (Strategy, Observer, Decorator)</li>
+        </ul>
+        <div class="pat-name" style="margin-top:4px;">Step 3 — State which principle is satisfied</div>
+        <ul>
+          <li>Factory + interface → OCP (extend without modify)</li>
+          <li>Extracted class → SRP</li>
+          <li>Delegate instead of chain → Law of Demeter</li>
+          <li>Composition over inheritance → flexible, testable</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Modern C++ -->
+    <div class="sec">
+      <div class="sec-head">MODERN C++ QUICK REF</div>
+      <div class="sec-body">
+        <div class="pat">
+          <div class="pat-name">Lambda Expressions</div>
+<pre>
+// [capture](params) -&gt; return { body }
+auto f = [](int x) { return x * 2; };
+// Capture local var:
+int n = 5;
+auto g = [n](int x) { return x + n; };  // by value
+auto h = [&amp;n](int x){ n += x; };        // by reference
+// With STL:
+sort(v.begin(), v.end(), [](int a,int b){ return a&lt;b; });
+</pre>
+          <div class="pat-rule"><b>[]</b>=nothing <b>[=]</b>=all by val <b>[&amp;]</b>=all by ref</div>
+        </div>
+        <div class="pat">
+          <div class="pat-name">Functor — overloads operator()</div>
+<pre>
+class RandomInt {
+  int min, max;
+public:
+  RandomInt(int a, int b):min(a),max(b){}
+  int operator()() {            // callable like fn
+    return min + rand()%(max-min+1);
+  }
+};
+RandomInt roll(1,6);
+cout &lt;&lt; roll();  // uses operator()
+</pre>
+        </div>
+        <div class="pat">
+          <div class="pat-name">unique_ptr — exclusive ownership</div>
+<pre>
+auto p1 = make_unique&lt;Date&gt;(2024,1,1);
+// auto p2 = p1;          // ERROR — no copy
+auto p2 = move(p1);       // transfer; p1=nullptr
+// p2 destroyed → Date deleted automatically
+</pre>
+        </div>
+        <div class="pat">
+          <div class="pat-name">shared_ptr — shared ownership (ref count)</div>
+<pre>
+auto p1 = make_shared&lt;Date&gt;(2024,1,1); // rc=1
+shared_ptr&lt;Date&gt; p2 = p1;              // rc=2
+p1.reset();  // rc=1; object still alive
+p2.reset();  // rc=0; Date deleted
+</pre>
+          <div class="pat-rule">unique_ptr: zero overhead, move-only. shared_ptr: ref count, copyable.</div>
+        </div>
+        <div class="pat">
+          <div class="pat-name">Move Semantics</div>
+<pre>
+string a = "Hello";
+string b = move(a);  // b owns data; a is empty
+v.push_back(move(s));// no copy — O(1) transfer
+</pre>
+          <div class="pat-rule">After move: source is valid but unspecified (don't read it).</div>
+          <div class="pat-rule"><b>Rule of Five:</b> if you define destructor → also define copy ctor, copy assign, move ctor, move assign.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end col2 -->
+
+  <!-- ── COL 3 ── -->
+  <div class="col">
+
+    <!-- Patterns structure reference -->
+    <div class="sec">
+      <div class="sec-head purple">STRUCTURAL SIGNATURES (for design problems)</div>
+      <div class="sec-body">
+        <table>
+          <tr><th>Pattern</th><th>Key structural signature</th></tr>
+          <tr><td><b>Template Method</b></td><td>Abstract base has non-virtual template method that calls pure virtual steps</td></tr>
+          <tr><td><b>Strategy</b></td><td>Context holds Strategy* field; set_strategy() method; delegates to strategy-&gt;do_it()</td></tr>
+          <tr><td><b>Observer</b></td><td>Subject has vector&lt;Observer*&gt;; attach/detach/notify; Observer has update()</td></tr>
+          <tr><td><b>State</b></td><td>Context holds State*; action methods do: state = state-&gt;action(). State methods return next State*</td></tr>
+          <tr><td><b>Iterator</b></td><td>Abstract: has_next()+next(). Concrete per collection type. Client uses only abstract interface</td></tr>
+          <tr><td><b>Visitor</b></td><td>Node::accept(Visitor&amp;) calls v.visit_NodeType(this). Visitor has one visit_X() per node type</td></tr>
+          <tr><td><b>Adapter</b></td><td>Inherits expected interface; holds reference to incompatible object; translates method calls</td></tr>
+          <tr><td><b>Facade</b></td><td>One class, one or few public methods; creates + coordinates all subsystem objects internally</td></tr>
+          <tr><td><b>Composite</b></td><td>Component base; Leaf (no children); Composite has vector&lt;Component*&gt; + add(). Both inherit same base</td></tr>
+          <tr><td><b>Decorator</b></td><td>Inherits AND holds Component*. Overrides with: return my_val + wrapped-&gt;method()</td></tr>
+          <tr><td><b>Factory Method</b></td><td>Creator base has pure virtual create_X(). Subclass overrides to return concrete product</td></tr>
+          <tr><td><b>Abstract Factory</b></td><td>Factory base has multiple make_A(), make_B(). Concrete factory returns consistent family</td></tr>
+          <tr><td><b>Singleton</b></td><td>Private constructor. Static get_instance() returns static local instance. Delete copy/assign</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Pattern categories summary -->
+    <div class="sec">
+      <div class="sec-head">ALL 13 PATTERNS — CATEGORY SUMMARY</div>
+      <div class="sec-body">
+        <table>
+          <tr><th>Pattern</th><th>Cat</th><th>Core idea (one line)</th></tr>
+          <tr><td>Template Method</td><td>Beh</td><td>Fixed skeleton, variable steps via inheritance</td></tr>
+          <tr><td>Strategy</td><td>Beh</td><td>Swappable algorithm via composition</td></tr>
+          <tr><td>Observer</td><td>Beh</td><td>1→many notification on state change</td></tr>
+          <tr><td>State</td><td>Beh</td><td>Delegate behavior to current state object</td></tr>
+          <tr><td>Iterator</td><td>Beh</td><td>has_next/next over any collection</td></tr>
+          <tr><td>Visitor</td><td>Beh</td><td>New ops without modifying hierarchy</td></tr>
+          <tr><td>Adapter</td><td>Str</td><td>Interface conversion for incompatible types</td></tr>
+          <tr><td>Facade</td><td>Str</td><td>Simple front door to complex subsystem</td></tr>
+          <tr><td>Composite</td><td>Str</td><td>Leaf+group tree, uniform interface</td></tr>
+          <tr><td>Decorator</td><td>Str</td><td>Wrap to add behavior dynamically</td></tr>
+          <tr><td>Factory Method</td><td>Cre</td><td>Subclass decides what to instantiate</td></tr>
+          <tr><td>Abstract Factory</td><td>Cre</td><td>Create a consistent product family</td></tr>
+          <tr><td>Singleton</td><td>Cre</td><td>One instance, global access point</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Threading summary -->
+    <div class="sec">
+      <div class="sec-head green">THREADING SUMMARY</div>
+      <div class="sec-body">
+        <table>
+          <tr><th>Need</th><th>Use</th></tr>
+          <tr><td>Protect critical section</td><td><code>lock_guard&lt;mutex&gt;</code> (RAII)</td></tr>
+          <tr><td>Multiple concurrent readers</td><td><code>shared_lock&lt;shared_mutex&gt;</code></td></tr>
+          <tr><td>Exclusive write</td><td><code>unique_lock&lt;shared_mutex&gt;</code></td></tr>
+          <tr><td>Thread-safe primitive</td><td><code>atomic&lt;T&gt;</code></td></tr>
+          <tr><td>Sleep until condition met</td><td><code>condition_variable</code></td></tr>
+          <tr><td>Voluntary CPU release</td><td><code>this_thread::yield()</code></td></tr>
+        </table>
+        <div class="pat-rule" style="margin-top:3px;"><b>Deadlock prevention:</b> Always acquire mutexes in the same global order across all threads.</div>
+        <div class="pat-rule"><b>lock_guard vs manual:</b> lock_guard auto-releases even on exception. Manual unlock can be skipped.</div>
+      </div>
+    </div>
+
+    <!-- Labs index -->
+    <div class="sec">
+      <div class="sec-head">LAB INDEX</div>
+      <div class="sec-body">
+        <table>
+          <tr><th>Lab</th><th>Concept</th></tr>
+          <tr><td>15.1–15.8</td><td>Recursion, Backtracking</td></tr>
+          <tr><td>16.1–16.4 + DiningPhil</td><td>Threading (race, mutex, RW, PC, deadlock)</td></tr>
+          <tr><td>2.1–2.5</td><td>SRP (Books)</td></tr>
+          <tr><td>4.1–4.4</td><td>OCP (Vehicles)</td></tr>
+          <tr><td>5.7–5.9</td><td>Law of Demeter</td></tr>
+          <tr><td>8.1–8.2</td><td>Template Method (Reports)</td></tr>
+          <tr><td>8.3–8.4</td><td>Strategy (Sports)</td></tr>
+          <tr><td>9.2</td><td>Factory Method</td></tr>
+          <tr><td>9.3</td><td>Abstract Factory</td></tr>
+          <tr><td>10.2</td><td>Adapter (Fans)</td></tr>
+          <tr><td>10.5</td><td>Facade (Funds)</td></tr>
+          <tr><td>11.2</td><td>Iterator (Players)</td></tr>
+          <tr><td>11.4</td><td>Visitor (Results)</td></tr>
+          <tr><td>12.2</td><td>Observer (Stats)</td></tr>
+          <tr><td>13.2</td><td>State (TicketMachine)</td></tr>
+          <tr><td>14.1</td><td>Singleton (ExecPass)</td></tr>
+          <tr><td>14.4</td><td>Composite (CostReport)</td></tr>
+          <tr><td>14.6</td><td>Decorator (Enhanced)</td></tr>
+          <tr><td>Lambda-1–3</td><td>Lambdas + STL</td></tr>
+          <tr><td>Functor-*</td><td>Functors</td></tr>
+          <tr><td>Smart*Pointer</td><td>unique_ptr, shared_ptr</td></tr>
+          <tr><td>MoveSemantics-*</td><td>Move semantics</td></tr>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- end col3 -->
+
+</div><!-- end page 2 -->
+
+</body>
+</html>

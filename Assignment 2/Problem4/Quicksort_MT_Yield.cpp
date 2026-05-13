@@ -23,7 +23,10 @@
  * - Completion is detected when subarray_stack is empty and active_workers == 0.
  *
  * Yielding strategy:
- * - After a worker thread partitions a subarray and pushes new tasks, it yields to allow
+ * - After a worker thread partitions a subarray and pushes new tasks onto the stack,
+ *   it calls std::this_thread::yield() to surrender its time slice.
+ * - This gives other waiting threads a chance to wake up and grab the newly available work,
+ *   potentially improving work distribution and reducing contention.
  */
 
 void Quicksort_MT_Yield::swap_values_at(const int index1, const int index2)
@@ -73,6 +76,7 @@ void Quicksort_MT_Yield::worker_thread()
         int right = -1;
 
         {
+            // Measure time to acquire the lock.
             auto lock_start = clk::now();
             std::unique_lock<std::mutex> lock(mtx);
             auto lock_end = clk::now();
@@ -104,6 +108,7 @@ void Quicksort_MT_Yield::worker_thread()
             bool pushed_any = false;
             bool done_set = false;
 
+            // Measure time to acquire the lock after partitioning.
             auto lock_start = clk::now();
             std::unique_lock<std::mutex> lock(mtx);
             auto lock_end = clk::now();
@@ -146,6 +151,7 @@ void Quicksort_MT_Yield::worker_thread()
                                       lock_end - lock_start).count();
 
             --active_workers;
+
             if (subarray_stack.empty() && active_workers == 0)
             {
                 done = true;

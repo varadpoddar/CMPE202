@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CMPE 202 — Final Exam Study Guide</title>
+<style>
+/* ── Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --blue:   #1a4f8a;
+  --green:  #1a6b3a;
+  --red:    #8a1a1a;
+  --purple: #5a1a8a;
+  --orange: #8a4a1a;
+  --bg-code:#f4f6f8;
+  --border: #d0d7de;
+  --text:   #1a1a1a;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text);
+  background: #fff;
+  padding: 20px 30px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* ── Cover ── */
+.cover {
+  text-align: center;
+  padding: 30px 0 20px;
+  border-bottom: 3px solid var(--blue);
+  margin-bottom: 24px;
+}
+.cover h1 { font-size: 26px; color: var(--blue); }
+.cover .sub { font-size: 15px; margin-top: 6px; color: #444; }
+.cover .exam-box {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 8px 24px;
+  background: #fff3cd;
+  border: 2px solid #f0ad4e;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #7a5000;
+}
+
+/* ── TOC ── */
+.toc {
+  background: #f8f9fa;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin-bottom: 28px;
+  column-count: 2;
+  column-gap: 30px;
+}
+.toc h2 { font-size: 14px; color: var(--blue); margin-bottom: 10px; column-span: all; }
+.toc ol { padding-left: 18px; font-size: 12px; }
+.toc li { margin: 3px 0; }
+.toc a { color: var(--blue); text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+
+/* ── Section headings ── */
+h2.section {
+  font-size: 17px;
+  color: #fff;
+  background: var(--blue);
+  padding: 8px 14px;
+  border-radius: 4px;
+  margin: 28px 0 14px;
+}
+h2.section.green  { background: var(--green); }
+h2.section.red    { background: var(--red); }
+h2.section.purple { background: var(--purple); }
+h2.section.orange { background: var(--orange); }
+
+h3.concept {
+  font-size: 14px;
+  color: var(--blue);
+  border-left: 4px solid var(--blue);
+  padding-left: 10px;
+  margin: 20px 0 8px;
+}
+h3.concept.green  { color: var(--green);  border-color: var(--green); }
+h3.concept.red    { color: var(--red);    border-color: var(--red); }
+h3.concept.purple { color: var(--purple); border-color: var(--purple); }
+h3.concept.orange { color: var(--orange); border-color: var(--orange); }
+
+/* ── Explanation boxes ── */
+.explain {
+  background: #f0f4ff;
+  border-left: 4px solid var(--blue);
+  padding: 10px 14px;
+  margin: 8px 0;
+  border-radius: 0 4px 4px 0;
+  font-size: 12.5px;
+}
+.explain.green  { background: #f0fff4; border-color: var(--green); }
+.explain.orange { background: #fff8f0; border-color: var(--orange); }
+.explain.red    { background: #fff0f0; border-color: var(--red); }
+.explain.purple { background: #f8f0ff; border-color: var(--purple); }
+
+.explain strong { display: block; margin-bottom: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #555; }
+
+/* ── Code blocks ── */
+pre {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 12px 14px;
+  font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", Menlo, monospace;
+  font-size: 11.5px;
+  line-height: 1.5;
+  overflow-x: auto;
+  margin: 8px 0;
+  white-space: pre;
+}
+code { font-family: inherit; font-size: 11.5px; }
+.good-label { color: var(--green); font-weight: bold; }
+.bad-label  { color: var(--red);   font-weight: bold; }
+
+/* ── Two-column code comparison ── */
+.compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 8px 0;
+}
+.compare .col-label {
+  font-size: 11px;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 3px 3px 0 0;
+  margin-bottom: -1px;
+}
+.col-bad  .col-label { background: #fdd; color: var(--red); }
+.col-good .col-label { background: #dfd; color: var(--green); }
+.col-bad  pre { border-top: 2px solid var(--red); }
+.col-good pre { border-top: 2px solid var(--green); }
+
+/* ── Key rules / bullets ── */
+ul.rules { margin: 8px 0 8px 18px; font-size: 12.5px; }
+ul.rules li { margin: 4px 0; }
+ul.rules li::marker { color: var(--blue); }
+
+/* ── Tables ── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin: 10px 0;
+}
+th {
+  background: var(--blue);
+  color: #fff;
+  padding: 6px 10px;
+  text-align: left;
+}
+td { padding: 5px 10px; border-bottom: 1px solid var(--border); }
+tr:nth-child(even) td { background: #f8f9fa; }
+
+/* ── Quick-ref card ── */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 10px 0;
+}
+.card {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 11.5px;
+}
+.card h4 { font-size: 12px; color: var(--blue); margin-bottom: 6px; }
+.card ul { padding-left: 14px; }
+.card li { margin: 2px 0; }
+
+/* ── Tip boxes ── */
+.tip {
+  background: #e8f5e9;
+  border: 1px solid #a5d6a7;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 12px;
+  margin: 8px 0;
+}
+.tip::before { content: "💡 Tip: "; font-weight: bold; }
+.warn {
+  background: #fff3e0;
+  border: 1px solid #ffcc80;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 12px;
+  margin: 8px 0;
+}
+.warn::before { content: "⚠ Watch out: "; font-weight: bold; }
+
+/* ── Print ── */
+@media print {
+  body { padding: 10px 16px; font-size: 11px; max-width: 100%; }
+  .cover { padding: 16px 0 10px; }
+  .cover h1 { font-size: 20px; }
+  h2.section { font-size: 13px; padding: 5px 10px; margin: 18px 0 8px; }
+  h3.concept { font-size: 12px; margin: 12px 0 5px; }
+  pre { font-size: 10px; padding: 8px 10px; }
+  .toc { column-count: 3; font-size: 10px; }
+  .compare { grid-template-columns: 1fr 1fr; }
+  .card-grid { grid-template-columns: repeat(3,1fr); }
+  /* Page breaks */
+  h2.section { page-break-before: always; }
+  h2.section:first-of-type { page-break-before: avoid; }
+  .cover { page-break-after: always; }
+  .toc  { page-break-after: always; }
+  pre, .compare, table, .explain { page-break-inside: avoid; }
+  a { color: inherit; text-decoration: none; }
+  .tip, .warn { border-width: 1px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════
+     COVER
+═══════════════════════════════════════════════════ -->
+<div class="cover">
+  <h1>CMPE 202 — Software Systems Engineering</h1>
+  <div class="sub">Instructor: Ronald Mak &nbsp;|&nbsp; San José State University &nbsp;|&nbsp; Spring 2026</div>
+  <div class="exam-box">FINAL EXAM &nbsp;·&nbsp; Wednesday, May 13 2026 &nbsp;·&nbsp; 5:30 PM &nbsp;·&nbsp; BBC 130</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     TABLE OF CONTENTS
+═══════════════════════════════════════════════════ -->
+<div class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#s1">Recursion</a></li>
+    <li><a href="#s2">Backtracking</a></li>
+    <li><a href="#s3">Multithreading &amp; Race Conditions</a></li>
+    <li><a href="#s4">Mutex &amp; lock_guard (RAII)</a></li>
+    <li><a href="#s5">Thread Yielding</a></li>
+    <li><a href="#s6">Reader-Writer Lock</a></li>
+    <li><a href="#s7">Producer-Consumer</a></li>
+    <li><a href="#s8">Dining Philosophers / Deadlock</a></li>
+    <li><a href="#s9">Single Responsibility Principle</a></li>
+    <li><a href="#s10">Open-Closed Principle</a></li>
+    <li><a href="#s11">Law of Demeter</a></li>
+    <li><a href="#s12">Template Method Pattern</a></li>
+    <li><a href="#s13">Strategy Pattern</a></li>
+    <li><a href="#s14">Factory Method Pattern</a></li>
+    <li><a href="#s15">Abstract Factory Pattern</a></li>
+    <li><a href="#s16">Adapter Pattern</a></li>
+    <li><a href="#s17">Facade Pattern</a></li>
+    <li><a href="#s18">Iterator Pattern</a></li>
+    <li><a href="#s19">Visitor Pattern</a></li>
+    <li><a href="#s20">Observer Pattern</a></li>
+    <li><a href="#s21">State Pattern</a></li>
+    <li><a href="#s22">Singleton Pattern</a></li>
+    <li><a href="#s23">Composite Pattern</a></li>
+    <li><a href="#s24">Decorator Pattern</a></li>
+    <li><a href="#s25">Lambda Expressions</a></li>
+    <li><a href="#s26">Functors</a></li>
+    <li><a href="#s27">unique_ptr</a></li>
+    <li><a href="#s28">shared_ptr</a></li>
+    <li><a href="#s29">Move Semantics</a></li>
+    <li><a href="#ref">Quick-Reference Tables</a></li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 1 — RECURSION
+═══════════════════════════════════════════════════ -->
+<h2 class="section" id="s1">1. Recursion</h2>
+
+<div class="explain">
+  <strong>What it is</strong>
+  A function solves a problem by calling <em>itself</em> on a smaller version of the same problem. Every recursive solution has exactly two parts: a <strong>base case</strong> (the smallest input you can solve directly, no further recursion needed) and a <strong>recursive case</strong> (break the problem into something smaller, recurse, combine the results).
+</div>
+
+<div class="explain green">
+  <strong>Why use it</strong>
+  Some problems are naturally self-similar — a tree is a node with subtrees, a factorial is n times factorial(n-1), a sorted array is a pivot plus two sorted halves. Writing these recursively mirrors the definition exactly. The alternative iterative version often requires an explicit stack and is harder to read.
+</div>
+
+<div class="explain orange">
+  <strong>The danger</strong>
+  Each recursive call adds a <em>stack frame</em>. Recurse too deeply (e.g., on a 100,000-element list) and you get a stack overflow. Also, exponential recursion (like naïve Fibonacci) recomputes the same sub-problems — use memoization or iteration for those.
+</div>
+
+<h3 class="concept">Pattern to memorize</h3>
+<pre>
+ReturnType solve(Input x) {
+    if (x is the simplest case)   // BASE CASE — no recursion
+        return direct_answer;
+    // RECURSIVE CASE — smaller problem + combine
+    return combine(something, solve(make_smaller(x)));
+}
+</pre>
+
+<h3 class="concept">Find the largest — Program15.1</h3>
+<pre>
+int largest(vector&lt;int&gt; v) {
+    if (v.size() == 1) return v[0];        // BASE: only one element left
+    int first = v[0];
+    v.erase(v.begin());                    // shrink the problem
+    int rest  = largest(v);               // recurse on the rest
+    return first &gt; rest ? first : rest;   // combine
+}
+</pre>
+
+<h3 class="concept">Tower of Hanoi — Program15.3</h3>
+<div class="explain">
+  <strong>The insight</strong>
+  To move N disks from source to destination: (1) move the top N-1 out of the way onto the temporary peg, (2) move the big disk directly to destination, (3) move the N-1 back on top. The base case is N=1 — just move it directly. Each call reduces N by 1, so it terminates. Total moves = 2ᴺ − 1.
+</div>
+<pre>
+void solve(int n, char src, char tmp, char dst) {
+    if (n == 1) {                         // BASE: move one disk directly
+        cout &lt;&lt; src &lt;&lt; " ==> " &lt;&lt; dst &lt;&lt; endl;
+        return;
+    }
+    solve(n-1, src, dst, tmp);            // Step 1: move n-1 out of the way
+    solve(1,   src, tmp, dst);            // Step 2: move the big disk
+    solve(n-1, tmp, src, dst);            // Step 3: move n-1 back on top
+}
+</pre>
+
+<h3 class="concept">Quicksort — Program15.5</h3>
+<div class="explain">
+  <strong>Divide and conquer:</strong> Pick a pivot, partition the array so everything left of the pivot is smaller and everything right is larger. The pivot is now in its final position. Recurse on the left part and the right part independently. Base case: a partition of size 0 or 1 is already sorted.
+</div>
+<pre>
+void Quicksort::sort(int left, int right) {
+    if (right - left + 1 &lt; 2) return;     // BASE: 0 or 1 element — done
+    int pivot = partition(left, right);   // pivot is now in final position
+    sort(left,      pivot - 1);           // sort left partition
+    sort(pivot + 1, right);               // sort right partition
+}
+</pre>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 2 — BACKTRACKING
+═══════════════════════════════════════════════════ -->
+<h2 class="section" id="s2">2. Backtracking</h2>
+
+<div class="explain">
+  <strong>What it is</strong>
+  Backtracking is recursion with an <strong>undo step</strong>. You explore a choice, recurse deeper, and if that path fails you <em>undo</em> the choice (backtrack) and try the next alternative. It systematically explores the entire solution space without revisiting the same state twice.
+</div>
+
+<div class="explain green">
+  <strong>The mental model</strong>
+  Think of a maze. You walk down a corridor. If it dead-ends, you walk back to the last junction and try the next corridor. "Walking back" is the backtrack. The key is that you restore the state exactly as it was before you made the choice.
+</div>
+
+<h3 class="concept">The universal backtracking template</h3>
+<pre>
+void search(State state, int depth) {
+    if (is_solution(state)) {             // BASE: found a complete solution
+        record(state);
+        return;
+    }
+    for (Choice c : all_choices(state)) {
+        if (is_valid(state, c)) {
+            apply(state, c);              // PLACE — make the choice
+            search(state, depth + 1);    // RECURSE — go deeper
+            undo(state, c);              // BACKTRACK — undo the choice
+        }
+    }
+}
+</pre>
+
+<h3 class="concept">N-Queens — Program15.7</h3>
+<div class="explain">
+  Place N queens on an N×N board so no two queens share the same row, column, or diagonal. We fill column by column. For each column we try every row. If a row is safe, we place the queen (<code>occupied[row][col] = true</code>) and recurse to the next column. When we come back from the recursion, we <em>remove</em> the queen (<code>= false</code>) — that is the backtrack.
+</div>
+<pre>
+void Queens::search(int col) {
+    for (int row = 0; row &lt; SIZE; row++) {
+        if (is_safe(row, col)) {
+            occupied[row][col] = true;    // PLACE
+            if (col == SIZE - 1)
+                print();                  // All columns filled — solution!
+            else
+                search(col + 1);         // RECURSE to next column
+            occupied[row][col] = false;  // BACKTRACK — undo
+        }
+    }
+}
+</pre>
+
+<h3 class="concept">Sudoku — Program15.8</h3>
+<div class="explain">
+  Walk cells left-to-right, top-to-bottom. Skip pre-filled cells. For each empty cell, try digits 1–9. If a digit is valid (not in same row, column, or 3×3 box), place it and recurse to the next cell. If the recursion returns <code>false</code>, no digit worked deeper — reset the cell to 0 and return <code>false</code> (backtrack the caller).
+</div>
+<pre>
+bool Sudoku::solve(int row, int col) {
+    if (row == 9) return true;            // Past last row — solved!
+    if (col == 9) return solve(row+1, 0); // Move to next row
+    if (grid[row][col] != 0)             // Pre-filled — skip it
+        return solve(row, col+1);
+    for (int n = 1; n &lt;= 9; n++) {
+        if (is_ok(row, col, n)) {
+            grid[row][col] = n;           // PLACE
+            if (solve(row, col+1))        // RECURSE
+                return true;
+        }
+    }
+    grid[row][col] = 0;                   // BACKTRACK — no digit worked
+    return false;
+}
+</pre>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 3 — MULTITHREADING / RACE CONDITIONS
+═══════════════════════════════════════════════════ -->
+<h2 class="section green" id="s3">3. Multithreading &amp; Race Conditions</h2>
+
+<div class="explain green">
+  <strong>What a thread is</strong>
+  A thread is an independent execution path inside the same process. All threads share the same heap memory and global variables, but each has its own stack. The OS scheduler decides when to pause one thread and resume another — you cannot predict or control the exact interleaving.
+</div>
+
+<div class="explain red">
+  <strong>Race condition</strong>
+  When two threads read/modify a shared variable at the same time, the result depends on which thread runs first — a <em>race condition</em>. Even a simple <code>counter++</code> is actually three machine instructions (load, add, store); another thread can interrupt between any two of them and corrupt the value.
+</div>
+
+<h3 class="concept">Creating and joining threads</h3>
+<pre>
+#include &lt;thread&gt;
+
+void print(string text) {
+    for (const char&amp; ch : text) cout &lt;&lt; ch; // NOT SAFE without a lock
+}
+
+int main() {
+    thread t1(print, "Hello, world!\n");   // Starts immediately
+    thread t2(print, "Good design!\n");
+    t1.join();   // Main blocks here until t1 finishes
+    t2.join();   // Then blocks until t2 finishes
+}   // Never let a thread go out of scope without join() or detach()
+</pre>
+
+<div class="warn">If a <code>thread</code> object is destroyed while the thread is still running, <code>std::terminate()</code> is called — your program crashes. Always <code>join()</code> before the thread object is destroyed.</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 4 — MUTEX & LOCK_GUARD
+═══════════════════════════════════════════════════ -->
+<h2 class="section green" id="s4">4. Mutex &amp; lock_guard (RAII)</h2>
+
+<div class="explain green">
+  <strong>What a mutex is</strong>
+  A <em>mutex</em> (mutual exclusion) is a lock. Only one thread can hold it at a time. Any other thread that calls <code>lock()</code> while the mutex is held will block (sleep) until it is released. The region of code protected by the mutex is called the <strong>critical section</strong>.
+</div>
+
+<div class="explain">
+  <strong>Why lock_guard is better than manual lock/unlock</strong>
+  If you manually call <code>unlock()</code> but an exception is thrown before you reach that line, the mutex is never released — every other thread blocks forever (deadlock). <code>lock_guard</code> uses RAII: it acquires the lock in its constructor and <em>automatically releases it in its destructor</em>, which runs whenever the guard goes out of scope — normally or via exception.
+</div>
+
+<div class="compare">
+  <div class="col-bad">
+    <div class="col-label bad-label">BAD — Program16.2a (manual)</div>
+<pre>
+mutex print_mutex;
+
+void print(string text) {
+    print_mutex.lock();      // Manual acquire
+    for (char ch : text)
+        cout &lt;&lt; ch;
+    print_mutex.unlock();    // Risky: skipped on exception
+}
+</pre>
+  </div>
+  <div class="col-good">
+    <div class="col-label good-label">GOOD — Program16.2c (RAII)</div>
+<pre>
+mutex print_mutex;
+
+void print(string text) {
+    lock_guard&lt;mutex&gt; guard(print_mutex); // Auto-release guaranteed
+    for (char ch : text)
+        cout &lt;&lt; ch;
+}   // guard destructor releases the mutex here
+</pre>
+  </div>
+</div>
+
+<div class="tip">The scope of the lock matters. Keep the critical section as short as possible — the longer you hold the lock, the longer other threads are blocked.</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 5 — THREAD YIELDING
+═══════════════════════════════════════════════════ -->
+<h2 class="section green" id="s5">5. Thread Yielding</h2>
+
+<div class="explain green">
+  <strong>What it does</strong>
+  <code>this_thread::yield()</code> is a hint to the OS scheduler: "I'm done with the CPU for this slice — please run another thread." It does <em>not</em> release any mutex. It simply gives other threads a chance to run, improving fairness when threads are competing in a tight loop.
+</div>
+
+<pre>
+// Program16.2b — yield inside the lock
+void print(string text) {
+    for (int i = 0; i &lt; COUNT; i++) {
+        lock_guard&lt;mutex&gt; guard(print_mutex);
+        for (char ch : text) cout &lt;&lt; ch;
+        this_thread::yield(); // Let another thread print next round
+    }
+}
+</pre>
+
+<div class="warn">Yield is a <em>hint</em>, not a guarantee. The scheduler may ignore it and keep running the same thread. Never depend on yield for correctness — use proper synchronization for that.</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 6 — READER-WRITER LOCK
+═══════════════════════════════════════════════════ -->
+<h2 class="section green" id="s6">6. Reader-Writer Lock (shared_mutex)</h2>
+
+<div class="explain green">
+  <strong>The problem it solves</strong>
+  A plain <code>mutex</code> is exclusive: only one thread at a time, whether reading or writing. But reads don't conflict with each other — it's safe for 100 threads to read simultaneously. <code>shared_mutex</code> allows exactly that: many concurrent readers <em>or</em> one exclusive writer, never both at the same time.
+</div>
+
+<table>
+  <tr><th>Lock type</th><th>Who can hold it simultaneously</th><th>Use for</th></tr>
+  <tr><td><code>shared_lock&lt;shared_mutex&gt;</code></td><td>Multiple threads at once</td><td>Read-only operations</td></tr>
+  <tr><td><code>unique_lock&lt;shared_mutex&gt;</code></td><td>Exactly one thread; blocks all others</td><td>Write operations</td></tr>
+</table>
+
+<pre>
+// Program16.3 — ReaderWriter
+shared_mutex meter_mutex;
+
+void Meter::set_meter(int id) {          // WRITER — exclusive
+    unique_lock&lt;shared_mutex&gt; lk(meter_mutex);
+    setting = rand() % MAX + 1;
+}
+void Meter::log_meter(int id) {          // READER — shared, concurrent OK
+    shared_lock&lt;shared_mutex&gt; lk(meter_mutex);
+    printf("LOGGER #%d: setting=%d\n", id, setting);
+}
+</pre>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 7 — PRODUCER-CONSUMER
+═══════════════════════════════════════════════════ -->
+<h2 class="section green" id="s7">7. Producer-Consumer</h2>
+
+<div class="explain green">
+  <strong>The pattern</strong>
+  Producer threads generate items and put them into a shared bounded queue. Consumer threads take items out and process them. The queue is the shared resource — both sides need synchronized access. When full, producers wait. When empty, consumers wait.
+</div>
+
+<pre>
+// Program16.4 — ProducerConsumer (key class)
+class SharedQueue {
+public:
+    bool is_empty() const { return data.size() == 0; }
+    bool is_full()  const { return data.size() == capacity; }
+    void enter(int v)     { data.push(v); }
+    int  remove()         { int v = data.front(); data.pop(); return v; }
+    mutex&amp; get_mutex()    { return q_mutex; }
+private:
+    queue&lt;int&gt; data;
+    size_t     capacity;
+    mutex      q_mutex;
+};
+
+// Producer: lock → check not full → push → unlock → yield
+// Consumer: lock → check not empty → pop → unlock → yield
+</pre>
+
+<div class="tip">In production code, use <code>condition_variable</code> instead of yield-based polling. A condition variable puts the waiting thread to sleep and wakes it exactly when the queue state changes — much more efficient.</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 8 — DINING PHILOSOPHERS / DEADLOCK
+═══════════════════════════════════════════════════ -->
+<h2 class="section green" id="s8">8. Dining Philosophers &amp; Deadlock</h2>
+
+<div class="explain green">
+  <strong>The scenario</strong>
+  Five philosophers sit at a round table. Between each pair is one chopstick (5 total). To eat, a philosopher needs <em>both</em> the left and right chopstick. If every philosopher simultaneously picks up their left chopstick and waits for the right, no one ever eats — <strong>deadlock</strong>.
+</div>
+
+<div class="explain red">
+  <strong>Four conditions for deadlock (all must hold)</strong>
+  <ol style="padding-left:18px; margin-top:6px;">
+    <li><strong>Mutual exclusion</strong> — only one thread can hold a resource at a time.</li>
+    <li><strong>Hold and wait</strong> — a thread holds a resource while waiting for another.</li>
+    <li><strong>No preemption</strong> — resources cannot be taken away; only released voluntarily.</li>
+    <li><strong>Circular wait</strong> — a cycle of threads each waiting on the next.</li>
+  </ol>
+  Break <em>any one</em> condition to prevent deadlock.
+</div>
+
+<pre>
+// DiningPhilosophers — key types
+enum class PhilosopherState { Thinking, Hungry, Filling, Eating, Done };
+
+class Philosopher {
+    atomic&lt;PhilosopherState&gt; state;   // atomic: safe read/write without mutex
+    mutex             mtx;
+    condition_variable cv;
+    bool using_chopstick() const {
+        auto s = state.load();
+        return s == PhilosopherState::Filling || s == PhilosopherState::Eating;
+    }
+};
+</pre>
+
+<div class="tip">One classic solution: always acquire chopsticks in a fixed global order (e.g., lower-numbered first). This breaks circular wait.</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 9 — SRP
+═══════════════════════════════════════════════════ -->
+<h2 class="section orange" id="s9">9. Single Responsibility Principle (SRP)</h2>
+
+<div class="explain orange">
+  <strong>The rule</strong>
+  A class should have <strong>only one reason to change</strong>. If a change to business logic A forces you to reopen and retest class X, but class X also implements logic B, then X has two responsibilities and you have a problem.
+</div>
+
+<div class="explain">
+  <strong>Why it matters in practice</strong>
+  When a class does too much, every change is risky — you can break unrelated functionality. Smaller, focused classes are easier to test in isolation, easier to reuse, and easier to understand.
+</div>
+
+<div class="compare">
+  <div class="col-bad">
+    <div class="col-label bad-label">BAD — Program2.1 (3 jobs in one)</div>
+<pre>
+class Catalogue {
+    // Job 1: store books
+    vector&lt;Book*&gt; booklist;
+    void add(string title, ...);
+
+    // Job 2: search books
+    vector&lt;Book*&gt; find(const Book&amp; target);
+
+    // Job 3: string comparison utility
+    static bool equal_ignore_case(
+        string s1, string s2);
+};
+</pre>
+  </div>
+  <div class="col-good">
+    <div class="col-label good-label">GOOD — Program2.5 (separated)</div>
+<pre>
+class Book      { /* data only */ };
+
+class Attributes {
+    AttributeMap map;  // metadata
+};
+
+class StringUtil {
+    static bool equal_ignore_case(...);
+};
+
+class Catalogue {
+    void add(Book*);
+    vector&lt;Book*&gt; find(...); // uses StringUtil
+};
+</pre>
+  </div>
+</div>
+
+<div class="tip">Ask: "If I change <em>X</em>, does this class need to change?" If two different changes would each require opening this file, the class has two responsibilities. Extract one.</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 10 — OCP
+═══════════════════════════════════════════════════ -->
+<h2 class="section orange" id="s10">10. Open-Closed Principle (OCP)</h2>
+
+<div class="explain orange">
+  <strong>The rule</strong>
+  Software entities (classes, modules, functions) should be <strong>open for extension</strong> but <strong>closed for modification</strong>. You should be able to add new behavior without editing existing, tested code.
+</div>
+
+<div class="explain">
+  <strong>How to achieve it</strong>
+  Define an abstract interface or base class. New behavior = new subclass implementing the interface. Existing code never changes. The key tool is <em>polymorphism</em> — the caller depends on the abstraction, not the concrete type.
+</div>
+
+<div class="compare">
+  <div class="col-bad">
+    <div class="col-label bad-label">BAD — Program4.1 (adding Motorcycle requires editing)</div>
+<pre>
+void drive(string type) {
+    if (type == "car")   { /* car logic */ }
+    if (type == "truck") { /* truck logic */ }
+    // Adding motorcycle → edit this function!
+}
+</pre>
+  </div>
+  <div class="col-good">
+    <div class="col-label good-label">GOOD — Program4.4 (add Motorcycle without editing)</div>
+<pre>
+class MotorVehicleInterface {
+public:
+    virtual void start_engine() = 0;
+    virtual void drive()        = 0;
+    virtual void apply_brakes() = 0;
+};
+class Car        : public MotorVehicleInterface { ... };
+class Truck      : public MotorVehicleInterface { ... };
+class Motorcycle : public MotorVehicleInterface { ... }; // Just add!
+</pre>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 11 — LAW OF DEMETER
+═══════════════════════════════════════════════════ -->
+<h2 class="section orange" id="s11">11. Law of Demeter (Principle of Least Knowledge)</h2>
+
+<div class="explain orange">
+  <strong>The rule</strong>
+  A method should only call methods on: (1) <code>this</code>, (2) its own fields, (3) parameters passed to it, (4) objects it created locally. In plain English: <strong>talk to friends, not strangers</strong>. Don't reach through one object to access another.
+</div>
+
+<div class="explain red">
+  <strong>The "one dot" heuristic</strong>
+  If you see <code>a.getB().getC().doSomething()</code>, that's a Demeter violation — you're depending on A's internal structure (it has a B) and B's internal structure (it has a C). A change to either breaks your code.
+</div>
+
+<div class="compare">
+  <div class="col-bad">
+    <div class="col-label bad-label">BAD — Program5.7 (reaching into Engine)</div>
+<pre>
+// Car reaching into Engine's internals
+Sparkplug* plug = engine.get_sparkplug();
+plug-&gt;replace(); // Demeter violation — talking to a stranger
+
+// Employee exposing internal pointer
+Date* get_birthdate() { return birthdate; }
+// Caller can now do: employee.get_birthdate()-&gt;set_year(1900);
+</pre>
+  </div>
+  <div class="col-good">
+    <div class="col-label good-label">GOOD — Program5.8/5.9 (delegate / return copy)</div>
+<pre>
+// Car delegates to Engine — Engine manages its own parts
+engine.replace_sparkplug(); // OK — one dot, talking to a friend
+
+// Employee returns a copy — internal state is protected
+Date* get_birthdate() {
+    return new Date(*birthdate); // copy, not the real object
+}
+</pre>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 12 — TEMPLATE METHOD
+═══════════════════════════════════════════════════ -->
+<h2 class="section purple" id="s12">12. Template Method Pattern</h2>
+
+<div class="explain purple">
+  <strong>Intent</strong>
+  Define the <em>skeleton</em> of an algorithm in a base class, fixing the sequence of steps. Let subclasses fill in the varying steps by overriding pure virtual methods. The overall flow is locked; only the details vary.
+</div>
+
+<div class="explain">
+  <strong>When to use it</strong>
+  When multiple classes do the same sequence of operations but differ in some steps — e.g., every report must print a header, acquire data, analyze data, print the report body, and print a footer. The header/footer are always the same; the data steps vary by report type.
+</div>
+
+<div class="compare">
+  <div class="col-bad">
+    <div class="col-label bad-label">BAD — Program8.1 (duplicated structure)</div>
+<pre>
+class BaseballReport {
+    void generate() {
+        print_header(); acquire_data();
+        analyze_data(); print_report(); print_footer();
+    } // Exact same sequence as VolleyballReport!
+};
+class VolleyballReport {
+    void generate() {
+        print_header(); acquire_data();
+        analyze_data(); print_report(); print_footer();
+    } // Duplicate — changes must be made in both!
+};
+</pre>
+  </div>
+  <div class="col-good">
+    <div class="col-label good-label">GOOD — Program8.2 (Template Method)</div>
+<pre>
+class GameReport {                     // Base class owns the sequence
+public:
+    void generate_report() {           // TEMPLATE METHOD — do not override!
+        print_header();                // concrete — same for all
+        acquire_data();                // abstract — subclass fills in
+        analyze_data();                // abstract — subclass fills in
+        print_report();                // abstract — subclass fills in
+        print_footer();                // concrete — same for all
+    }
+protected:
+    void print_header() const { cout &lt;&lt; title() &lt;&lt; endl; }
+    void print_footer() const { cout &lt;&lt; "End of report" &lt;&lt; endl; }
+    virtual void acquire_data()       = 0;
+    virtual void analyze_data()       = 0;
+    virtual void print_report() const = 0;
+};
+class BaseballReport  : public GameReport { /* override 3 methods */ };
+class VolleyballReport: public GameReport { /* override 3 methods */ };
+</pre>
+  </div>
+</div>
+
+<div class="tip"><strong>vs. Strategy:</strong> Template Method uses <em>inheritance</em> — the algorithm skeleton is baked into the class hierarchy. Strategy uses <em>composition</em> — you inject a strategy object. Strategy can be swapped at runtime; Template Method cannot.</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 13 — STRATEGY
+═══════════════════════════════════════════════════ -->
+<h2 class="section purple" id="s13">13. Strategy Pattern</h2>
+
+<div class="explain purple">
+  <strong>Intent</strong>
+  Define a family of algorithms, encapsulate each in its own class, and make them interchangeable. The class that uses the algorithm holds a <em>pointer to the strategy interface</em> — it doesn't know or care which concrete strategy is plugged in.
+</div>
+
+<div class="explain">
+  <strong>Key benefit</strong>
+  You can change the algorithm used by an object <em>at runtime</em> without modifying the object itself. You can also add new algorithms (new strategy classes) without touching existing code — this satisfies OCP.
+</div>
+
+<pre>
+// Program8.4 — Sports Strategy
+class PlayerStrategy { public: virtual string strategy() const = 0; };
+class VenueStrategy  { public: virtual string strategy() const = 0; };
+
+// Concrete strategies
+class DraftPlayers    : public PlayerStrategy { string strategy() const override { return "Draft from colleges"; } };
+class OpenTryoutPlayers: public PlayerStrategy { string strategy() const override { return "Open tryouts"; } };
+class Stadium         : public VenueStrategy  { string strategy() const override { return "Reserve stadium"; } };
+class Gym             : public VenueStrategy  { string strategy() const override { return "Reserve gym"; } };
+
+class Sport {
+public:
+    Sport(PlayerStrategy* ps, VenueStrategy* vs) : ps(ps), vs(vs) {}
+
+    // Runtime swap — the key feature of Strategy
+    void set_player_strategy(PlayerStrategy* s) { ps = s; }
+    void set_venue_strategy(VenueStrategy* s)   { vs = s; }
+
+    string recruit() { return ps-&gt;strategy(); }
+    string venue()   { return vs-&gt;strategy(); }
+private:
+    PlayerStrategy* ps;
+    VenueStrategy*  vs;
+};
+</pre>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 14 — FACTORY METHOD
+═══════════════════════════════════════════════════ -->
+<h2 class="section purple" id="s14">14. Factory Method Pattern</h2>
+
+<div class="explain purple">
+  <strong>Intent</strong>
+  Define an interface for creating an object, but let <em>subclasses decide which concrete class to instantiate</em>. The creator class never names the concrete product — it just calls the factory method. This decouples the caller from the product's class name.
+</div>
+
+<div class="explain">
+  <strong>Two common forms</strong>
+  <strong>Form 1 — Static factory:</strong> A static method on a factory class takes a parameter (e.g., an enum) and returns the right subtype. Simple, widely used. (Program7.7)<br>
+  <strong>Form 2 — Virtual factory method:</strong> An abstract base class defines a pure virtual <code>create_X()</code>; subclasses override it to produce their specific product. The base class calls it without knowing the concrete type. (Program9.2)
+</div>
+
+<pre>
+// Form 1 — Program7.7 ToyFactory
+class ToyFactory {
+public:
+    static Toy* make(Kind kind) {          // Client never writes "new ToyCar"
+        switch (kind) {
+            case Kind::CAR:      return new ToyCar(new Roll(),   new Engine());
+            case Kind::AIRPLANE: return new ModelAirplane(new Fly(), new Engine());
+            case Kind::TRAIN:    return new TrainSet(new Roll(), new ChooChoo());
+            default:             return nullptr;
+        }
+    }
+};
+Toy* t = ToyFactory::make(Kind::CAR);    // Caller only knows "Toy"
+
+// Form 2 — Program9.2 AthleticsDept
+class AthleticsDept {
+public:
+    void generate_report(const Type&amp; type) {
+        Sport* s = create_sport(type);   // Call factory method — type unknown here
+        s-&gt;generate_report();
+    }
+private:
+    virtual Sport* create_sport(const Type&amp;) = 0;  // FACTORY METHOD
+};
+class VarsityDept   : public AthleticsDept {
+    Sport* create_sport(const Type&amp; t) override { return new VarsitySport(t); }
+};
+class IntramuralDept: public AthleticsDept {
+    Sport* create_sport(const Type&amp; t) override { return new IntramuralSport(t); }
+};
+</pre>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 15 — ABSTRACT FACTORY
+═══════════════════════════════════════════════════ -->
+<h2 class="section purple" id="s15">15. Abstract Factory Pattern</h2>
+
+<div class="explain purple">
+  <strong>Intent</strong>
+  Provide an interface for creating <em>families of related objects</em> without specifying their concrete classes. Instead of one factory method, you have a factory object with <em>multiple</em> factory methods — one per product in the family. Swapping the factory swaps the entire family at once.
+</div>
+
+<div class="explain">
+  <strong>Factory Method vs Abstract Factory — the clearest distinction</strong>
+  Factory Method: one product type, one method, subclasses override it.<br>
+  Abstract Factory: a whole <em>product family</em> (e.g., PlayerStrategy + VenueStrategy together). You swap the entire factory to get a consistent family — you'd never accidentally mix VarsityPlayers with IntramuralVenue.
+</div>
+
+<pre>
+// Program9.3 — Abstract Factory
+class ProvisionsFactory {                 // Abstract factory interface
+public:
+    virtual PlayerStrategy* make_players(const Type&amp;) = 0;
+    virtual VenueStrategy*  make_venue()               = 0;
+};
+
+class VarsityFactory : public ProvisionsFactory {
+public:
+    PlayerStrategy* make_players(const Type&amp; t) override { return new DraftPlayers(t); }
+    VenueStrategy*  make_venue()                override { return new Stadium(); }
+};
+
+class IntramuralFactory : public ProvisionsFactory {
+public:
+    PlayerStrategy* make_players(const Type&amp; t) override { return new OpenTryouts(t); }
+    VenueStrategy*  make_venue()                override { return new Gym(); }
+};
+
+// Client — never mentions Varsity or Intramural concrete types
+void setup(ProvisionsFactory* factory) {
+    PlayerStrategy* ps = factory-&gt;make_players(Type::SOCCER);
+    VenueStrategy*  vs = factory-&gt;make_venue();
+    Sport sport(ps, vs);
+}
+setup(new VarsityFactory());    // OR new IntramuralFactory()
+</pre>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 16 — ADAPTER
+═══════════════════════════════════════════════════ -->
+<h2 class="section purple" id="s16">16. Adapter Pattern</h2>
+
+<div class="explain purple">
+  <strong>Intent</strong>
+  Convert the interface of one class into another interface that clients expect. Adapter lets incompatible interfaces work together. Think of it as a plug adapter — the appliance hasn't changed, the wall socket hasn't changed, the adapter in between makes them compatible.
+</div>
+
+<div class="explain">
+  <strong>Real-world analogy</strong>
+  <code>FootballInfo</code> has <code>get_fans()</code> and <code>get_field()</code>. Your <code>AttendanceReport</code> only knows how to use <code>AttendanceData</code> which has <code>get_attendance()</code> and <code>get_venue()</code>. The Adapter wraps <code>FootballInfo</code> and translates its methods to match <code>AttendanceData</code>.
+</div>
+
+<pre>
+// Program10.2 — Adapter
+class AttendanceReport {
+private:
+    // Inner adapter: wraps any data source into the expected interface
+    class ConvertedData : public AttendanceData {
+    public:
+        ConvertedData(Venue v, int a) : venue(v), attendance(a) {}
+        Venue get_venue()      const override { return venue; }
+        int   get_attendance() const override { return attendance; }
+    private:
+        Venue venue;
+        int   attendance;
+    };
+
+    void core_print(const AttendanceData&amp; data) const; // one print method
+
+public:
+    // For FootballInfo — adapt on the fly
+    void print(const FootballInfo&amp; f) const {
+        core_print(ConvertedData(f.get_field(), f.get_fans()));
+    }
+    // For VolleyballStats — adapt on the fly
+    void print(const VolleyballStats&amp; v) const {
+        core_print(ConvertedData(v.get_gym(), v.get_crowd()));
+    }
+};
+</pre>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 17 — FACADE
+═══════════════════════════════════════════════════ -->
+<h2 class="section purple" id="s17">17. Facade Pattern</h2>
+
+<div class="explain purple">
+  <strong>Intent</strong>
+  Provide a single, simplified interface to a complex subsystem. The facade doesn't add new capability — it hides the complexity of coordinating multiple subsystem classes behind one clean entry point.
+</div>
+
+<div class="explain">
+  <strong>Analogy</strong>
+  A TV remote is a facade. You press "Watch Netflix" and it turns on the TV, switches the HDMI input, starts the streaming box, and navigates to Netflix. You don't operate each device separately.
+</div>
+
+<div class="compare">
+  <div class="col-bad">
+    <div class="col-label bad-label">BAD — Program10.4 (client manages complexity)</div>
+<pre>
+// Client must know 4 subsystem classes and call them in the right order
+Alumni     alumni;    alumni.send_solicitations();
+BoosterClubs clubs;   clubs.schedule_meetings();
+Students   students;  students.collect_fees();
+Admin      admin;     admin.process_grants();
+</pre>
+  </div>
+  <div class="col-good">
+    <div class="col-label good-label">GOOD — Program10.5 (Facade)</div>
+<pre>
+class FundRaiser {               // Facade
+public:
+    void do_fund_raising() {     // One method hides all complexity
+        Alumni alumni;     alumni.send_solicitations();
+        BoosterClubs clubs; clubs.schedule_meetings();
+        Students students; students.collect_fees();
+    }
+};
+// Client:
+FundRaiser fr;
+fr.do_fund_raising();            // That's it
+</pre>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 18 — ITERATOR
+═══════════════════════════════════════════════════ -->
+<h2 class="section purple" id="s18">18. Iterator Pattern</h2>
+
+<div class="explain purple">
+  <strong>Intent</strong>
+  Provide a uniform way to traverse elements of a collection without exposing the collection's internal representation. Whether the collection is an array, a vector, a linked list, or a hash map, the client uses the same <code>has_next()</code> / <code>next()</code> interface.
+</div>
+
+<div class="explain">
+  <strong>Why it matters</strong>
+  Without iterators, your traversal code is tied to the collection type — change from vector to map and you must rewrite the traversal. With an iterator, the traversal code stays the same; you just swap which iterator you create.
+</div>
+
+<pre>
+// Program11.2 — Iterator
+class Iterator {                         // Abstract iterator interface
+public:
+    virtual Player* next()      = 0;
+    virtual bool    has_next() const = 0;
+    virtual ~Iterator() = default;
+};
+
+class VectorIterator : public Iterator {
+public:
+    VectorIterator(vector&lt;Player*&gt; ps) : players(ps), cursor(players.begin()) {}
+    Player* next()      override { return *(cursor++); }
+    bool    has_next() const override { return cursor != players.end(); }
+private:
+    vector&lt;Player*&gt; players;
+    vector&lt;Player*&gt;::iterator cursor;
+};
+
+class MapIterator : public Iterator {   // Same interface, different internals
+    // ... map traversal hidden inside
+};
+
+// Client — identical traversal regardless of collection type:
+void print_all(Iterator* it) {
+    while (it-&gt;has_next())
+        cout &lt;&lt; it-&gt;next()-&gt;name() &lt;&lt; endl;
+}
+</pre>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 19 — VISITOR
+═══════════════════════════════════════════════════ -->
+<h2 class="section purple" id="s19">19. Visitor Pattern</h2>
+
+<div class="explain purple">
+  <strong>Intent</strong>
+  Let you add new operations to a class hierarchy <em>without modifying those classes</em>. Each operation becomes a new Visitor subclass. The objects "accept" the visitor and let it do its work.
+</div>
+
+<div class="explain">
+  <strong>Double dispatch — the key mechanism</strong>
+  Normal method calls use single dispatch (the object's type determines which method runs). Visitor achieves double dispatch: first the node's type is used (via <code>accept()</code>) to call the right <code>visit_X()</code> on the visitor; then the visitor's type determines the actual operation. Both types participate in selecting the right method.
+</div>
+
+<pre>
+// Program11.4 — Visitor
+class Node {
+public:
+    virtual void accept(Visitor&amp; v) = 0;  // Step 1: dispatch on Node type
+};
+class Sport : public Node {
+    void accept(Visitor&amp; v) override { v.visit_Sport(this); } // calls right visitor method
+};
+class Game  : public Node {
+    void accept(Visitor&amp; v) override { v.visit_Game(this); }
+};
+
+class Visitor {
+public:
+    virtual void visit_Sport(Sport* n) = 0;  // Step 2: dispatch on Visitor type
+    virtual void visit_Game(Game*   n) = 0;
+};
+
+// Add a new operation — create a new Visitor, touch nothing else:
+class ScoresReportVisitor  : public Visitor {
+    void visit_Sport(Sport* n) override { /* print sport scores */ }
+    void visit_Game(Game*   n) override { /* print game scores */ }
+};
+class WinningsReportVisitor: public Visitor { /* different behavior */ };
+</pre>
+
+<div class="tip"><strong>When to use Visitor vs adding a method:</strong> If the class hierarchy is <em>stable</em> (you rarely add new node types) but you frequently add new <em>operations</em>, use Visitor. If you add node types frequently, Visitor is painful (every new node type requires updating every Visitor).</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 20 — OBSERVER
+═══════════════════════════════════════════════════ -->
+<h2 class="section purple" id="s20">20. Observer Pattern</h2>
+
+<div class="explain purple">
+  <strong>Intent</strong>
+  Define a one-to-many dependency so that when one object (the <strong>Subject</strong>) changes state, all its dependents (the <strong>Observers</strong>) are notified and updated automatically. The Subject doesn't need to know anything about who its observers are or how many there are.
+</div>
+
+<div class="explain">
+  <strong>Push vs Pull</strong>
+  <strong>Push model:</strong> The Subject passes the new data as arguments to <code>update()</code>. Observers get data immediately without querying the subject. (Used in Program12.2)<br>
+  <strong>Pull model:</strong> <code>update()</code> receives a reference to the subject; observers query the subject for what they need. More flexible but observers are loosely coupled to the subject's interface.
+</div>
+
+<pre>
+// Program12.2 — Observer
+class Observer {
+public:
+    virtual void update(const string&amp; name, int outs) = 0; // push model
+    virtual ~Observer() = default;
+};
+
+class Subject {
+public:
+    void attach(Observer* o) { observers.push_back(o); }
+    void detach(Observer* o) { /* remove from vector */ }
+    void notify(const string&amp; name, int outs) const {
+        for (Observer* o : observers)
+            o-&gt;update(name, outs);          // Notify all registered observers
+    }
+private:
+    vector&lt;Observer*&gt; observers;
+};
+
+// Adding a new observer type requires zero changes to Subject:
+class GraphReport   : public Observer { void update(...) override { /* draw graph */ } };
+class LogReport     : public Observer { void update(...) override { /* write log  */ } };
+class FanClubReport : public Observer { void update(...) override { /* post tweet */ } };
+</pre>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 21 — STATE
+═══════════════════════════════════════════════════ -->
+<h2 class="section purple" id="s21">21. State Pattern</h2>
+
+<div class="explain purple">
+  <strong>Intent</strong>
+  Allow an object to change its behavior when its internal state changes. Instead of one class with a big <code>switch(state)</code> in every method, each state becomes its own class. The object delegates all behavior to its current state object.
+</div>
+
+<div class="explain">
+  <strong>Why switch statements are bad here</strong>
+  Every new state requires editing every method that has a switch. Miss one and you have a bug. With the State pattern, each state class is self-contained — adding a new state means adding one new class, touching nothing else.
+</div>
+
+<div class="compare">
+  <div class="col-bad">
+    <div class="col-label bad-label">BAD — Program13.1 (switch everywhere)</div>
+<pre>
+enum State { READY, VALIDATING, SOLD, SOLD_OUT };
+
+void insert_card() {
+    switch (state) {
+        case READY:      state = VALIDATING; break;
+        case VALIDATING: cout &lt;&lt; "Card already in"; break;
+        case SOLD_OUT:   cout &lt;&lt; "Machine empty";   break;
+    }
+}
+void take_ticket() {
+    switch (state) {     // Another switch — must maintain both!
+        ...
+    }
+}
+</pre>
+  </div>
+  <div class="col-good">
+    <div class="col-label good-label">GOOD — Program13.2 (State objects)</div>
+<pre>
+class State {                           // Abstract state
+public:
+    virtual State* insert_card()   = 0;
+    virtual State* check_validity()= 0;
+    virtual State* take_ticket()   = 0;
+};
+
+class READY : public State {            // State knows its own transitions
+    State* insert_card() override { return new VALIDATING(...); }
+    State* take_ticket() override {
+        cout &lt;&lt; "Insert card first"; return this; // stay in READY
+    }
+};
+
+// Context — delegates everything to current state:
+class TicketMachine {
+    State* current = new READY(...);
+    void insert_card() { current = current-&gt;insert_card(); }
+    void take_ticket() { current = current-&gt;take_ticket(); }
+};
+</pre>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 22 — SINGLETON
+═══════════════════════════════════════════════════ -->
+<h2 class="section purple" id="s22">22. Singleton Pattern</h2>
+
+<div class="explain purple">
+  <strong>Intent</strong>
+  Ensure that a class has <em>exactly one instance</em> and provide a global access point to it. Common uses: logging, configuration, connection pools, thread pools.
+</div>
+
+<div class="explain">
+  <strong>How it works</strong>
+  The constructor is <em>private</em> — nobody can write <code>new Singleton()</code>. A static method <code>get_instance()</code> creates the one instance on first call (lazy initialization) and returns it on every subsequent call. Copy constructor and copy assignment are deleted to prevent cloning.
+</div>
+
+<pre>
+// Standard modern C++ Singleton (thread-safe since C++11)
+class Logger {
+public:
+    static Logger&amp; get_instance() {
+        static Logger instance;  // Created once; destroyed at program exit
+        return instance;
+    }
+    void write(const string&amp; msg) { cout &lt;&lt; "[LOG] " &lt;&lt; msg &lt;&lt; endl; }
+
+    Logger(const Logger&amp;)            = delete; // No copy
+    Logger&amp; operator=(const Logger&amp;) = delete; // No assignment
+private:
+    Logger() {}   // Private constructor — no external new
+};
+
+// Usage — always the same instance:
+Logger::get_instance().write("App started");
+Logger&amp; log = Logger::get_instance();
+log.write("Step 2");
+</pre>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 23 — COMPOSITE
+═══════════════════════════════════════════════════ -->
+<h2 class="section purple" id="s23">23. Composite Pattern</h2>
+
+<div class="explain purple">
+  <strong>Intent</strong>
+  Compose objects into tree structures to represent part-whole hierarchies. Clients treat individual objects (leaves) and groups of objects (composites) <em>uniformly</em> through a common interface — they don't need to know which one they have.
+</div>
+
+<div class="explain">
+  <strong>The key insight</strong>
+  A <code>ProvisionGroup</code> implements the same interface as a <code>ProvisionItem</code>. So a group can contain other groups — the tree can be arbitrarily deep. The recursive <code>get_cost()</code> call automatically sums the entire tree without the caller knowing its structure.
+</div>
+
+<pre>
+// Program14.4 — Composite
+class ProvisionItem {                        // Component — leaf or composite
+public:
+    virtual double get_cost() const = 0;
+    virtual void   add(ProvisionItem* item) {
+        throw logic_error("Leaf cannot have children");
+    }
+    virtual ~ProvisionItem() = default;
+};
+
+class Meal : public ProvisionItem {          // LEAF — no children
+public:
+    Meal(string n, double c) : name(n), cost(c) {}
+    double get_cost() const override { return cost; }
+private:
+    string name; double cost;
+};
+
+class ProvisionGroup : public ProvisionItem {  // COMPOSITE — has children
+public:
+    void add(ProvisionItem* item) override { children.push_back(item); }
+    double get_cost() const override {         // Recursively sums the tree
+        double total = 0;
+        for (auto* c : children) total += c-&gt;get_cost(); // same call on leaf or group
+        return total;
+    }
+private:
+    vector&lt;ProvisionItem*&gt; children;
+};
+
+// Build a tree:
+ProvisionGroup* team = new ProvisionGroup();
+team-&gt;add(new Meal("Breakfast", 12.00));
+team-&gt;add(new Meal("Lunch",     18.50));
+
+ProvisionGroup* event = new ProvisionGroup();
+event-&gt;add(team);                            // Group inside group
+event-&gt;add(new Meal("Awards Dinner", 35.00));
+
+cout &lt;&lt; event-&gt;get_cost(); // 65.50 — no knowledge of tree depth needed
+</pre>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 24 — DECORATOR
+═══════════════════════════════════════════════════ -->
+<h2 class="section purple" id="s24">24. Decorator Pattern</h2>
+
+<div class="explain purple">
+  <strong>Intent</strong>
+  Attach additional responsibilities to an object <em>dynamically</em> by wrapping it. Decorators provide a flexible alternative to subclassing — instead of N×M subclasses for N base types and M enhancements, you write N base classes and M decorators that can be combined in any order.
+</div>
+
+<div class="explain">
+  <strong>Structural key</strong>
+  A Decorator (1) <em>inherits from</em> the same base class as the object it wraps, AND (2) <em>holds a reference to</em> an object of that same base type. This is what enables chaining: each decorator wraps the previous, and all implement the same interface.
+</div>
+
+<div class="compare">
+  <div class="col-bad">
+    <div class="col-label bad-label">BAD — Program14.5 (boolean flags)</div>
+<pre>
+class Ticket {
+    Ticket(bool party, bool vip, int coupons);
+    double get_cost() const {
+        double t = BASE;
+        if (pregame_party) t += PARTY;
+        if (vip_seating)   t += VIP;
+        return t + coupons * COUPON;
+    }
+    // Adding new feature = edit this class
+};
+</pre>
+  </div>
+  <div class="col-good">
+    <div class="col-label good-label">GOOD — Program14.6 (Decorator chain)</div>
+<pre>
+class Ticket { public: virtual double get_cost() const = 0; };
+
+class Decorator : public Ticket {        // Inherits AND holds same type
+public:
+    Decorator(Ticket* t) : wrapped(t) {}
+    double get_cost() const override {
+        return my_price + wrapped-&gt;get_cost(); // delegate + add
+    }
+protected:
+    Ticket* wrapped;
+    double  my_price;
+};
+class Party  : public Decorator { Party(Ticket* t) : Decorator(t) { my_price=20; } };
+class VIP    : public Decorator { VIP(Ticket* t)   : Decorator(t) { my_price=50; } };
+
+// Build dynamically — any combination:
+Ticket* t = new BaseTicket(80);
+t = new Party(t);   // +20
+t = new VIP(t);     // +50
+cout &lt;&lt; t-&gt;get_cost(); // 150
+</pre>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 25 — LAMBDA
+═══════════════════════════════════════════════════ -->
+<h2 class="section" id="s25">25. Lambda Expressions</h2>
+
+<div class="explain">
+  <strong>What they are</strong>
+  A lambda is an anonymous function defined inline at the point of use. Instead of declaring a separate named function and passing a function pointer, you write the logic directly where you need it. Lambdas can capture local variables from the surrounding scope — something plain function pointers cannot do.
+</div>
+
+<pre>
+// Syntax:  [capture](parameters) -&gt; return_type { body }
+
+// Lambda-1: old way — separate function needed
+bool is_male(const Person&amp; p) { return p.gender == Gender::M; }
+auto males = select(people, is_male);           // function pointer
+
+// Lambda-2: new way — inline, captures local variable
+string target = "Smith";
+auto smiths = select(people,
+    [target](const Person&amp; p) -&gt; bool {        // captures 'target' by value
+        return p.last == target;
+    });
+
+// Lambda-3: with STL algorithms
+sort(words.begin(), words.end(),
+    [](const string&amp; a, const string&amp; b) { return a &lt; b; }); // alphabetical
+
+for_each(words.begin(), words.end(),
+    [](const string&amp; s) { cout &lt;&lt; s &lt;&lt; endl; });
+</pre>
+
+<table>
+  <tr><th>Capture syntax</th><th>Meaning</th></tr>
+  <tr><td><code>[]</code></td><td>Capture nothing — no access to local variables</td></tr>
+  <tr><td><code>[=]</code></td><td>Capture all local variables by value (copy)</td></tr>
+  <tr><td><code>[&amp;]</code></td><td>Capture all local variables by reference</td></tr>
+  <tr><td><code>[x]</code></td><td>Capture only <code>x</code> by value</td></tr>
+  <tr><td><code>[&amp;x]</code></td><td>Capture only <code>x</code> by reference</td></tr>
+  <tr><td><code>[x, &amp;y]</code></td><td>x by value, y by reference</td></tr>
+</table>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 26 — FUNCTOR
+═══════════════════════════════════════════════════ -->
+<h2 class="section" id="s26">26. Functors (Function Objects)</h2>
+
+<div class="explain">
+  <strong>What they are</strong>
+  A functor is a class that overloads <code>operator()</code>, making its instances callable like functions. The advantage over plain functions: a functor is an <em>object</em> — it can carry state between calls, be initialized with parameters, and be stored or copied.
+</div>
+
+<pre>
+// Functor-Randomint
+class RandomInt {
+public:
+    RandomInt(int min, int max) : min(min), max(max) { srand(time(NULL)); }
+    int operator()() {                      // Makes the instance callable
+        return min + rand() % (max - min + 1);
+    }
+private:
+    int min, max;   // State persists between calls — functions can't do this
+};
+
+RandomInt roll(1, 6);           // Construct with range
+cout &lt;&lt; roll() &lt;&lt; endl;         // Call like a function — uses operator()
+cout &lt;&lt; roll() &lt;&lt; roll() &lt;&lt; endl; // Each call uses the stored min/max
+
+// Functor-Summation — accumulating state
+class Summation {
+public:
+    void operator()(int x) { total += x; }  // Accumulates
+    int get_total() const  { return total; }
+private:
+    int total = 0;
+};
+
+Summation sum;
+for_each(v.begin(), v.end(), sum); // STL passes each element to operator()
+</pre>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 27 — UNIQUE_PTR
+═══════════════════════════════════════════════════ -->
+<h2 class="section" id="s27">27. Smart Pointers — unique_ptr</h2>
+
+<div class="explain">
+  <strong>What it solves</strong>
+  Raw pointers require manual <code>delete</code>. Forget it → memory leak. Throw an exception before reaching it → memory leak. Delete twice → undefined behavior. <code>unique_ptr</code> automates this: the object is deleted when the pointer goes out of scope, always, guaranteed.
+</div>
+
+<div class="explain green">
+  <strong>Exclusive ownership</strong>
+  Only <em>one</em> <code>unique_ptr</code> can own an object at a time. You cannot copy a <code>unique_ptr</code> (that would mean two owners both trying to delete the object). You <em>can</em> <strong>move</strong> it — transferring ownership. After the move, the original pointer is <code>nullptr</code>.
+</div>
+
+<pre>
+// SmartUniquePointer
+{
+    unique_ptr&lt;Date&gt; p1(new Date(2001, 1, 1));  // p1 owns the Date
+    // unique_ptr&lt;Date&gt; p2 = p1;               // ERROR — no copy!
+    unique_ptr&lt;Date&gt; p2 = move(p1);            // Transfer ownership
+    // p1 is now nullptr; p2 owns the Date
+
+    if (p1 == nullptr)
+        cout &lt;&lt; "p1 is null" &lt;&lt; endl;          // Yes, it is
+    cout &lt;&lt; *p2 &lt;&lt; endl;                        // Dereference like a raw pointer
+}   // p2 goes out of scope → ~Date() called automatically — no memory leak
+
+// Prefer make_unique (C++14) — no raw new:
+auto p3 = make_unique&lt;Date&gt;(2024, 5, 13);
+
+// Custom deleter:
+auto deleter = [](Date* d) { cout &lt;&lt; "Deleting\n"; delete d; };
+unique_ptr&lt;Date, decltype(deleter)&gt; p4(new Date(2020,1,1), deleter);
+</pre>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 28 — SHARED_PTR
+═══════════════════════════════════════════════════ -->
+<h2 class="section" id="s28">28. Smart Pointers — shared_ptr</h2>
+
+<div class="explain">
+  <strong>Shared ownership via reference counting</strong>
+  Multiple <code>shared_ptr</code>s can point to the same object. Each copy increments a reference count. Each destruction decrements it. When the count reaches 0, the object is deleted automatically. You never have to worry about who deletes it.
+</div>
+
+<pre>
+// SmartSharedPointer
+shared_ptr&lt;Date&gt; p1(new Date(2001, 1, 1));  // ref count = 1
+shared_ptr&lt;Date&gt; p2(p1);                    // ref count = 2 (copy is OK!)
+shared_ptr&lt;Date&gt; p3 = p1;                   // ref count = 3
+
+cout &lt;&lt; *p1 &lt;&lt; endl;   // All three point to same Date object
+cout &lt;&lt; *p2 &lt;&lt; endl;
+cout &lt;&lt; *p3 &lt;&lt; endl;
+
+p1.reset(new Date(2011, 11, 11)); // p1 now points to new Date; old Date ref count → 2
+p2.reset();                       // old Date ref count → 1
+p3.reset();                       // old Date ref count → 0 → deleted automatically
+
+// Prefer make_shared:
+auto p4 = make_shared&lt;Date&gt;(2024, 5, 13);
+</pre>
+
+<table>
+  <tr><th></th><th>unique_ptr</th><th>shared_ptr</th></tr>
+  <tr><td>Number of owners</td><td>Exactly 1</td><td>Many (ref counted)</td></tr>
+  <tr><td>Copyable</td><td>No — move only</td><td>Yes</td></tr>
+  <tr><td>Overhead</td><td>Zero (raw pointer size)</td><td>Ref count allocation</td></tr>
+  <tr><td>Use when</td><td>Clear single owner</td><td>Shared ownership needed</td></tr>
+</table>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 29 — MOVE SEMANTICS
+═══════════════════════════════════════════════════ -->
+<h2 class="section" id="s29">29. Move Semantics</h2>
+
+<div class="explain">
+  <strong>The problem with copying</strong>
+  When you assign or return a large object (a vector, a string, a buffer), C++ makes a deep copy — allocates new memory and copies all the data. If the original is about to be destroyed anyway (a temporary), that copy is pure waste.
+</div>
+
+<div class="explain green">
+  <strong>What moving does</strong>
+  Instead of copying the data, moving <em>steals</em> the resources (heap buffer, file handle, etc.) from the source and leaves the source in an empty but valid state. Moving a <code>string</code> with 1MB of text is O(1) — just transfer the pointer. Copying is O(n).
+</div>
+
+<pre>
+// MoveSemantics-1
+string a = "Hello World";
+
+// Copy — a keeps its data, b gets a full duplicate
+string b = a;
+cout &lt;&lt; a; // still "Hello World"
+cout &lt;&lt; b; // "Hello World" (separate copy)
+
+// Move — b steals a's buffer; a is now empty
+string c = move(a);
+cout &lt;&lt; a; // "" (moved-from state — valid but empty)
+cout &lt;&lt; c; // "Hello World"
+
+// Push_back with move — avoids copying large objects into vector
+vector&lt;string&gt; v;
+string big = "...lots of data...";
+v.push_back(move(big));   // Transfer into vector — O(1) instead of O(n)
+// big is now in a valid but unspecified state
+</pre>
+
+<div class="warn">After a move, the source object is in a <em>valid but unspecified</em> state. You can still assign to it or call methods on it, but don't rely on its value.</div>
+
+<pre>
+// Rule of Five: if you define any of these, define all five:
+class Resource {
+public:
+    Resource(const Resource&amp; other);             // copy constructor
+    Resource&amp; operator=(const Resource&amp; other); // copy assignment
+    Resource(Resource&amp;&amp; other) noexcept;         // move constructor
+    Resource&amp; operator=(Resource&amp;&amp; other) noexcept; // move assignment
+    ~Resource();                                 // destructor
+};
+</pre>
+
+<!-- ═══════════════════════════════════════════════════
+     QUICK REFERENCE
+═══════════════════════════════════════════════════ -->
+<h2 class="section" id="ref">Quick Reference</h2>
+
+<h3 class="concept">Design Patterns at a Glance</h3>
+<table>
+  <tr><th>Pattern</th><th>Category</th><th>One-line description</th><th>Lab</th></tr>
+  <tr><td>Template Method</td><td>Behavioral</td><td>Fixed algorithm skeleton; subclasses override steps</td><td>Program8.2</td></tr>
+  <tr><td>Strategy</td><td>Behavioral</td><td>Swap algorithms at runtime via composition</td><td>Program8.4</td></tr>
+  <tr><td>Factory Method</td><td>Creational</td><td>Subclass decides which concrete class to create</td><td>Program9.2</td></tr>
+  <tr><td>Abstract Factory</td><td>Creational</td><td>Creates a family of related objects as a unit</td><td>Program9.3</td></tr>
+  <tr><td>Singleton</td><td>Creational</td><td>Exactly one instance; private constructor + static getter</td><td>Program14.1</td></tr>
+  <tr><td>Adapter</td><td>Structural</td><td>Converts one interface to another</td><td>Program10.2</td></tr>
+  <tr><td>Facade</td><td>Structural</td><td>Simplifies a complex subsystem behind one interface</td><td>Program10.5</td></tr>
+  <tr><td>Composite</td><td>Structural</td><td>Tree of leaf/group objects — uniform interface</td><td>Program14.4</td></tr>
+  <tr><td>Decorator</td><td>Structural</td><td>Wraps an object to add behavior; inherits + holds same type</td><td>Program14.6</td></tr>
+  <tr><td>Iterator</td><td>Behavioral</td><td>Uniform traversal of any collection via has_next/next</td><td>Program11.2</td></tr>
+  <tr><td>Visitor</td><td>Behavioral</td><td>Add operations to hierarchy without modifying classes</td><td>Program11.4</td></tr>
+  <tr><td>Observer</td><td>Behavioral</td><td>Subject notifies all registered observers on state change</td><td>Program12.2</td></tr>
+  <tr><td>State</td><td>Behavioral</td><td>Object delegates behavior to current state object</td><td>Program13.2</td></tr>
+</table>
+
+<h3 class="concept">OOP Principles</h3>
+<table>
+  <tr><th>Principle</th><th>Violation sign</th><th>Fix</th></tr>
+  <tr><td>Single Responsibility</td><td>Class has &gt;1 reason to change</td><td>Extract class per responsibility</td></tr>
+  <tr><td>Open-Closed</td><td>Adding a feature requires editing existing class</td><td>Depend on abstraction; add new subclass</td></tr>
+  <tr><td>Law of Demeter</td><td><code>a.getB().getC().doThing()</code></td><td>Delegate: <code>a.doThing()</code></td></tr>
+</table>
+
+<h3 class="concept">Threading Quick Reference</h3>
+<table>
+  <tr><th>Scenario</th><th>Tool</th><th>Notes</th></tr>
+  <tr><td>Protect a critical section</td><td><code>mutex</code> + <code>lock_guard</code></td><td>RAII; always use lock_guard</td></tr>
+  <tr><td>Multiple concurrent readers</td><td><code>shared_mutex</code> + <code>shared_lock</code></td><td>Readers do not block each other</td></tr>
+  <tr><td>Exclusive write</td><td><code>shared_mutex</code> + <code>unique_lock</code></td><td>Blocks all readers and writers</td></tr>
+  <tr><td>Thread-safe single value</td><td><code>atomic&lt;T&gt;</code></td><td>No mutex needed for simple types</td></tr>
+  <tr><td>Wait for condition</td><td><code>condition_variable</code></td><td>Sleep until notified; no busy-wait</td></tr>
+  <tr><td>Voluntary CPU release</td><td><code>this_thread::yield()</code></td><td>Hint only — scheduler may ignore</td></tr>
+</table>
+
+<h3 class="concept">Recursion/Backtracking Checklist</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>Recursion</h4>
+    <ul>
+      <li>Identify the base case first</li>
+      <li>Make the problem strictly smaller each call</li>
+      <li>Combine results on the way back up</li>
+      <li>Watch stack depth for large inputs</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Backtracking</h4>
+    <ul>
+      <li>Place → Recurse → <strong>Undo</strong></li>
+      <li>Undo must restore state exactly</li>
+      <li>Return false / break on failure</li>
+      <li>Check constraints before placing</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Smart Pointers</h4>
+    <ul>
+      <li><code>unique_ptr</code>: one owner, move-only</li>
+      <li><code>shared_ptr</code>: many owners, ref count</li>
+      <li>Prefer <code>make_unique</code> / <code>make_shared</code></li>
+      <li>After <code>move()</code>, source is null/empty</li>
+    </ul>
+  </div>
+</div>
+
+<br>
+<div style="text-align:center; color:#888; font-size:11px; border-top:1px solid #ddd; padding-top:10px; margin-top:20px;">
+  CMPE 202 Spring 2026 &nbsp;·&nbsp; Instructor: Ronald Mak &nbsp;·&nbsp; Final Exam: Wednesday May 13, 2026 at 5:30 PM
+</div>
+
+</body>
+</html>

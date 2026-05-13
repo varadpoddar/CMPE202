@@ -1,242 +1,297 @@
 \documentclass[landscape,letterpaper]{article}
-\usepackage[margin=0.18in]{geometry}
+\usepackage[top=0.20in,bottom=0.20in,left=0.20in,right=0.20in]{geometry}
 \usepackage{multicol}
 \usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
 \usepackage{microtype}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \pagestyle{empty}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0pt}
-\setlist[itemize]{leftmargin=*,topsep=0pt,itemsep=0pt,parsep=0pt,partopsep=0pt}
-\renewcommand{\normalsize}{\fontsize{6.5}{7.5}\selectfont}
+\setlength{\columnsep}{4pt}
+\setlength{\columnseprule}{0.2pt}
+\renewcommand{\arraystretch}{0.88}
+\setlist[itemize]{leftmargin=7pt,topsep=0pt,itemsep=0pt,parsep=0pt,partopsep=0pt,label=\textbullet}
+\setlist[enumerate]{leftmargin=9pt,topsep=0pt,itemsep=0pt,parsep=0pt,partopsep=0pt}
+\linespread{1.03}
+\renewcommand{\normalsize}{\fontsize{6.5}{7.4}\selectfont}
 \normalsize
+\newcommand{\h}[1]{\textbf{#1}}
+\newcommand{\hd}[1]{\vspace{1pt}\noindent\textbf{\underline{#1}}\vspace{-1pt}}
+
 \begin{document}
 \begin{multicols}{4}
 
-\textbf{RECURSION}\\[-3pt]
-Key idea: divide problem into smaller similar subproblem. \textbf{Base case}: smallest, immediate solution (no recursive call). \textbf{Recursive case}: calls itself on simpler input approaching base case. Each call has its own local variables.\\[-3pt]
-\textbf{Largest}: compare first elem to largest of rest; base=size 1. \textbf{Reverse}: remove first, reverse rest, append first; base=size 1. \textbf{Member-of}: \texttt{x==head || member(x,rest)}; base=size 0 (false). \textbf{Multiply} \texttt{i*j}: \texttt{i + multiply(i,j-1)}; base \texttt{j==0}$\to$0.\\[-3pt]
-\textbf{Towers of Hanoi} (n disks, src$\to$dst via tmp):
-\begin{itemize}
-\item \texttt{solve(n-1,src,dst,tmp)} move top n-1 to tmp
-\item \texttt{solve(1,src,tmp,dst)} move largest to dst (base)
-\item \texttt{solve(n-1,tmp,src,dst)} move n-1 from tmp to dst
-\end{itemize}
-Very hard without recursion. $2^n-1$ moves total.\\[-3pt]
-\textbf{Fibonacci Disaster}: \texttt{f(n)=f(n-2)+f(n-1)}, base \texttt{f(0)=0,f(1)=1}. Exponential calls -- use iteration instead. Recursion is powerful but use appropriately.\\[-3pt]
-\textbf{Quicksort Partition}: pick pivot (middle), swap to right, move \texttt{i} right while \texttt{data[i]<pivot}, move \texttt{j} left while \texttt{data[j]>pivot}, if \texttt{i<j} swap \texttt{data[i],data[j]}, repeat until \texttt{j} crosses \texttt{i}, swap pivot back. Pivot at correct position. Recursively sort left/right subarrays. Base: size 0/1 return; size 2 swap if needed. Most elegant algorithm (1961).\\[-3pt]
-\textbf{Dynamic Backtracking}: try a solution path recursively; if dead end, backtrack and try another. Decision tree: stages, nodes=steps, paths between stages. Base=step with no solution paths.\\[-3pt]
-\textbf{N-Queens}: solve column by column L$\to$R. \texttt{is\_safe\_position(row,col)}: check attacks from left. \texttt{find\_solutions()}: recurse on columns to right, then backtrack to next safe square. Base=past last column$\to$solution found. 92 solutions for 8 queens.\\[-3pt]
-\textbf{Sudoku Backtracking}: brute force, try 1-9 at each cell L$\to$R, top$\to$bottom. Recursively check ahead; if no solution backtrack. Base=past last cell$\to$solved.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hd{RECURSION}\\[-2pt]
+\h{Key ideas:} base case (immediate, obvious); recursive case calls self on smaller/similar problem; each call has own local vars on stack; must approach base case. \h{Largest:} compare head vs.\ largest(rest). \h{Reverse:} remove head, recurse, append head at end. \h{Member-of:} head==x OR member(rest). \h{Multiply} $i{\times}j$: base $j{=}0$; else $i + \text{mult}(i,j{-}1)$.\\[-2pt]
 
-\vspace{-2pt}
-\textbf{MULTITHREADING}\\[-3pt]
-\textbf{Thread}: path computer takes through code. Multithreading = multiple simultaneous paths. Each thread has own stack \& registers; share code, data, resources. \textbf{Concurrency}: one CPU switches tasks. \textbf{Parallelism}: multiple CPUs truly simultaneous.\\[-3pt]
-\textbf{Shared resource}: memory, printer, output stream. \textbf{Critical region}: code that accesses shared resource. \textbf{Mutual exclusion}: only one thread in critical region at a time.\\[-3pt]
-\textbf{mutex}: enforces mutual exclusion. \texttt{mutex m; m.lock(); /*crit*/ m.unlock();}. Thread blocks if mutex already locked. Must unlock before exiting critical region.\\[-3pt]
-\textbf{lock\_guard}: RAII wrapper -- auto-locks on construction, auto-unlocks on destruction (scope exit). \texttt{lock\_guard<mutex> lk(m);}. Prevents forgetting to unlock (deadlock risk).\\[-3pt]
-\textbf{Context switching}: runtime switches among threads. \texttt{this\_thread::yield()} explicitly relinquishes control. \texttt{this\_thread::sleep\_for(chrono::seconds(n))}.\\[-3pt]
-\textbf{Reader-Writer Problem}: multiple readers OK simultaneously; one writer excludes all. Use \texttt{shared\_mutex}. \texttt{unique\_lock<shared\_mutex>}: one thread only (writer). \texttt{shared\_lock<shared\_mutex>}: multiple threads (readers). Both auto-unlock on scope exit.\\[-3pt]
-\textbf{atomic\textless T\textgreater}: thread-safe ops without mutex. \texttt{atomic<int> cnt; cnt.store(n); cnt.load(); --cnt;}\\[-3pt]
-\textbf{condition\_variable}: synchronization beyond mutexes. \texttt{cv.wait(lock)}: unlocks, sleeps, re-locks when notified. \texttt{cv.notify\_all()}: wake all waiting threads. Pattern: \texttt{while(condition) cv.wait(lock);} (loop guards spurious wakeups).\\[-3pt]
-\textbf{Producer-Consumer}: producers enter data to shared queue (capacity-limited); consumers remove. Queue full$\to$producers wait on \texttt{producer\_cv}; queue empty$\to$consumers wait on \texttt{consumer\_cv}. Producer notifies consumers when queue becomes non-empty; consumer notifies producers when queue becomes non-full.\\[-3pt]
-\textbf{Dining Philosophers}: 5 philosophers, 5 chopsticks (1 between each). Need both adjacent chopsticks to eat. Must pick up both at once (not hold-and-wait). Loop: think$\to$wait$\to$fill bowl$\to$eat.\\[-3pt]
-\textbf{Deadlock}: all threads blocked, app hangs. Avoid by consistent lock ordering, using \texttt{lock\_guard}. Performance: more threads $\ne$ faster; context switch costs, mutex overhead matter. \textbf{Spawn}: \texttt{thread t(func, args); t.join();}\\[-3pt]
-\textbf{auto}: type inference from initializer. \texttt{auto x = expr;} compiler deduces type. \textbf{decltype(x)}: returns type of variable \texttt{x}. Use: \texttt{auto t = steady\_clock::now(); decltype(t) end;}
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
 
-\vspace{-2pt}
-\textbf{WELL-DESIGNED SOFTWARE}\\[-3pt]
-\textbullet\ Meets requirements (does what supposed to)\quad\textbullet\ Reliable (fewer bugs, no surprises, no hidden perf issues)\quad\textbullet\ Flexible \& scalable (easy to add features, less complexity)\quad\textbullet\ Maintainable (future devs can understand)\quad\textbullet\ Uses good design techniques \& patterns\quad\textbullet\ Saves time/cost overall. Good design = iterative dev (design-code-test).
+\hd{TOWERS OF HANOI}\\[-2pt]
+Move $n$ disks src$\to$dst using tmp. Recursive solution:
+\begin{enumerate}
+  \item solve($n{-}1$, src, dst, tmp) — move top $n{-}1$ via dst
+  \item move(src$\to$dst) — base case: 1 disk
+  \item solve($n{-}1$, tmp, src, dst) — move from tmp
+\end{enumerate}
+Total moves: $2^n - 1$. ``Very difficult without recursion!''\quad Pins swap roles (src/tmp/dst) each call.\\[-2pt]
 
-\vspace{-2pt}
-\textbf{OOP DESIGN}\\[-3pt]
-\textbf{Encapsulation}: combine data+behavior in class; public/private; contains/isolates changes (prevents leaks). Object \textbf{state} = values of member vars; \textbf{state change} = values change.\\[-3pt]
-\textbf{Abstraction}: ignore irrelevant details; multiple levels; reduces complexity.\\[-3pt]
-\textbf{Inheritance}: subclass from superclass; inherits state+behavior; can add/override. Reduces code complexity.\\[-3pt]
-\textbf{Polymorphism}: pointer to superclass calls correct subclass method at runtime. \texttt{virtual} keyword enables. Increases flexibility. \texttt{override} keyword: compiler checks signature match.\\[-3pt]
-\textbf{dynamic\_cast\textless T*\textgreater(ptr)}: type check+convert; returns \texttt{nullptr} if wrong type. \textbf{Abstract class}: $\ge$1 pure virtual fn (\texttt{=0}); cannot instantiate directly. \textbf{Interface class}: only pure virtual fns, no member vars. Subclasses must implement all. Use dashed arrow in UML (realization).\\[-3pt]
-\textbf{virtual} destructor: required if class has subclasses. \textbf{Function signature}: name + param count/types/order (not return type, not param names).\\[-3pt]
-\textbf{Override vs Overload}: Override=subclass same signature (polymorphism). Overload=same name different signature same scope.\\[-3pt]
-\textbf{Liskov Substitution}: subclass object substitutable for superclass without errors. Violation: \texttt{CircularBuffer : vector} allows invalid \texttt{at(),erase()} -- fix: has-a not is-a.\\[-3pt]
-\textbf{Code to Interface}: declare as superclass ptr, assign subclass. \texttt{Shape *s = new Rectangle(); s = new Circle();} Relies on polymorphism. Hardcoding: \texttt{Rectangle *r = new Rectangle();} -- inflexible.
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
 
-\vspace{-2pt}
-\textbf{DESIGN SMELLS}\\[-3pt]
-\textbullet\ \textbf{Leaking changes}: change in class A forces change in B (tight coupling)\quad\textbullet\ \textbf{God class}: too many responsibilities (AutomobileApp)\quad\textbullet\ \textbf{Hardcoded concrete}: \texttt{Cat *pet = new Cat();} inflexible\quad\textbullet\ \textbf{Least surprise violation}: misleading names, hidden perf issues, off-by-one (month array)\quad\textbullet\ \textbf{DRY violation}: repeated code in multiple places
+\hd{FIBONACCI DISASTER}\\[-2pt]
+\texttt{f(n)=f(n-1)+f(n-2)}: exponential redundant calls; bogs down. Use \h{iteration} instead. Recursion is powerful but use appropriately.\\[-2pt]
 
-\vspace{-2pt}
-\textbf{DESIGN PRINCIPLES}\\[-3pt]
-\textbf{SRP} (Single Responsibility): class has one primary responsibility; cohesive; easy to use+maintain.\\[-3pt]
-\textbf{Encapsulate What Varies}: isolate code that can change so changes don't leak to other code. Put varying code in its own class.\\[-3pt]
-\textbf{Delegation}: move work from requester class to more suitable delegate class. Requester has no dependency on how delegate works. Increases cohesion.\\[-3pt]
-\textbf{Principle of Least Knowledge (Law of Demeter)}: classes have minimal dependencies on each other's implementation. Loosely coupled. Rules: \texttt{afunc()} may call \texttt{bfunc()} on B if: (1) B is member var of A; (2) B passed as param to afunc; (3) B instantiated by afunc. May NOT call on B returned by another object's method (\texttt{a.getB().getC()} = smell). Return copies not pointers (immutability).\\[-3pt]
-\textbf{OCP} (Open-Closed): closed to modification (stable), open for extension (subclasses). Use private members in superclass.\\[-3pt]
-\textbf{Code to Interface}: write code using superclass/interface, not specific subclasses. Runtime polymorphism.\\[-3pt]
-\textbf{DRY} (Don't Repeat Yourself): no duplicate code; share one copy as function or class.\\[-3pt]
-\textbf{Defensive Programming}: runtime checks of param values; create only valid objects; \texttt{assert()} invariants.\\[-3pt]
-\textbf{Programming by Contract}: \textbf{Precondition}: must be true when function called (caller's responsibility). \textbf{Postcondition}: must be true when function returns (function's responsibility). \textbf{Class invariant}: condition true after construction and after every mutation. \texttt{assert(class\_invariant());} Use \texttt{assert()} for pre/post conditions.\\[-3pt]
-\textbf{Favor Composition over Inheritance}: "has-a" often better than "is-a". Toys: \texttt{Toy} has \texttt{PlayAction*} and \texttt{Sound*} -- strategies composable. Factory function: \texttt{static Toy* make(Kind k)} creates/returns correct subclass.\\[-3pt]
-\textbf{Lazy Evaluation}: compute value only when needed. \textbf{Refactoring}: redesign to improve without changing functionality.
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
 
-\vspace{-2pt}
-\textbf{REQUIREMENTS}\\[-3pt]
-\textbf{Functional req}: what system shall do or allow users to do. Use "shall"/"must". \textbf{Nonfunctional req}: usability, reliability, performance, supportability constraints. Just as important!\\[-3pt]
-Requirements must be: \textbf{Clear} (jargon-free), \textbf{Consistent} (no contradictions), \textbf{Correct}, \textbf{Complete} (no gaps), \textbf{Realistic}, \textbf{Verifiable} (testable), \textbf{Traceable} (each req $\leftrightarrow$ feature).\\[-3pt]
-Use strong auxiliary verbs "shall"/"must"; "should" = wish list. Sources: interviews, observation, stated+implied requirements. Iterative: show prototypes, requirements evolve.\\[-3pt]
-\textbf{I18N} (Internationalization, 18 letters): design app to support multiple locales. \textbf{L10N} (Localization, 10 letters): adapt to specific locale (language, date format, monetary, encoding). Encapsulate locale-varying parts.\\[-3pt]
-\textbf{V\&V}: \textbf{Validate} = building right application (customer confirms requirements) -- customers validate. \textbf{Verify} = building application right (developers test implementation) -- developers verify.
+\hd{QUICKSORT} (1961, ``most elegant'')\\[-2pt]
+\h{Partition:} pick middle as pivot (A); park at right by swap (B); set \texttt{i=left-1, j=right}; loop until $j$ crosses $i$: move \texttt{i} right while \texttt{data[i]<pivot} (C); move \texttt{j} left while \texttt{data[j]>pivot} (D); if \texttt{i<j} swap \texttt{data[i],data[j]} (E); swap pivot back in at \texttt{i}. \h{Sort:} base: size$<$2 return; size$=$2 swap if needed; else partition, recursively sort left \& right subarrays.\\[-2pt]
 
-\vspace{-2pt}
-\textbf{UML DIAGRAMS}\\[-3pt]
-\textbf{Class diagram}: class name (required), member vars (opt), member fns (opt). \texttt{+}=public, \texttt{-}=private, \texttt{\#}=protected.\\[-3pt]
-\textbf{UML class relationships} (line types):\\[-3pt]
-\begin{itemize}
-\item \textbf{Dependency} (dashed arrow): A uses B transiently (param/local var)
-\item \textbf{Association} (solid arrow): A has member var of type B
-\item \textbf{Aggregation} (hollow diamond): A contains B objects; B can exist independently
-\item \textbf{Composition} (filled diamond): A contains B; B cannot exist without A
-\item \textbf{Inheritance} (solid triangle arrow): subclass$\to$superclass
-\item \textbf{Realization} (dashed triangle arrow): class implements interface (\texttt{<<interface>>})
-\end{itemize}
-Cardinality: "1 Catalogue aggregates 0..* Book objects".\\[-3pt]
-\textbf{State diagram}: rounded boxes=states, arrows=transitions, labels=triggering events. Filled diamonds=branch/merge, heavy bars=fork/join.\\[-3pt]
-\textbf{Sequence diagram}: runtime interactions during use case. Lifelines (dashed vertical), active rectangles, labeled horizontal arrows=method calls. Time top$\to$bottom.
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
 
-\vspace{-2pt}
-\textbf{USE CASES}\\[-3pt]
-\textbf{Use case}: single task app must allow actor to accomplish OR single goal actor must achieve. \textbf{Actor}: external agent (person or app); role abstraction; outside system boundary.\\[-3pt]
-Use cases capture customer understanding; provide context for requirements; show how functional req determine functionality.\\[-3pt]
-\textbf{Use case description fields}: \textbf{Name} (verb-noun, achievable goal e.g. "Withdraw Cash"), \textbf{Goal}, \textbf{Summary} (1-2 sentences), \textbf{Actors}, \textbf{Preconditions} (what must be true before; can ref other UCs), \textbf{Trigger} (what actor did to start), \textbf{Primary sequence} ($\le$10 steps; can ref other UCs), \textbf{Alternate sequences} (exception paths), \textbf{Postconditions} (situation when done), \textbf{Nonfunctional requirements}, \textbf{Glossary}.\\[-3pt]
-Guidelines: short/simple/informal; no GUI/impl details; $\le$10 primary steps (else split); focus on WHAT not HOW; "black box" view.
+\hd{DYNAMIC BACKTRACKING}\\[-2pt]
+Decision tree: try a path; backtrack on dead end; try next path. Base case = no further paths (dead end) or solution found. Can find all solutions by continuing after finding one.\\[-2pt]
+\h{N-Queens (8):} solve column-by-column L$\to$R. \texttt{is\_safe\_position(row,col)} checks left attacks. \texttt{find\_solutions()} recurses right. After each safe square, backtrack to try next. \h{92 solutions.}\\[-2pt]
+\h{Sudoku:} brute-force 1--9 per cell; L$\to$R top$\to$bottom; recursively check ahead; backtrack to next number after trying all 9; backtrack to previous cell.\\[-2pt]
 
-\vspace{-2pt}
-\textbf{FUNCTIONAL SPECIFICATION}\\[-3pt]
-Written by dev team; non-technical jargon-free language; for customer+devs. Contains: \textbf{Product name}, \textbf{Problem statement} (what problem solved), \textbf{Objectives} (what app accomplishes), \textbf{Functional requirements} (must/shall), \textbf{Nonfunctional requirements} (must/shall), \textbf{Use cases} (diagrams + descriptions). May include: External Test Plan (black-box tests), Deployment Plan, Maintenance Plan. No implementation details (those go in Design Specification). Customer reads/approves to validate = "building right app". Also called External Reference Specification.\\[-3pt]
-\textbf{Design Specification}: technical doc with impl details; UML class/state/sequence diagrams; for developers. May include Internal Test Plan (unit tests, regression tests). Also called Internal Maintenance Specification.
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
 
-\vspace{-2pt}
-\textbf{REQUIREMENTS ANALYSIS (Textual)}\\[-3pt]
-From functional requirements: \textbf{Nouns$\to$Classes}: identify nouns, determine which become classes, member vars for state. \textbf{Verbs$\to$Behaviors/Methods}: transitive verbs acting on objects$\to$member functions; assign to cohesive classes (SRP). Create \textbf{Noun-Class Table} (noun, class, states/vars) and \textbf{Verb-Behavior Table} (verb, class, member fn). Initial classes refined during iterations.
+\hd{MULTITHREADING}\\[-2pt]
+\h{Thread:} path through code; own stack+registers; shares code/data/resources. \h{Concurrency} (switch among tasks, 1 CPU) vs.\ \h{Parallelism} (simultaneous, multi-CPU). \h{Shared resource:} output stream, memory. \h{Critical region:} code accessing shared resource. \h{Mutual exclusion:} only 1 thread in critical region at a time.\\[-2pt]
+\h{mutex:} \texttt{lock()} blocks if already locked; \texttt{unlock()} on exit. \h{lock\_guard\textless mutex\textgreater:} RAII — auto-locks on construct, auto-unlocks on scope exit; prevents deadlock from forgotten unlock. \h{Context switching:} runtime switches threads; \texttt{this\_thread::yield()} voluntary relinquish. \texttt{this\_thread::sleep\_for(chrono::seconds(n))}.\\[-2pt]
+\h{Reader-Writer:} \texttt{shared\_mutex}. Writers use \texttt{unique\_lock\textless shared\_mutex\textgreater} (exclusive — no readers or writers). Readers use \texttt{shared\_lock\textless shared\_mutex\textgreater} (multiple readers OK; blocks writers).\\[-2pt]
+\h{atomic\textless T\textgreater:} thread-safe without mutex; \texttt{store()}, \texttt{load()}, \texttt{--} ops.\\[-2pt]
+\h{condition\_variable:} \texttt{cv.wait(lock)} — atomically unlocks+sleeps; re-locks when notified; always use \texttt{while()} loop (spurious wakeup). \texttt{cv.notify\_all()} wakes all waiting.\\[-2pt]
 
-\vspace{-2pt}
-\textbf{LAMBDA EXPRESSIONS}\\[-3pt]
-\texttt{[capture](params)->ret\{body\}} -- unnamed inline function. No capture needed: \texttt{[](const Person\& p)->bool\{return p.gender==M;\}}. \textbf{Capture by ref}: \texttt{[\&count]}; by value: \texttt{[count]}. With capture, formal param must use \texttt{std::function<bool(const Person\&)>}. \textbf{Predicate}: Boolean fn depending on params. Use with STL algorithms (sort, find\_if, etc.) and custom functions. Lambda as object: \texttt{auto f = [](int x)\{return x*2;\};}\\[-3pt]
-\textbf{Functor (Function Object)}: class overloading \texttt{operator()()}. Stores state in member vars. Can be stored, passed, returned. \texttt{RandomInt ri(5,12); ri();} \texttt{Summation adder; adder(3);} accumulates sum across calls.
+\columnbreak
 
-\vspace{-2pt}
-\textbf{MODERN C++: MOVE SEMANTICS \& SMART PTRS}\\[-3pt]
-\textbf{lvalue}: variable (can be on left of assignment). \textbf{rvalue}: temporary computed value. Copying rvalue is wasteful (it will be destroyed). \textbf{Move semantics}: "steal" resources from rvalue instead of copying. \texttt{std::move(x)}: force lvalue to behave as rvalue.\\[-3pt]
-\textbf{Rule of Big Five}: if you define destructor, also define: copy ctor, copy assign op, \textbf{move ctor}, \textbf{move assign op}. Move ctor/assign steal resources from source. Big Three: destructor + copy ctor + copy assign op. STL containers implicitly use move semantics.\\[-3pt]
-\textbf{unique\_ptr\textless T\textgreater}: exclusive ownership; auto-deleted when out of scope or reset. Cannot copy (exclusive). Transfer with \texttt{std::move(p)} -- source set to nullptr. \texttt{unique\_ptr<T> p(new T()); p.reset(new T());}. Custom deleter via lambda + decltype.\\[-3pt]
-\textbf{shared\_ptr\textless T\textgreater}: shared ownership via reference count. Multiple ptrs to same object; auto-deleted when last ptr gone (count=0). \texttt{shared\_ptr<T> p2(p1);} increments count. \texttt{p.reset(new T())} decrements old, starts new. Raw ptrs: dangerous (memory leak, double delete, no ownership clarity). Use smart ptrs instead.\\[-3pt]
-\textbf{C++ Vectors performance}: growing vector copies all elements to new array (O(n)). Use \texttt{reserve()} to pre-allocate. Store \texttt{T*} (pointers) not \texttt{T} objects to avoid copy ctor/dtor overhead on insert/remove. Refactor: \texttt{vector<Date*>} instead of \texttt{vector<Date>}.
+\hd{PRODUCER-CONSUMER}\\[-2pt]
+Queue with capacity. Producers wait on \texttt{producer\_cv} when full (\texttt{is\_full()}). Consumers wait on \texttt{consumer\_cv} when empty (\texttt{is\_empty()}). Producer notifies consumers when \texttt{just\_became\_not\_empty()} (size==1). Consumer notifies producers when \texttt{just\_became\_not\_full()} (size==CAP-1). When all producers done, notify consumers.\\[-2pt]
+\h{Dining Philosophers:} 5 philosophers, 5 chopsticks (one between each). Need both adjacent; must pick up both at once (cannot hold one and wait). Loop: think$\to$wait$\to$fill bowl$\to$eat. \h{Deadlock:} all blocked; prevent with consistent lock ordering.\\[-2pt]
+\h{auto:} type inference from initializer. \h{decltype(x):} yields type of variable \texttt{x}; use to declare same-type variable.\\[-2pt]
 
-\vspace{-2pt}
-\textbf{DESIGN PATTERNS (GoF -- 13 covered)}\\[-3pt]
-23 total in GoF book; \textbf{Creational}: Factory Method, Abstract Factory, Singleton; \textbf{Structural}: Adapter, Facade, Composite, Decorator; \textbf{Behavioral}: Template Method, Strategy, Iterator, Visitor, Observer, State. Industry-proven model solutions; not copy-paste code; not libraries; discovered from experience.
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
 
-\vspace{-2pt}
-\textbf{TEMPLATE METHOD DP}\\[-3pt]
-\textbf{Problem}: algorithm with fixed steps order; some steps common, some sport-specific; code duplication. \textbf{Solution}: superclass defines \textbf{template method} (\texttt{generate\_report()}) calling step methods in order; implements common steps (\texttt{print\_header(), print\_footer()}); delegates varying steps to subclasses (\texttt{acquire\_data(), analyze\_data(), print\_report()} = abstract). Subclasses implement varying steps. \textbf{Uses inheritance}. Benefits: algorithm outline, reduced duplication, OCP (extend by subclass), encapsulation of varying steps.\\[-3pt]
-\texttt{GameReport} (template method) $\leftarrow$ \texttt{BaseballReport, VolleyballReport} (concrete implementations).
+\hd{WELL-DESIGNED SOFTWARE}\\[-2pt]
+Meets requirements \quad$\cdot$\quad Reliable (no surprises, no hidden perf issues) \quad$\cdot$\quad Flexible+scalable (add features without complexity) \quad$\cdot$\quad Maintainable \quad$\cdot$\quad Uses good design+patterns \quad$\cdot$\quad Saves time/cost. Design-code-test iterations (``Mozart'' analogy — iterative, not big-bang).\\[-2pt]
 
-\vspace{-2pt}
-\textbf{STRATEGY DP}\\[-3pt]
-\textbf{Problem}: family of interchangeable algorithms; hardcoded algorithms; code duplication; can't share/reuse. \textbf{Solution}: interface for each algorithm family (\texttt{PlayerStrategy, VenueStrategy}); concrete classes implement each algorithm; \texttt{Sport} class aggregates strategy interfaces ("has-a"). Choose algorithm at runtime by setting member var. \textbf{Uses composition}. Benefits: encapsulated algorithms, shared code (DRY), runtime flexibility, OCP for Sport class, loosely coupled.\\[-3pt]
-Template Method vs Strategy: TM=inheritance, outline in superclass, common steps; Strategy=composition, whole interchangeable algorithms.\\[-3pt]
-\texttt{Sport} has \texttt{player\_strategy*} and \texttt{venue\_strategy*}; \texttt{Baseball,Football,Volleyball} subclasses set these.
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
 
-\vspace{-2pt}
-\textbf{FACTORY METHOD DP}\\[-3pt]
-\textbf{Problem}: \texttt{AthleticsDept} must create Sport objects; nested switch statements; multiple responsibilities. \textbf{Solution}: superclass \texttt{AthleticsDept} defines abstract \textbf{factory method} \texttt{create\_sport()}; subclasses \texttt{VarsityDept, IntramuralDept} implement it to create appropriate Sport objects. Benefits: encapsulated changes (add categories easily), OCP for AthleticsDept, delegation to subclasses, SRP (each subclass creates only its sports), loose coupling.\\[-3pt]
-Generic: Creator (AthleticsDept) + ConcreteCreator (VarsityDept) + Product (Sport) + ConcreteProduct (VarsityBaseball...).
+\hd{OOP DESIGN}\\[-2pt]
+\h{Encapsulation:} data+behavior in class; public/private; contains/isolates changes. \h{Abstraction:} ignore irrelevant details. \h{Inheritance:} subclass from superclass; adds/overrides state+behavior. \h{Polymorphism:} base ptr calls correct subclass method at runtime via \texttt{virtual}. \h{dynamic\_cast\textless T*\textgreater(ptr):} type-check+convert; returns \texttt{nullptr} if wrong type. \h{Abstract class:} $\geq$1 pure virtual (\texttt{=0}); cannot instantiate; subclasses must implement. \h{Interface class:} all pure virtual, no member vars. \h{virtual destructor} required if subclasses exist. \h{Override} (same signature, different class) vs.\ \h{Overload} (same name, different params, same scope).\\[-2pt]
+\h{Liskov Substitution (LSP):} subclass substitutable for superclass. \h{Violation:} \texttt{CircularBuffer:vector} exposes invalid vector methods (\texttt{at()}, \texttt{erase()}); \h{Fix:} has-a not is-a (member \texttt{vector<int> buffer}). \h{Code to Interface:} declare as base ptr, assign subclass at runtime.\\[-2pt]
 
-\vspace{-2pt}
-\textbf{ABSTRACT FACTORY DP}\\[-3pt]
-\textbf{Problem}: Factory Method can't prevent coding errors that mix families (e.g., varsity player on intramural team). \textbf{Solution}: \textbf{abstract factory} interface \texttt{ProvisionsFactory} with \texttt{make\_players()} and \texttt{make\_venue()}; concrete factories \texttt{VarsityFactory, IntramuralFactory} each create objects from one family only. Each Sport subclass receives factory and uses it. Benefits: families kept together (prevents mix-up), runtime flexibility (choose family), encapsulated object creation, loosely coupled.\\[-3pt]
-Factory Method: interface for creating one object, subclass decides which. Abstract Factory: interface for creating families, prevents mixing families.
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
 
-\vspace{-2pt}
-\textbf{ADAPTER DP}\\[-3pt]
-\textbf{Problem}: integrate external/legacy code with incompatible interfaces; can't modify either; repeated conversion code. \textbf{Solution}: \textbf{Object adapter}: adapter class implements target interface, aggregates adaptee, converts calls. \textbf{Class adapter}: multiple inheritance from target interface and adaptee. Benefits: encapsulated conversion (Encapsulate What Varies), SRP (AttendanceReport only prints), loose coupling (add sports without changing report class).\\[-3pt]
-Generic: Target (AttendanceData interface) + Adapter (FootballData) + Adaptee (FootballInfo). \texttt{request()} calls \texttt{specific\_request()}.
+\hd{DESIGN SMELLS}\\[-2pt]
+\h{Leaking changes:} change in \texttt{Car} forces change in \texttt{Driver} (key$\to$button). \h{God class:} \texttt{AutomobileApp} — too many responsibilities (drive+maintain+wash). \h{Hardcoded concrete:} \texttt{Cat *pet = new Cat()}. \h{Principle of least surprise violation:} \texttt{Date} MONTH\_NAMES[12] off-by-one (month=9$\to$OCT not SEP). \h{DRY violation:} repeated code in multiple classes.\\[-2pt]
 
-\vspace{-2pt}
-\textbf{FACADE DP}\\[-3pt]
-\textbf{Problem}: complex subsystem with multiple interfaces; clients must know order; duplicated coordination code. \textbf{Solution}: \textbf{facade class} (\texttt{FundRaiser}) provides simple higher-level interface hiding subsystem (\texttt{Alumni, BoosterClubs, Students}). Clients call facade only. Benefits: reduced duplication (DRY), loose coupling (PoLK), encapsulates changes (add CorporateSponsors $\to$ only facade changes), simpler interface.
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
 
-\vspace{-2pt}
-\textbf{SINGLETON DP}\\[-3pt]
-\textbf{Problem}: need exactly one instance; global object allows copies and multiple instances. \textbf{Solution}: private constructor; private static \texttt{single\_instance} ptr (nullptr if not created); public static \texttt{get\_singleton()} creates lazily and returns; disable copy ctor and copy assign (\texttt{= delete}). Benefits: guaranteed one instance, global access point, lazy creation. Warning: multithreading issue -- multiple threads may each create instance; need mutex protection.\\[-3pt]
-\texttt{ExecutivePass::obtain()} = global access. \texttt{delete} singleton$\to$enables creating new one.
-
-\vspace{-2pt}
-\textbf{ITERATOR DP}\\[-3pt]
-\textbf{Problem}: single algorithm over multiple collections (array, vector, map) stored differently; overloaded functions per collection type. \textbf{Solution}: Iterator interface with \texttt{has\_next(), next()}; each Team subclass creates appropriate Iterator; \texttt{TeamReport} delegates iteration to Iterator, doesn't know collection type. Benefits: delegated iteration, loose coupling (PoLK), encapsulated iteration algorithms, DRY, sharable.\\[-3pt]
-Note: C++ built-in iterators (\texttt{vector<T>::iterator}) are NOT modeled by this pattern -- not loosely coupled.\\[-3pt]
-Generic: SequentialCollection + Iterator interface + ConcreteIterator (with cursor) + Client.
-
-\vspace{-2pt}
-\textbf{VISITOR DP}\\[-3pt]
-\textbf{Problem}: different algorithms over same tree data structure; algorithm code scattered in node classes; hard to add new passes. \textbf{Solution}: Node interface with \texttt{accept(Visitor\&)}; Visitor interface with \texttt{visit\_NodeType()} for each node type; concrete Visitor classes encapsulate each algorithm. Node: \texttt{accept(v)\{v.visit\_X(this);\}} then propagates to children. Benefits: encapsulated algorithms, SRP (nodes=structure, visitors=algorithms), loose coupling, add new algorithms without modifying structure.\\[-3pt]
-Analogy: craftsmen (painter, plumber) visit rooms -- each does different task per room type.\\[-3pt]
-\texttt{ScoresReportVisitor, ActivitiesReportVisitor, WinningsReportVisitor} each visit \texttt{Intramural, Sport, Game, Hall} nodes.
-
-\vspace{-2pt}
-\textbf{OBSERVER DP}\\[-3pt]
-\textbf{Problem}: publisher hardcodes subscribers; tight coupling; can't add/remove subscribers without code change. \textbf{Solution}: Subject (publisher) has \texttt{observers} vector of Observer interface ptrs; \texttt{subscribe/unsubscribe}; \texttt{notify()} calls \texttt{update()} on each observer. Observer calls \texttt{get\_current\_event()} if interested. Benefits: loose coupling (publisher $\leftrightarrow$ subscriber; only knows \texttt{update()}), flexible (add/remove subscribers at runtime), SRP (publisher generates events, subscribers process).\\[-3pt]
-Publisher-Subscriber / producer-consumer model. \texttt{BaseballReporter} (Subject) $\to$ \texttt{LogReport, GraphReport, TableReport} (Observers).
-
-\vspace{-2pt}
-\textbf{COMPOSITE DP}\\[-3pt]
-\textbf{Problem}: tree (part-whole hierarchy); treat individual items and composites differently; complex client code. \textbf{Solution}: Component interface (e.g., \texttt{ProvisionItem} with \texttt{get\_cost()}); Leaf = individual item; Composite (\texttt{ProvisionGroup}) IS-A Component and HAS-A vector of Components; client treats both uniformly. Disable \texttt{add()/remove()} in Leaf. Benefits: uniformity, simplicity, flexibility (add/remove items at runtime).\\[-3pt]
-Generic: Component + Leaf + Composite (is-a Component, has-a vector of Components).
-
-\vspace{-2pt}
-\textbf{DECORATOR DP}\\[-3pt]
-\textbf{Problem}: add responsibilities dynamically; subclassing leads to class explosion; hardcoded enhancements. \textbf{Solution}: Component interface (Ticket); ConcreteComponent (BaseTicket); Decorator abstract class (is-a Ticket, has-a Ticket* to next); ConcreteDecorators (Party, VIP, Coupon) each add cost and chain call. \texttt{get\_cost()} = \texttt{ticket->get\_cost() + my\_cost}. Benefits: dynamic enhancement, no hardcoding, easy add/remove, loose coupling, uniform treatment.\\[-3pt]
-\texttt{Ticket* t = new Party(new VIP(new Coupon(new BaseTicket())));} -- wrapping layers.
-
-\vspace{-2pt}
-\textbf{STATE DP}\\[-3pt]
-\textbf{Problem}: object behavior changes with state; if/switch on state everywhere; scattered state logic; hard to add states. \textbf{Solution}: State interface with action methods; ConcreteState subclasses encapsulate actions+transitions for each state; Context (TicketMachine) has \texttt{State* state} member; delegates actions to current State; State methods return next State. StatesBlock aggregates all States (loose coupling between states). Benefits: encapsulated states (Encapsulate What Varies), SRP (TicketMachine only tracks vars), loose coupling (PoLK), easy to add/remove states.\\[-3pt]
-States: \texttt{READY, VALIDATING, TICKET\_SOLD, SOLD\_OUT}. Actions: \texttt{insert\_card, check\_validity, take\_ticket, remove\_card}. UML state diagram documents transitions.\\[-3pt]
-Generic: Context (TicketMachine) + State interface + ConcreteStateA,B,... (READY, VALIDATING...). \texttt{handle()} = action methods.
-
-\vspace{-2pt}
-\textbf{UML SUMMARY TABLE}\\[-3pt]
-\begin{tabular}{ll}
-Inheritance & solid line, hollow triangle \\
-Realization & dashed line, hollow triangle \\
-Composition & solid line, filled diamond \\
-Aggregation & solid line, hollow diamond \\
-Association & solid line, open arrow \\
-Dependency & dashed line, open arrow \\
-\end{tabular}\\[-3pt]
-\texttt{+}=public \texttt{-}=private \texttt{\#}=protected (accessible by class+subclasses only).
-
-\vspace{-2pt}
-\textbf{MVC ARCHITECTURE}\\[-3pt]
-\textbf{Model}: persistent data (memory/files/DB). \textbf{View}: UI components (text fields, buttons, menus, checkboxes); collects user input. \textbf{Controller}: coordinates model+view; dispatches view data to model; user cannot directly modify model. Loose coupling among 3 types. Qt6 framework: subclass framework classes, add custom classes, register callbacks/event handlers. \textbf{Inversion of control}: framework controls execution flow.
-
-\vspace{-2pt}
-\textbf{DESIGN PATTERN COMPARISON}\\[-3pt]
-\begin{tabular}{ll}
-Template Method & inheritance, fixed algorithm outline \\
-Strategy & composition, interchangeable algorithms \\
-Factory Method & subclass decides which object to create \\
-Abstract Factory & creates families, prevents mixing \\
-Adapter & integrates incompatible interfaces \\
-Facade & simpler interface to complex subsystem \\
-Composite & part-whole hierarchy, uniform treatment \\
-Decorator & dynamic responsibilities, wrapping \\
-Iterator & single algorithm, multiple collections \\
-Visitor & multiple algorithms, single collection \\
-Observer & pub-sub, loose coupling, notify \\
-State & state-dependent behavior, encapsulated \\
-Singleton & one instance, lazy creation, private ctor \\
+\hd{DESIGN PRINCIPLES (9)}\\[-2pt]
+\vspace{-3pt}
+{\fontsize{5.8}{6.6}\selectfont
+\begin{tabular}{@{}p{1.4in}p{1.2in}@{}}
+\toprule
+\textbf{Principle} & \textbf{Key idea}\\
+\midrule
+SRP & One primary responsibility; cohesive; easy use+maintain\\
+Encapsulate What Varies & Isolate changeable code; changes don't leak\\
+Delegation & Move work to suitable class; requester no HOW dep.\\
+Law of Demeter/Least Know. & Call only: member var, param, locally instantiated; NOT returned obj (\texttt{a.getB().getC()} is smell); return copies not ptrs\\
+OCP & Closed to modification; open for extension via subclasses\\
+Code to Interface & Use base/interface ptr not specific subclass\\
+DRY & No duplicate code; share as function/class\\
+Defensive Programming & Runtime param checks; create only valid objects; \texttt{assert()}\\
+Programming by Contract & Precondition=caller's resp.; Postcondition=function's resp.; Class invariant=true after ctor+every mutation\\
+\bottomrule
 \end{tabular}
+}\\[-2pt]
+Also: \h{Favor Composition over Inheritance} (has-a often better). \h{Lazy Evaluation.} \h{Refactoring} (improve without changing functionality).\\[-2pt]
+
+\columnbreak
+
+\hd{REQUIREMENTS}\\[-2pt]
+\h{Functional:} what system \emph{shall} do / allow users to do. \h{Nonfunctional:} usability, reliability, performance, supportability — equally important. Use \h{``shall''/``must''} (strong); \h{``should''} = wish list.\\[-2pt]
+\vspace{-3pt}
+{\fontsize{5.8}{6.6}\selectfont
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Quality} & \textbf{Meaning}\\
+\midrule
+Clear & Non-technical, jargon-free\\
+Consistent & No contradictions\\
+Correct & Each req must be correct\\
+Complete & No gaps\\
+Realistic & Satisfiable\\
+Verifiable & Testable\\
+Traceable & Each req $\leftrightarrow$ feature\\
+\bottomrule
+\end{tabular}
+}\\[-2pt]
+\h{Sources:} interview, observe, stated+implied. \h{Iterative} — show prototypes; customers don't always know what they want. \h{I18N} (Internationalization, 18 letters) — design for multiple locales. \h{L10N} (Localization, 10 letters) — adapt language, dates, monetary, encoding. \h{V\&V:} Validate=building right app (customer confirms); Verify=building app right (developers test).\\[-2pt]
+
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
+
+\hd{UML DIAGRAMS}\\[-2pt]
+\h{Class:} class name; member vars (+pub/-priv/\#prot); member fns. \h{6 relationships:} dependency, transient dependency, aggregation (has vector of), composition (part cannot exist outside container), generalization (superclass), realization (implements interface — dashed arrow). \h{Multiplicity} notation on arrows.\\[-2pt]
+\h{Use Case:} oval=use case; stick figure=actor (external agent: person or system); rectangle=system boundary.\\[-2pt]
+\h{State:} rounded boxes=states; arrows=transitions+events; filled circle=start; circle-in-circle=end; [conditions] in brackets.\\[-2pt]
+\h{Sequence:} lifelines (dashed vertical); active rectangles; labeled horizontal arrows=method calls; time top$\to$bottom.\\[-2pt]
+
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
+
+\hd{USE CASE DESCRIPTION (10 fields)}\\[-2pt]
+\h{Name} (verb-noun); \h{Goal}; \h{Summary} (1--2 sent.); \h{Actors}; \h{Preconditions} (what must be true before); \h{Trigger} (actor action to start); \h{Primary sequence} ($\leq$10 steps); \h{Alternate sequences} (exception paths); \h{Postconditions}; \h{Nonfunctional requirements}; \h{Glossary}. Focus on WHAT not HOW; ``black box'' view; no GUI/impl details.\\[-2pt]
+
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
+
+\hd{FUNCTIONAL SPEC \& DESIGN SPEC}\\[-2pt]
+\h{Functional Spec} (External Ref Spec): product name, problem statement, objectives, functional reqs, nonfunctional reqs, use cases. No impl details. Customer reads/approves $\Rightarrow$ \h{validates} (building right app). \h{Design Spec} (Internal Maintenance Spec): technical, impl details, UML class/state/sequence. Developers \h{verify} (building app right).\\[-2pt]
+
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
+
+\hd{REQUIREMENTS ANALYSIS (textual)}\\[-2pt]
+\h{Nouns$\to$Classes} (member vars for state). \h{Verbs$\to$Behaviors/Methods} (transitive verbs acting on objects $\to$ member fns; assign cohesively per SRP). \h{Noun-Class Table:} noun, class, states/vars. \h{Verb-Behavior Table:} verb, class, member fn.\\[-2pt]
+
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
+
+\hd{LAMBDA EXPRESSIONS}\\[-2pt]
+Syntax: \texttt{[capture](params)->ret\{body\}}. No capture: \texttt{[](const T\& x)\{...\}}. Capture by ref: \texttt{[\&var]}; by value: \texttt{[var]}. \texttt{std::function\textless bool(const T\&)\textgreater} for lambdas with capture. \h{Predicate:} bool function whose return depends on params. Use with STL: \texttt{sort}, \texttt{find\_if}, etc. \texttt{auto f = [](int x)\{return x*2;\};}\\[-2pt]
+
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
+
+\hd{FUNCTORS (Function Objects)}\\[-2pt]
+Class overloading \texttt{operator()()}. Stores state across calls in member vars. Can be stored, passed, returned. \texttt{RandomInt ri(5,12); ri();} — next random int. \texttt{Summation adder; adder(3);} — accumulates sum. \texttt{()(){}} syntax: first \texttt{()} = operator name, second \texttt{()} = params.\\[-2pt]
+
+\columnbreak
+
+\hd{MOVE SEMANTICS \& BIG FIVE}\\[-2pt]
+\h{lvalue:} named variable (can be left of assignment). \h{rvalue:} temporary, about to be destroyed. Moving rvalue = ``steal'' resources O(1) vs copy O(n). \texttt{std::move(x):} force lvalue to behave as rvalue. \h{Rule of Big Five:} if define any one $\to$ define all: destructor, copy ctor, copy assign, move ctor, move assign. Move ctor/assign steal and set source to valid empty state (nullptr). Avoids costly copies of temporary objects (e.g., \texttt{push\_back(first+" "+last)}).\\[-2pt]
+
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
+
+\hd{SMART POINTERS}\\[-2pt]
+\h{Raw ptrs:} memory leak risk, double delete, no ownership clarity. \h{unique\_ptr\textless T\textgreater:} exclusive ownership; auto-deleted on scope exit/reset; cannot copy (only move via \texttt{std::move}); source set to \texttt{nullptr}. \h{shared\_ptr\textless T\textgreater:} shared ownership via ref count; auto-deleted when count=0; copy increments count; \texttt{reset()} decrements; deleted exactly once.\\[-2pt]
+
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
+
+\hd{VECTORS \& PERFORMANCE}\\[-2pt]
+Growing copies all elements O(n). Use \texttt{reserve()} to pre-allocate. Store \texttt{T*} not \texttt{T} to avoid copy overhead on insert/remove (only pointer copies). Remove shifts all following elements.\\[-2pt]
+
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
+
+\hd{MVC ARCHITECTURE}\\[-2pt]
+\h{Model:} persistent data (memory/files/DB). \h{View:} UI components (fields, buttons, menus). \h{Controller:} coordinates model+view; dispatches user input to model. Qt6 framework; inversion of control; loose coupling among 3 types. User cannot directly modify model.\\[-2pt]
+
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
+
+\hd{DESIGN PATTERNS — CLASSIFICATION}\\[-2pt]
+\vspace{-3pt}
+{\fontsize{5.8}{6.6}\selectfont
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Creational} & \textbf{Structural} & \textbf{Behavioral}\\
+\midrule
+Factory Method & Adapter & Template Method\\
+Abstract Factory & Facade & Strategy\\
+Singleton & Composite & Iterator\\
+ & Decorator & Visitor\\
+ &  & Observer\\
+ &  & State\\
+\bottomrule
+\end{tabular}
+}\\[-2pt]
+
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
+
+\hd{TEMPLATE METHOD DP}\\[-2pt]
+\h{Intent:} fixed algorithm skeleton in base class (\emph{template method}); varying steps as abstract methods in subclasses. \h{Structure:} superclass (\texttt{GameReport}) has \texttt{generate\_report()} calling steps in order; implements common steps (\texttt{print\_header/footer}); abstract steps (\texttt{acquire\_data, analyze\_data, print\_report}) in subclasses (\texttt{BaseballReport, VolleyballReport}). \h{Mechanism:} Inheritance. \h{Keywords:} ``algorithm outline'', ``fixed sequence'', ``outline of steps''. \h{vs.\ Strategy:} TM=inheritance+fixed outline with varying steps; Strategy=composition+entire algorithm swapped.\\[-2pt]
+
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
+
+\hd{STRATEGY DP}\\[-2pt]
+\h{Intent:} family of interchangeable algorithms; interface per family; concrete classes implement; context has-a strategy ptr set at runtime. \h{Structure:} \texttt{Sport} has \texttt{player\_strategy} and \texttt{venue\_strategy} ptrs to interfaces \texttt{PlayerStrategy} and \texttt{VenueStrategy}; concrete classes (\texttt{BaseballPlayers, Stadium, OpenField}) implement interfaces. \h{Mechanism:} Composition. \h{Keywords:} ``interchangeable'', ``runtime selection'', ``family of algorithms''. \h{vs.\ TM:} Strategy swaps entire algorithm; TM varies steps within fixed outline.\\[-2pt]
+
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
+
+\hd{FACTORY METHOD DP}\\[-2pt]
+\h{Intent:} creator superclass has abstract factory method; subclass decides which product to instantiate. \h{Structure:} Creator=\texttt{AthleticsDept}; ConcreteCreators=\texttt{VarsityDept, IntramuralDept}; factory method=\texttt{create\_sport()}; Product=\texttt{Sport}. Superclass delegates object creation to subclasses. \h{Mechanism:} Inheritance. \h{Keywords:} ``subclass decides'', ``single product type'', ``factory method''. \h{vs.\ Abstract Factory:} FM=single product type; AF=families of related products; AF prevents mixing families.\\[-2pt]
+
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
+
+\hd{ABSTRACT FACTORY DP}\\[-2pt]
+\h{Intent:} interface creates families of related objects; concrete factory creates one consistent family; prevents mixing families. \h{Structure:} AbstractFactory=\texttt{ProvisionsFactory}; ConcreteFactories=\texttt{VarsityFactory, IntramuralFactory}; each creates family (\texttt{make\_players(), make\_venue()}). \h{Mechanism:} Composition. \h{Keywords:} ``product family'', ``consistency'', ``prevents mixing''. \h{vs.\ FM:} AF ensures family consistency; FM just delegates single-type creation to subclass.\\[-2pt]
+
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
+
+\hd{ADAPTER DP (Object)}\\[-2pt]
+\h{Intent:} make incompatible interfaces work together; wrap legacy/external code. \h{Structure:} Target interface (\texttt{AttendanceData}); Adapter (\texttt{FootballData}) implements Target + aggregates Adaptee (\texttt{FootballInfo}); converts calls. \h{Class Adapter:} uses multiple inheritance instead of aggregation; can override adaptee methods. \h{Keywords:} ``incompatible interface'', ``legacy code'', ``wrapper''. \h{vs.\ Facade:} Adapter=make incompatible work; Facade=simplify complex.\\[-2pt]
+
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
+
+\hd{FACADE DP}\\[-2pt]
+\h{Intent:} simple high-level interface to complex subsystem; hide complexity. \h{Structure:} Facade class (\texttt{FundRaiser}) delegates to subsystem classes (\texttt{Alumni, BoosterClubs, Students}); clients (\texttt{AthleticsDept, Administration}) only call facade. \h{Keywords:} ``simplify'', ``hide complexity'', ``front door'', ``single interface''.\\[-2pt]
+
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
+
+\hd{SINGLETON DP}\\[-2pt]
+\h{Intent:} exactly one instance; global access point. \h{Structure:} private constructor; private static ptr \texttt{single\_instance}; public static \texttt{get\_singleton()} — lazy creation (creates if null); deleted copy ctor+assign. \h{Thread safety issue:} multiple threads may each create instance if \texttt{single\_instance==nullptr} simultaneously. \h{Keywords:} ``one instance'', ``global access'', ``private constructor'', ``lazy construction''.\\[-2pt]
+
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
+
+\hd{COMPOSITE DP}\\[-2pt]
+\h{Intent:} uniform treatment of leaf and composite; part-whole hierarchy. \h{Structure:} Component interface (\texttt{ProvisionItem}) + Leaf (e.g., \texttt{Ball, Bat}; no children) + Composite (\texttt{ProvisionGroup}: is-a \texttt{ProvisionItem} AND has-a \texttt{vector\textless ProvisionItem*\textgreater}); \texttt{get\_cost()} on composite sums children. Disable \texttt{add/remove} on leaves. \h{Keywords:} ``part-whole hierarchy'', ``tree structure'', ``recursive'', ``uniform treatment''.\\[-2pt]
+
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
+
+\hd{DECORATOR DP}\\[-2pt]
+\h{Intent:} add responsibilities dynamically; flexible alternative to subclassing. \h{Structure:} Component=\texttt{Ticket}; ConcreteComponent=\texttt{BaseTicket}; Decorator abstract (is-a \texttt{Ticket}, has-a \texttt{Ticket*} to next); ConcreteDecorators=\texttt{Party, VIP, Coupon}; chain: \texttt{get\_cost()=next->get\_cost()+my\_cost}. \h{Keywords:} ``add responsibilities dynamically'', ``wrap'', ``chain''. \h{vs.\ Composite:} Decorator=single child+add behavior; Composite=multiple children+aggregate.\\[-2pt]
+
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
+
+\hd{ITERATOR DP}\\[-2pt]
+\h{Intent:} traverse collection without exposing representation; decouple algorithm from collection type. \h{Structure:} Iterator interface (\texttt{has\_next(), next()}) + ConcreteIterators (\texttt{ArrayIterator, VectorIterator, MapIterator}) each with private cursor; Collection (\texttt{Team} subclasses) creates appropriate iterator; Client (\texttt{TeamReport}) uses only iterator interface. \h{Note:} C++ built-in iterators $\neq$ this pattern (not via common interface). \h{Keywords:} ``traverse'', ``decouple collection'', ``has\_next/next''.\\[-2pt]
+
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
+
+\hd{VISITOR DP}\\[-2pt]
+\h{Intent:} add operations without modifying structure; different algorithms on single tree. \h{Structure:} Node interface has \texttt{accept(Visitor\&)}; \texttt{accept} impl: \texttt{v.visit\_X(this)} then propagate to children; Visitor interface has \texttt{visit\_NodeType()} per type; ConcreteVisitors (\texttt{ScoresReportVisitor}, etc.) encapsulate algorithms. \h{Double dispatch:} node type + visitor type determine behavior. \h{Analogy:} craftsmen (painter, plumber) visiting rooms — each craftsman does different task per room type. \h{Keywords:} ``new operations'', ``node hierarchy'', ``double dispatch'', ``craftsmen visiting rooms''. \h{vs.\ Iterator:} Visitor=multiple algorithms on tree; Iterator=single traversal.\\[-2pt]
+
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
+
+\hd{OBSERVER DP}\\[-2pt]
+\h{Intent:} publish-subscribe; 1-to-many; loose coupling. \h{Structure:} Subject has \texttt{vector\textless Observer*\textgreater observers}; \texttt{subscribe/unsubscribe/notify()} calls \texttt{update()} on each; Subject stores \texttt{current\_event}; Observer calls \texttt{get\_current\_event()} to pull data. \texttt{BaseballReporter} is Subject; \texttt{LogReport, GraphReport, TableReport} are Observers. \h{Keywords:} ``publish-subscribe'', ``notify'', ``1-to-many'', ``event-driven'', ``producer-consumer model''.\\[-2pt]
+
+\vspace{-1pt}\noindent\rule{\columnwidth}{0.2pt}\vspace{-3pt}
+
+\hd{STATE DP}\\[-2pt]
+\h{Intent:} state-dependent behavior; object appears to change class; encapsulated transitions. \h{Structure:} Context (\texttt{TicketMachine}) has \texttt{State* state} member; delegates actions to current state. State interface has action methods. ConcreteStates (\texttt{READY, VALIDATING, TICKET\_SOLD, SOLD\_OUT}) encapsulate actions+transitions and return next State. \texttt{StatesBlock} aggregates all states (loose coupling). Each action fn returns next \texttt{State*}. \h{UML state diagram} documents transitions. \h{Keywords:} ``state-dependent behavior'', ``state machine'', ``encapsulated transitions'', ``alter behavior when state changes''.\\[-2pt]
+
+\vspace{-3pt}
+{\fontsize{5.8}{6.6}\selectfont
+\begin{tabular}{@{}p{0.65in}p{0.65in}p{0.65in}@{}}
+\toprule
+\textbf{Pattern} & \textbf{Mechanism} & \textbf{Confused with}\\
+\midrule
+Template Method & Inheritance & Strategy\\
+Strategy & Composition & Template Method\\
+Factory Method & Inheritance & Abstract Factory\\
+Abstract Factory & Composition & Factory Method\\
+Adapter & Aggregation/MI & Facade\\
+Facade & Delegation & Adapter\\
+Singleton & Static field & ---\\
+Composite & Recursion & Decorator\\
+Decorator & Chain & Composite\\
+Iterator & Cursor & Visitor\\
+Visitor & Double dispatch & Iterator\\
+Observer & Notify/pull & ---\\
+State & Delegation & Strategy\\
+\bottomrule
+\end{tabular}
+}
 
 \end{multicols}
 \end{document}

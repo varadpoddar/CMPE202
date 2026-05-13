@@ -2,236 +2,194 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>CMPE 202 Lecture Cheat Sheet</title>
+<title>CMPE 202 — Complete Lecture Cheat Sheet</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html, body {
-  font-family: 'Arial Narrow', Arial, sans-serif;
-  font-size: 6.6pt;
-  line-height: 1.15;
-  color: #000;
-  background: #fff;
+*{margin:0;padding:0;box-sizing:border-box;}
+@page{size:letter landscape;margin:0.20in;}
+html,body{
+  font-family:'Arial Narrow',Arial,sans-serif;
+  font-size:6.6pt;
+  line-height:1.18;
+  color:#000;background:#fff;
 }
-@page {
-  size: letter landscape;
-  margin: 0.18in 0.18in 0.18in 0.18in;
+.page{
+  column-count:4;
+  column-gap:6pt;
+  column-rule:0.3pt solid #000;
+  column-fill:auto;
+  height:calc(8.5in - 0.40in);
+  overflow:hidden;
 }
-body {
-  width: 100%;
-}
-.page {
-  width: 100%;
-  column-count: 4;
-  column-gap: 5pt;
-  column-fill: auto;
-  height: calc(8.5in - 0.36in);
-  overflow: hidden;
-}
-.blk {
-  display: block;
-  margin-bottom: 2pt;
-  break-inside: avoid;
-}
-b {
-  font-weight: bold;
-  font-size: 6.8pt;
-}
-code {
-  font-family: 'Courier New', monospace;
-  font-size: 6.0pt;
-  background: #f0f0f0;
-}
-ul {
-  margin: 0 0 1pt 8pt;
-  padding: 0;
-  list-style-type: disc;
-}
-li {
-  margin: 0;
-  padding: 0;
-  line-height: 1.12;
-}
-table {
-  border-collapse: collapse;
-  font-size: 6.2pt;
-  margin: 1pt 0;
-  width: 100%;
-}
-td {
-  padding: 0 3pt 0 0;
-  vertical-align: top;
-  line-height: 1.12;
-}
-@media print {
-  * { color: #000 !important; background: #fff !important; }
-  code { background: #eee !important; }
+p{margin:0 0 1pt 0;}
+b{font-weight:700;}
+code{font-family:'Courier New',monospace;font-size:5.9pt;}
+em{font-style:italic;}
+hr{border:none;border-top:0.3pt solid #000;margin:1pt 0;}
+ol,ul{margin:0 0 1pt 7pt;padding:0;}
+li{margin:0;padding:0;line-height:1.15;}
+.cb{break-after:column;}
+.hd{font-weight:700;text-decoration:underline;font-size:6.9pt;display:block;margin-top:1pt;}
+table.ct{width:100%;border-collapse:collapse;font-size:5.9pt;margin:1pt 0;}
+table.ct td{padding:0.5pt 2pt 0.5pt 0;vertical-align:top;line-height:1.12;}
+table.ct tr.toprule td{border-top:1pt solid #000;padding:0;height:0;}
+table.ct tr.midrule td{border-top:0.5pt solid #000;padding:0;height:0;}
+table.ct tr.bottomrule td{border-top:1pt solid #000;padding:0;height:0;}
+table.ct thead tr th{font-weight:700;border-bottom:0.5pt solid #000;}
+.sm{font-size:5.9pt;}
+@media print{
+  *{color:#000!important;background:#fff!important;}
+  code{background:transparent!important;}
 }
 </style>
 </head>
 <body>
 <div class="page">
-<div class="blk"><b>RECURSION</b><br>
-Key idea: divide problem into smaller similar subproblem. <b>Base case</b>: smallest, immediate solution (no recursive call). <b>Recursive case</b>: calls itself on simpler input approaching base case. Each call has its own local variables.<br>
-<b>Largest</b>: compare first elem to largest of rest; base=size 1. <b>Reverse</b>: remove first, reverse rest, append first; base=size 1. <b>Member-of</b>: <code>x==head || member(x,rest)</code>; base=size 0 (false). <b>Multiply</b> <code>i*j</code>: <code>i + multiply(i,j-1)</code>; base <code>j==0</code>→0.<br>
-<b>Towers of Hanoi</b> (n disks, src→dst via tmp):
-<ul><li><code>solve(n-1,src,dst,tmp)</code> move top n-1 to tmp</li><li><code>solve(1,src,tmp,dst)</code> move largest to dst (base)</li><li><code>solve(n-1,tmp,src,dst)</code> move n-1 from tmp to dst</li></ul>
-Very hard without recursion. 2ⁿ−1 moves total.<br>
-<b>Fibonacci Disaster</b>: <code>f(n)=f(n-2)+f(n-1)</code>, base <code>f(0)=0,f(1)=1</code>. Exponential calls – use iteration instead. Recursion is powerful but use appropriately.<br>
-<b>Quicksort Partition</b>: pick pivot (middle), swap to right, move <code>i</code> right while <code>data[i]<pivot</code>, move <code>j</code> left while <code>data[j]>pivot</code>, if <code>i<j</code> swap <code>data[i],data[j]</code>, repeat until <code>j</code> crosses <code>i</code>, swap pivot back. Pivot at correct position. Recursively sort left/right subarrays. Base: size 0/1 return; size 2 swap if needed. Most elegant algorithm (1961).<br>
-<b>Dynamic Backtracking</b>: try a solution path recursively; if dead end, backtrack and try another. Decision tree: stages, nodes=steps, paths between stages. Base=step with no solution paths.<br>
-<b>N-Queens</b>: solve column by column L→R. <code>is\_safe\_position(row,col)</code>: check attacks from left. <code>find\_solutions()</code>: recurse on columns to right, then backtrack to next safe square. Base=past last column→solution found. 92 solutions for 8 queens.<br>
-<b>Sudoku Backtracking</b>: brute force, try 1-9 at each cell L→R, top→bottom. Recursively check ahead; if no solution backtrack. Base=past last cell→solved.</div>
-<div class="blk">
-<b>MULTITHREADING</b><br>
-<b>Thread</b>: path computer takes through code. Multithreading = multiple simultaneous paths. Each thread has own stack &amp;amp; registers; share code, data, resources. <b>Concurrency</b>: one CPU switches tasks. <b>Parallelism</b>: multiple CPUs truly simultaneous.<br>
-<b>Shared resource</b>: memory, printer, output stream. <b>Critical region</b>: code that accesses shared resource. <b>Mutual exclusion</b>: only one thread in critical region at a time.<br>
-<b>mutex</b>: enforces mutual exclusion. <code>mutex m; m.lock(); /*crit*/ m.unlock();</code>. Thread blocks if mutex already locked. Must unlock before exiting critical region.<br>
-<b>lock\_guard</b>: RAII wrapper – auto-locks on construction, auto-unlocks on destruction (scope exit). <code>lock\_guard<mutex> lk(m);</code>. Prevents forgetting to unlock (deadlock risk).<br>
-<b>Context switching</b>: runtime switches among threads. <code>this\_thread::yield()</code> explicitly relinquishes control. <code>this\_thread::sleep\_for(chrono::seconds(n))</code>.<br>
-<b>Reader-Writer Problem</b>: multiple readers OK simultaneously; one writer excludes all. Use <code>shared\_mutex</code>. <code>unique\_lock<shared\_mutex></code>: one thread only (writer). <code>shared\_lock<shared\_mutex></code>: multiple threads (readers). Both auto-unlock on scope exit.<br>
-<b>atomic&lt; T&gt;</b>: thread-safe ops without mutex. <code>atomic<int> cnt; cnt.store(n); cnt.load(); –cnt;</code><br>
-<b>condition\_variable</b>: synchronization beyond mutexes. <code>cv.wait(lock)</code>: unlocks, sleeps, re-locks when notified. <code>cv.notify\_all()</code>: wake all waiting threads. Pattern: <code>while(condition) cv.wait(lock);</code> (loop guards spurious wakeups).<br>
-<b>Producer-Consumer</b>: producers enter data to shared queue (capacity-limited); consumers remove. Queue full→producers wait on <code>producer\_cv</code>; queue empty→consumers wait on <code>consumer\_cv</code>. Producer notifies consumers when queue becomes non-empty; consumer notifies producers when queue becomes non-full.<br>
-<b>Dining Philosophers</b>: 5 philosophers, 5 chopsticks (1 between each). Need both adjacent chopsticks to eat. Must pick up both at once (not hold-and-wait). Loop: think→wait→fill bowl→eat.<br>
-<b>Deadlock</b>: all threads blocked, app hangs. Avoid by consistent lock ordering, using <code>lock\_guard</code>. Performance: more threads \ne faster; context switch costs, mutex overhead matter. <b>Spawn</b>: <code>thread t(func, args); t.join();</code><br>
-<b>auto</b>: type inference from initializer. <code>auto x = expr;</code> compiler deduces type. <b>decltype(x)</b>: returns type of variable <code>x</code>. Use: <code>auto t = steady\_clock::now(); decltype(t) end;</code></div>
-<div class="blk">
-<b>WELL-DESIGNED SOFTWARE</b><br>
-• Meets requirements (does what supposed to)&nbsp;• Reliable (fewer bugs, no surprises, no hidden perf issues)&nbsp;• Flexible &amp;amp; scalable (easy to add features, less complexity)&nbsp;• Maintainable (future devs can understand)&nbsp;• Uses good design techniques &amp;amp; patterns&nbsp;• Saves time/cost overall. Good design = iterative dev (design-code-test).</div>
-<div class="blk">
-<b>OOP DESIGN</b><br>
-<b>Encapsulation</b>: combine data+behavior in class; public/private; contains/isolates changes (prevents leaks). Object <b>state</b> = values of member vars; <b>state change</b> = values change.<br>
-<b>Abstraction</b>: ignore irrelevant details; multiple levels; reduces complexity.<br>
-<b>Inheritance</b>: subclass from superclass; inherits state+behavior; can add/override. Reduces code complexity.<br>
-<b>Polymorphism</b>: pointer to superclass calls correct subclass method at runtime. <code>virtual</code> keyword enables. Increases flexibility. <code>override</code> keyword: compiler checks signature match.<br>
-<b>dynamic\_cast&lt; T*&gt;(ptr)</b>: type check+convert; returns <code>nullptr</code> if wrong type. <b>Abstract class</b>: ≥1 pure virtual fn (<code>=0</code>); cannot instantiate directly. <b>Interface class</b>: only pure virtual fns, no member vars. Subclasses must implement all. Use dashed arrow in UML (realization).<br>
-<b>virtual</b> destructor: required if class has subclasses. <b>Function signature</b>: name + param count/types/order (not return type, not param names).<br>
-<b>Override vs Overload</b>: Override=subclass same signature (polymorphism). Overload=same name different signature same scope.<br>
-<b>Liskov Substitution</b>: subclass object substitutable for superclass without errors. Violation: <code>CircularBuffer : vector</code> allows invalid <code>at(),erase()</code> – fix: has-a not is-a.<br>
-<b>Code to Interface</b>: declare as superclass ptr, assign subclass. <code>Shape *s = new Rectangle(); s = new Circle();</code> Relies on polymorphism. Hardcoding: <code>Rectangle *r = new Rectangle();</code> – inflexible.</div>
-<div class="blk">
-<b>DESIGN SMELLS</b><br>
-• <b>Leaking changes</b>: change in class A forces change in B (tight coupling)&nbsp;• <b>God class</b>: too many responsibilities (AutomobileApp)&nbsp;• <b>Hardcoded concrete</b>: <code>Cat *pet = new Cat();</code> inflexible&nbsp;• <b>Least surprise violation</b>: misleading names, hidden perf issues, off-by-one (month array)&nbsp;• <b>DRY violation</b>: repeated code in multiple places</div>
-<div class="blk">
-<b>DESIGN PRINCIPLES</b><br>
-<b>SRP</b> (Single Responsibility): class has one primary responsibility; cohesive; easy to use+maintain.<br>
-<b>Encapsulate What Varies</b>: isolate code that can change so changes don't leak to other code. Put varying code in its own class.<br>
-<b>Delegation</b>: move work from requester class to more suitable delegate class. Requester has no dependency on how delegate works. Increases cohesion.<br>
-<b>Principle of Least Knowledge (Law of Demeter)</b>: classes have minimal dependencies on each other's implementation. Loosely coupled. Rules: <code>afunc()</code> may call <code>bfunc()</code> on B if: (1) B is member var of A; (2) B passed as param to afunc; (3) B instantiated by afunc. May NOT call on B returned by another object's method (<code>a.getB().getC()</code> = smell). Return copies not pointers (immutability).<br>
-<b>OCP</b> (Open-Closed): closed to modification (stable), open for extension (subclasses). Use private members in superclass.<br>
-<b>Code to Interface</b>: write code using superclass/interface, not specific subclasses. Runtime polymorphism.<br>
-<b>DRY</b> (Don't Repeat Yourself): no duplicate code; share one copy as function or class.<br>
-<b>Defensive Programming</b>: runtime checks of param values; create only valid objects; <code>assert()</code> invariants.<br>
-<b>Programming by Contract</b>: <b>Precondition</b>: must be true when function called (caller's responsibility). <b>Postcondition</b>: must be true when function returns (function's responsibility). <b>Class invariant</b>: condition true after construction and after every mutation. <code>assert(class\_invariant());</code> Use <code>assert()</code> for pre/post conditions.<br>
-<b>Favor Composition over Inheritance</b>: "has-a" often better than "is-a". Toys: <code>Toy</code> has <code>PlayAction*</code> and <code>Sound*</code> – strategies composable. Factory function: <code>static Toy* make(Kind k)</code> creates/returns correct subclass.<br>
-<b>Lazy Evaluation</b>: compute value only when needed. <b>Refactoring</b>: redesign to improve without changing functionality.</div>
-<div class="blk">
-<b>REQUIREMENTS</b><br>
-<b>Functional req</b>: what system shall do or allow users to do. Use "shall"/"must". <b>Nonfunctional req</b>: usability, reliability, performance, supportability constraints. Just as important!<br>
-Requirements must be: <b>Clear</b> (jargon-free), <b>Consistent</b> (no contradictions), <b>Correct</b>, <b>Complete</b> (no gaps), <b>Realistic</b>, <b>Verifiable</b> (testable), <b>Traceable</b> (each req ↔ feature).<br>
-Use strong auxiliary verbs "shall"/"must"; "should" = wish list. Sources: interviews, observation, stated+implied requirements. Iterative: show prototypes, requirements evolve.<br>
-<b>I18N</b> (Internationalization, 18 letters): design app to support multiple locales. <b>L10N</b> (Localization, 10 letters): adapt to specific locale (language, date format, monetary, encoding). Encapsulate locale-varying parts.<br>
-<b>V&amp;amp;V</b>: <b>Validate</b> = building right application (customer confirms requirements) – customers validate. <b>Verify</b> = building application right (developers test implementation) – developers verify.</div>
-<div class="blk">
-<b>UML DIAGRAMS</b><br>
-<b>Class diagram</b>: class name (required), member vars (opt), member fns (opt). <code>+</code>=public, <code>-</code>=private, <code>\#</code>=protected.<br>
-<b>UML class relationships</b> (line types):<br>
-<ul><li><b>Dependency</b> (dashed arrow): A uses B transiently (param/local var)</li><li><b>Association</b> (solid arrow): A has member var of type B</li><li><b>Aggregation</b> (hollow diamond): A contains B objects; B can exist independently</li><li><b>Composition</b> (filled diamond): A contains B; B cannot exist without A</li><li><b>Inheritance</b> (solid triangle arrow): subclass→superclass</li><li><b>Realization</b> (dashed triangle arrow): class implements interface (<code><<interface>></code>)</li></ul>
-Cardinality: "1 Catalogue aggregates 0..* Book objects".<br>
-<b>State diagram</b>: rounded boxes=states, arrows=transitions, labels=triggering events. Filled diamonds=branch/merge, heavy bars=fork/join.<br>
-<b>Sequence diagram</b>: runtime interactions during use case. Lifelines (dashed vertical), active rectangles, labeled horizontal arrows=method calls. Time top→bottom.</div>
-<div class="blk">
-<b>USE CASES</b><br>
-<b>Use case</b>: single task app must allow actor to accomplish OR single goal actor must achieve. <b>Actor</b>: external agent (person or app); role abstraction; outside system boundary.<br>
-Use cases capture customer understanding; provide context for requirements; show how functional req determine functionality.<br>
-<b>Use case description fields</b>: <b>Name</b> (verb-noun, achievable goal e.g. "Withdraw Cash"), <b>Goal</b>, <b>Summary</b> (1-2 sentences), <b>Actors</b>, <b>Preconditions</b> (what must be true before; can ref other UCs), <b>Trigger</b> (what actor did to start), <b>Primary sequence</b> (≤10 steps; can ref other UCs), <b>Alternate sequences</b> (exception paths), <b>Postconditions</b> (situation when done), <b>Nonfunctional requirements</b>, <b>Glossary</b>.<br>
-Guidelines: short/simple/informal; no GUI/impl details; ≤10 primary steps (else split); focus on WHAT not HOW; "black box" view.</div>
-<div class="blk">
-<b>FUNCTIONAL SPECIFICATION</b><br>
-Written by dev team; non-technical jargon-free language; for customer+devs. Contains: <b>Product name</b>, <b>Problem statement</b> (what problem solved), <b>Objectives</b> (what app accomplishes), <b>Functional requirements</b> (must/shall), <b>Nonfunctional requirements</b> (must/shall), <b>Use cases</b> (diagrams + descriptions). May include: External Test Plan (black-box tests), Deployment Plan, Maintenance Plan. No implementation details (those go in Design Specification). Customer reads/approves to validate = "building right app". Also called External Reference Specification.<br>
-<b>Design Specification</b>: technical doc with impl details; UML class/state/sequence diagrams; for developers. May include Internal Test Plan (unit tests, regression tests). Also called Internal Maintenance Specification.</div>
-<div class="blk">
-<b>REQUIREMENTS ANALYSIS (Textual)</b><br>
-From functional requirements: <b>Nouns→Classes</b>: identify nouns, determine which become classes, member vars for state. <b>Verbs→Behaviors/Methods</b>: transitive verbs acting on objects→member functions; assign to cohesive classes (SRP). Create <b>Noun-Class Table</b> (noun, class, states/vars) and <b>Verb-Behavior Table</b> (verb, class, member fn). Initial classes refined during iterations.</div>
-<div class="blk">
-<b>LAMBDA EXPRESSIONS</b><br>
-<code>[capture](params)->ret\{body\</code>} – unnamed inline function. No capture needed: <code>[](const Person&amp;amp; p)->bool\{return p.gender==M;\</code>}. <b>Capture by ref</b>: <code>[&amp;amp;count]</code>; by value: <code>[count]</code>. With capture, formal param must use <code>std::function<bool(const Person&amp;amp;)></code>. <b>Predicate</b>: Boolean fn depending on params. Use with STL algorithms (sort, find\_if, etc.) and custom functions. Lambda as object: <code>auto f = [](int x)\{return x*2;\</code>;}<br>
-<b>Functor (Function Object)</b>: class overloading <code>operator()()</code>. Stores state in member vars. Can be stored, passed, returned. <code>RandomInt ri(5,12); ri();</code> <code>Summation adder; adder(3);</code> accumulates sum across calls.</div>
-<div class="blk">
-<b>MODERN C++: MOVE SEMANTICS &amp;amp; SMART PTRS</b><br>
-<b>lvalue</b>: variable (can be on left of assignment). <b>rvalue</b>: temporary computed value. Copying rvalue is wasteful (it will be destroyed). <b>Move semantics</b>: "steal" resources from rvalue instead of copying. <code>std::move(x)</code>: force lvalue to behave as rvalue.<br>
-<b>Rule of Big Five</b>: if you define destructor, also define: copy ctor, copy assign op, <b>move ctor</b>, <b>move assign op</b>. Move ctor/assign steal resources from source. Big Three: destructor + copy ctor + copy assign op. STL containers implicitly use move semantics.<br>
-<b>unique\_ptr&lt; T&gt;</b>: exclusive ownership; auto-deleted when out of scope or reset. Cannot copy (exclusive). Transfer with <code>std::move(p)</code> – source set to nullptr. <code>unique\_ptr<T> p(new T()); p.reset(new T());</code>. Custom deleter via lambda + decltype.<br>
-<b>shared\_ptr&lt; T&gt;</b>: shared ownership via reference count. Multiple ptrs to same object; auto-deleted when last ptr gone (count=0). <code>shared\_ptr<T> p2(p1);</code> increments count. <code>p.reset(new T())</code> decrements old, starts new. Raw ptrs: dangerous (memory leak, double delete, no ownership clarity). Use smart ptrs instead.<br>
-<b>C++ Vectors performance</b>: growing vector copies all elements to new array (O(n)). Use <code>reserve()</code> to pre-allocate. Store <code>T*</code> (pointers) not <code>T</code> objects to avoid copy ctor/dtor overhead on insert/remove. Refactor: <code>vector<Date*></code> instead of <code>vector<Date></code>.</div>
-<div class="blk">
-<b>DESIGN PATTERNS (GoF – 13 covered)</b><br>
-23 total in GoF book; <b>Creational</b>: Factory Method, Abstract Factory, Singleton; <b>Structural</b>: Adapter, Facade, Composite, Decorator; <b>Behavioral</b>: Template Method, Strategy, Iterator, Visitor, Observer, State. Industry-proven model solutions; not copy-paste code; not libraries; discovered from experience.</div>
-<div class="blk">
-<b>TEMPLATE METHOD DP</b><br>
-<b>Problem</b>: algorithm with fixed steps order; some steps common, some sport-specific; code duplication. <b>Solution</b>: superclass defines <b>template method</b> (<code>generate\_report()</code>) calling step methods in order; implements common steps (<code>print\_header(), print\_footer()</code>); delegates varying steps to subclasses (<code>acquire\_data(), analyze\_data(), print\_report()</code> = abstract). Subclasses implement varying steps. <b>Uses inheritance</b>. Benefits: algorithm outline, reduced duplication, OCP (extend by subclass), encapsulation of varying steps.<br>
-<code>GameReport</code> (template method) ← <code>BaseballReport, VolleyballReport</code> (concrete implementations).</div>
-<div class="blk">
-<b>STRATEGY DP</b><br>
-<b>Problem</b>: family of interchangeable algorithms; hardcoded algorithms; code duplication; can't share/reuse. <b>Solution</b>: interface for each algorithm family (<code>PlayerStrategy, VenueStrategy</code>); concrete classes implement each algorithm; <code>Sport</code> class aggregates strategy interfaces ("has-a"). Choose algorithm at runtime by setting member var. <b>Uses composition</b>. Benefits: encapsulated algorithms, shared code (DRY), runtime flexibility, OCP for Sport class, loosely coupled.<br>
-Template Method vs Strategy: TM=inheritance, outline in superclass, common steps; Strategy=composition, whole interchangeable algorithms.<br>
-<code>Sport</code> has <code>player\_strategy*</code> and <code>venue\_strategy*</code>; <code>Baseball,Football,Volleyball</code> subclasses set these.</div>
-<div class="blk">
-<b>FACTORY METHOD DP</b><br>
-<b>Problem</b>: <code>AthleticsDept</code> must create Sport objects; nested switch statements; multiple responsibilities. <b>Solution</b>: superclass <code>AthleticsDept</code> defines abstract <b>factory method</b> <code>create\_sport()</code>; subclasses <code>VarsityDept, IntramuralDept</code> implement it to create appropriate Sport objects. Benefits: encapsulated changes (add categories easily), OCP for AthleticsDept, delegation to subclasses, SRP (each subclass creates only its sports), loose coupling.<br>
-Generic: Creator (AthleticsDept) + ConcreteCreator (VarsityDept) + Product (Sport) + ConcreteProduct (VarsityBaseball...).</div>
-<div class="blk">
-<b>ABSTRACT FACTORY DP</b><br>
-<b>Problem</b>: Factory Method can't prevent coding errors that mix families (e.g., varsity player on intramural team). <b>Solution</b>: <b>abstract factory</b> interface <code>ProvisionsFactory</code> with <code>make\_players()</code> and <code>make\_venue()</code>; concrete factories <code>VarsityFactory, IntramuralFactory</code> each create objects from one family only. Each Sport subclass receives factory and uses it. Benefits: families kept together (prevents mix-up), runtime flexibility (choose family), encapsulated object creation, loosely coupled.<br>
-Factory Method: interface for creating one object, subclass decides which. Abstract Factory: interface for creating families, prevents mixing families.</div>
-<div class="blk">
-<b>ADAPTER DP</b><br>
-<b>Problem</b>: integrate external/legacy code with incompatible interfaces; can't modify either; repeated conversion code. <b>Solution</b>: <b>Object adapter</b>: adapter class implements target interface, aggregates adaptee, converts calls. <b>Class adapter</b>: multiple inheritance from target interface and adaptee. Benefits: encapsulated conversion (Encapsulate What Varies), SRP (AttendanceReport only prints), loose coupling (add sports without changing report class).<br>
-Generic: Target (AttendanceData interface) + Adapter (FootballData) + Adaptee (FootballInfo). <code>request()</code> calls <code>specific\_request()</code>.</div>
-<div class="blk">
-<b>FACADE DP</b><br>
-<b>Problem</b>: complex subsystem with multiple interfaces; clients must know order; duplicated coordination code. <b>Solution</b>: <b>facade class</b> (<code>FundRaiser</code>) provides simple higher-level interface hiding subsystem (<code>Alumni, BoosterClubs, Students</code>). Clients call facade only. Benefits: reduced duplication (DRY), loose coupling (PoLK), encapsulates changes (add CorporateSponsors → only facade changes), simpler interface.</div>
-<div class="blk">
-<b>SINGLETON DP</b><br>
-<b>Problem</b>: need exactly one instance; global object allows copies and multiple instances. <b>Solution</b>: private constructor; private static <code>single\_instance</code> ptr (nullptr if not created); public static <code>get\_singleton()</code> creates lazily and returns; disable copy ctor and copy assign (<code>= delete</code>). Benefits: guaranteed one instance, global access point, lazy creation. Warning: multithreading issue – multiple threads may each create instance; need mutex protection.<br>
-<code>ExecutivePass::obtain()</code> = global access. <code>delete</code> singleton→enables creating new one.</div>
-<div class="blk">
-<b>ITERATOR DP</b><br>
-<b>Problem</b>: single algorithm over multiple collections (array, vector, map) stored differently; overloaded functions per collection type. <b>Solution</b>: Iterator interface with <code>has\_next(), next()</code>; each Team subclass creates appropriate Iterator; <code>TeamReport</code> delegates iteration to Iterator, doesn't know collection type. Benefits: delegated iteration, loose coupling (PoLK), encapsulated iteration algorithms, DRY, sharable.<br>
-Note: C++ built-in iterators (<code>vector<T>::iterator</code>) are NOT modeled by this pattern – not loosely coupled.<br>
-Generic: SequentialCollection + Iterator interface + ConcreteIterator (with cursor) + Client.</div>
-<div class="blk">
-<b>VISITOR DP</b><br>
-<b>Problem</b>: different algorithms over same tree data structure; algorithm code scattered in node classes; hard to add new passes. <b>Solution</b>: Node interface with <code>accept(Visitor&amp;amp;)</code>; Visitor interface with <code>visit\_NodeType()</code> for each node type; concrete Visitor classes encapsulate each algorithm. Node: <code>accept(v)\{v.visit\_X(this);\</code>} then propagates to children. Benefits: encapsulated algorithms, SRP (nodes=structure, visitors=algorithms), loose coupling, add new algorithms without modifying structure.<br>
-Analogy: craftsmen (painter, plumber) visit rooms – each does different task per room type.<br>
-<code>ScoresReportVisitor, ActivitiesReportVisitor, WinningsReportVisitor</code> each visit <code>Intramural, Sport, Game, Hall</code> nodes.</div>
-<div class="blk">
-<b>OBSERVER DP</b><br>
-<b>Problem</b>: publisher hardcodes subscribers; tight coupling; can't add/remove subscribers without code change. <b>Solution</b>: Subject (publisher) has <code>observers</code> vector of Observer interface ptrs; <code>subscribe/unsubscribe</code>; <code>notify()</code> calls <code>update()</code> on each observer. Observer calls <code>get\_current\_event()</code> if interested. Benefits: loose coupling (publisher ↔ subscriber; only knows <code>update()</code>), flexible (add/remove subscribers at runtime), SRP (publisher generates events, subscribers process).<br>
-Publisher-Subscriber / producer-consumer model. <code>BaseballReporter</code> (Subject) → <code>LogReport, GraphReport, TableReport</code> (Observers).</div>
-<div class="blk">
-<b>COMPOSITE DP</b><br>
-<b>Problem</b>: tree (part-whole hierarchy); treat individual items and composites differently; complex client code. <b>Solution</b>: Component interface (e.g., <code>ProvisionItem</code> with <code>get\_cost()</code>); Leaf = individual item; Composite (<code>ProvisionGroup</code>) IS-A Component and HAS-A vector of Components; client treats both uniformly. Disable <code>add()/remove()</code> in Leaf. Benefits: uniformity, simplicity, flexibility (add/remove items at runtime).<br>
-Generic: Component + Leaf + Composite (is-a Component, has-a vector of Components).</div>
-<div class="blk">
-<b>DECORATOR DP</b><br>
-<b>Problem</b>: add responsibilities dynamically; subclassing leads to class explosion; hardcoded enhancements. <b>Solution</b>: Component interface (Ticket); ConcreteComponent (BaseTicket); Decorator abstract class (is-a Ticket, has-a Ticket* to next); ConcreteDecorators (Party, VIP, Coupon) each add cost and chain call. <code>get\_cost()</code> = <code>ticket->get\_cost() + my\_cost</code>. Benefits: dynamic enhancement, no hardcoding, easy add/remove, loose coupling, uniform treatment.<br>
-<code>Ticket* t = new Party(new VIP(new Coupon(new BaseTicket())));</code> – wrapping layers.</div>
-<div class="blk">
-<b>STATE DP</b><br>
-<b>Problem</b>: object behavior changes with state; if/switch on state everywhere; scattered state logic; hard to add states. <b>Solution</b>: State interface with action methods; ConcreteState subclasses encapsulate actions+transitions for each state; Context (TicketMachine) has <code>State* state</code> member; delegates actions to current State; State methods return next State. StatesBlock aggregates all States (loose coupling between states). Benefits: encapsulated states (Encapsulate What Varies), SRP (TicketMachine only tracks vars), loose coupling (PoLK), easy to add/remove states.<br>
-States: <code>READY, VALIDATING, TICKET\_SOLD, SOLD\_OUT</code>. Actions: <code>insert\_card, check\_validity, take\_ticket, remove\_card</code>. UML state diagram documents transitions.<br>
-Generic: Context (TicketMachine) + State interface + ConcreteStateA,B,... (READY, VALIDATING...). <code>handle()</code> = action methods.</div>
-<div class="blk">
-<b>UML SUMMARY TABLE</b><br>
-<table><tr><td>Inheritance</td><td>solid line, hollow triangle</td></tr><tr><td>Realization</td><td>dashed line, hollow triangle</td></tr><tr><td>Composition</td><td>solid line, filled diamond</td></tr><tr><td>Aggregation</td><td>solid line, hollow diamond</td></tr><tr><td>Association</td><td>solid line, open arrow</td></tr><tr><td>Dependency</td><td>dashed line, open arrow</td></tr></table><br>
-<code>+</code>=public <code>-</code>=private <code>\#</code>=protected (accessible by class+subclasses only).</div>
-<div class="blk">
-<b>MVC ARCHITECTURE</b><br>
-<b>Model</b>: persistent data (memory/files/DB). <b>View</b>: UI components (text fields, buttons, menus, checkboxes); collects user input. <b>Controller</b>: coordinates model+view; dispatches view data to model; user cannot directly modify model. Loose coupling among 3 types. Qt6 framework: subclass framework classes, add custom classes, register callbacks/event handlers. <b>Inversion of control</b>: framework controls execution flow.</div>
-<div class="blk">
-<b>DESIGN PATTERN COMPARISON</b><br>
-<table><tr><td>Template Method</td><td>inheritance, fixed algorithm outline</td></tr><tr><td>Strategy</td><td>composition, interchangeable algorithms</td></tr><tr><td>Factory Method</td><td>subclass decides which object to create</td></tr><tr><td>Abstract Factory</td><td>creates families, prevents mixing</td></tr><tr><td>Adapter</td><td>integrates incompatible interfaces</td></tr><tr><td>Facade</td><td>simpler interface to complex subsystem</td></tr><tr><td>Composite</td><td>part-whole hierarchy, uniform treatment</td></tr><tr><td>Decorator</td><td>dynamic responsibilities, wrapping</td></tr><tr><td>Iterator</td><td>single algorithm, multiple collections</td></tr><tr><td>Visitor</td><td>multiple algorithms, single collection</td></tr><tr><td>Observer</td><td>pub-sub, loose coupling, notify</td></tr><tr><td>State</td><td>state-dependent behavior, encapsulated</td></tr><tr><td>Singleton</td><td>one instance, lazy creation, private ctor</td></tr></table></div>
+<span class="hd">RECURSION</span><br>[-2pt]
+<b>Key ideas:</b> base case (immediate, obvious); recursive case calls self on smaller/similar problem; each call has own local vars on stack; must approach base case. <b>Largest:</b> compare head vs. largest(rest). <b>Reverse:</b> remove head, recurse, append head at end. <b>Member-of:</b> head==x OR member(rest). <b>Multiply</b> i×j: base j=0; else i + mult(i,j-1).<br>
+<hr>
+<span class="hd">TOWERS OF HANOI</span><br>[-2pt]
+<p>Move n disks src→dst using tmp. Recursive solution:</p>
+<ol><li>solve(n-1, src, dst, tmp) — move top n-1 via dst</li><li>move(src→dst) — base case: 1 disk</li><li>solve(n-1, tmp, src, dst) — move from tmp</li></ol>
+<p>Total moves: 2^n - 1. ``Very difficult without recursion!''&emsp; Pins swap roles (src/tmp/dst) each call.<br></p>
+<hr>
+<span class="hd">FIBONACCI DISASTER</span><br>[-2pt]
+<code>f(n)=f(n-1)+f(n-2)</code>: exponential redundant calls; bogs down. Use <b>iteration</b> instead. Recursion is powerful but use appropriately.<br>
+<hr>
+<span class="hd">QUICKSORT</span> (1961, ``most elegant'')<br>
+<b>Partition:</b> pick middle as pivot (A); park at right by swap (B); set <code>i=left-1, j=right</code>; loop until j crosses i: move <code>i</code> right while <code>data[i]<pivot</code> (C); move <code>j</code> left while <code>data[j]>pivot</code> (D); if <code>i<j</code> swap <code>data[i],data[j]</code> (E); swap pivot back in at <code>i</code>. <b>Sort:</b> base: size<2 return; size=2 swap if needed; else partition, recursively sort left &amp;amp; right subarrays.<br>
+<hr>
+<span class="hd">DYNAMIC BACKTRACKING</span><br>[-2pt]
+<p>Decision tree: try a path; backtrack on dead end; try next path. Base case = no further paths (dead end) or solution found. Can find all solutions by continuing after finding one.<br></p>
+<b>N-Queens (8):</b> solve column-by-column L→R. <code>is\_safe\_position(row,col)</code> checks left attacks. <code>find\_solutions()</code> recurses right. After each safe square, backtrack to try next. <b>92 solutions.</b><br>[-2pt]
+<b>Sudoku:</b> brute-force 1–9 per cell; L→R top→bottom; recursively check ahead; backtrack to next number after trying all 9; backtrack to previous cell.<br>
+<hr>
+<span class="hd">MULTITHREADING</span><br>[-2pt]
+<b>Thread:</b> path through code; own stack+registers; shares code/data/resources. <b>Concurrency</b> (switch among tasks, 1 CPU) vs. <b>Parallelism</b> (simultaneous, multi-CPU). <b>Shared resource:</b> output stream, memory. <b>Critical region:</b> code accessing shared resource. <b>Mutual exclusion:</b> only 1 thread in critical region at a time.<br>
+<b>mutex:</b> <code>lock()</code> blocks if already locked; <code>unlock()</code> on exit. <b>lock\_guard&lt; mutex&gt;:</b> RAII — auto-locks on construct, auto-unlocks on scope exit; prevents deadlock from forgotten unlock. <b>Context switching:</b> runtime switches threads; <code>this\_thread::yield()</code> voluntary relinquish. <code>this\_thread::sleep\_for(chrono::seconds(n))</code>.<br>
+<b>Reader-Writer:</b> <code>shared\_mutex</code>. Writers use <code>unique\_lock&lt; shared\_mutex&gt;</code> (exclusive — no readers or writers). Readers use <code>shared\_lock&lt; shared\_mutex&gt;</code> (multiple readers OK; blocks writers).<br>
+<b>atomic&lt; T&gt;:</b> thread-safe without mutex; <code>store()</code>, <code>load()</code>, <code>–</code> ops.<br>
+<b>condition\_variable:</b> <code>cv.wait(lock)</code> — atomically unlocks+sleeps; re-locks when notified; always use <code>while()</code> loop (spurious wakeup). <code>cv.notify\_all()</code> wakes all waiting.<br>
+<div class="cb"></div>
+<span class="hd">PRODUCER-CONSUMER</span><br>[-2pt]
+<p>Queue with capacity. Producers wait on <code>producer\_cv</code> when full (<code>is\_full()</code>). Consumers wait on <code>consumer\_cv</code> when empty (<code>is\_empty()</code>). Producer notifies consumers when <code>just\_became\_not\_empty()</code> (size==1). Consumer notifies producers when <code>just\_became\_not\_full()</code> (size==CAP-1). When all producers done, notify consumers.<br></p>
+<b>Dining Philosophers:</b> 5 philosophers, 5 chopsticks (one between each). Need both adjacent; must pick up both at once (cannot hold one and wait). Loop: think→wait→fill bowl→eat. <b>Deadlock:</b> all blocked; prevent with consistent lock ordering.<br>
+<b>auto:</b> type inference from initializer. <b>decltype(x):</b> yields type of variable <code>x</code>; use to declare same-type variable.<br>
+<hr>
+<span class="hd">WELL-DESIGNED SOFTWARE</span><br>[-2pt]
+<p>Meets requirements &emsp;·&emsp; Reliable (no surprises, no hidden perf issues) &emsp;·&emsp; Flexible+scalable (add features without complexity) &emsp;·&emsp; Maintainable &emsp;·&emsp; Uses good design+patterns &emsp;·&emsp; Saves time/cost. Design-code-test iterations (``Mozart'' analogy — iterative, not big-bang).<br></p>
+<hr>
+<span class="hd">OOP DESIGN</span><br>[-2pt]
+<b>Encapsulation:</b> data+behavior in class; public/private; contains/isolates changes. <b>Abstraction:</b> ignore irrelevant details. <b>Inheritance:</b> subclass from superclass; adds/overrides state+behavior. <b>Polymorphism:</b> base ptr calls correct subclass method at runtime via <code>virtual</code>. <b>dynamic\_cast&lt; T*&gt;(ptr):</b> type-check+convert; returns <code>nullptr</code> if wrong type. <b>Abstract class:</b> ≥1 pure virtual (<code>=0</code>); cannot instantiate; subclasses must implement. <b>Interface class:</b> all pure virtual, no member vars. <b>virtual destructor</b> required if subclasses exist. <b>Override</b> (same signature, different class) vs. <b>Overload</b> (same name, different params, same scope).<br>
+<b>Liskov Substitution (LSP):</b> subclass substitutable for superclass. <b>Violation:</b> <code>CircularBuffer:vector</code> exposes invalid vector methods (<code>at()</code>, <code>erase()</code>); <b>Fix:</b> has-a not is-a (member <code>vector<int> buffer</code>). <b>Code to Interface:</b> declare as base ptr, assign subclass at runtime.<br>
+<hr>
+<span class="hd">DESIGN SMELLS</span><br>[-2pt]
+<b>Leaking changes:</b> change in <code>Car</code> forces change in <code>Driver</code> (key→button). <b>God class:</b> <code>AutomobileApp</code> — too many responsibilities (drive+maintain+wash). <b>Hardcoded concrete:</b> <code>Cat *pet = new Cat()</code>. <b>Principle of least surprise violation:</b> <code>Date</code> MONTH\_NAMES[12] off-by-one (month=9→OCT not SEP). <b>DRY violation:</b> repeated code in multiple classes.<br>
+<hr>
+<span class="hd">DESIGN PRINCIPLES (9)</span><br>[-2pt]
+<div class="sm"><table class="ct"><tr><td>p{1.2in}@{}}
+<tr class="toprule"><td colspan="99"></td></tr>
+<b>Principle</b></td><td><b>Key idea</b><br>
+<tr class="midrule"><td colspan="99"></td></tr>
+<p>SRP</td><td>One primary responsibility; cohesive; easy use+maintain</td></tr><tr><td>Encapsulate What Varies</td><td>Isolate changeable code; changes don't leak</td></tr><tr><td>Delegation</td><td>Move work to suitable class; requester no HOW dep.</td></tr><tr><td>Law of Demeter/Least Know.</td><td>Call only: member var, param, locally instantiated; NOT returned obj (<code>a.getB().getC()</code> is smell); return copies not ptrs</td></tr><tr><td>OCP</td><td>Closed to modification; open for extension via subclasses</td></tr><tr><td>Code to Interface</td><td>Use base/interface ptr not specific subclass</td></tr><tr><td>DRY</td><td>No duplicate code; share as function/class</td></tr><tr><td>Defensive Programming</td><td>Runtime param checks; create only valid objects; <code>assert()</code><br></p>
+<p>Programming by Contract</td><td>Precondition=caller's resp.; Postcondition=function's resp.; Class invariant=true after ctor+every mutation</td></tr><tr><td><tr class="bottomrule"><td colspan="99"></td></tr></td></tr></table></div></p>
+<p>}<br>[-2pt]</p>
+<p>Also: <b>Favor Composition over Inheritance</b> (has-a often better). <b>Lazy Evaluation.</b> <b>Refactoring</b> (improve without changing functionality).<br></p>
+<div class="cb"></div>
+<span class="hd">REQUIREMENTS</span><br>[-2pt]
+<b>Functional:</b> what system <em>shall} do / allow users to do. <b>Nonfunctional:</b> usability, reliability, performance, supportability — equally important. Use <b>``shall''/``must''</b> (strong); <b>``should''</b> = wish list.<br>
+<div class="sm"><table class="ct"><tr><td>}
+<tr class="toprule"><td colspan="99"></td></tr>
+<b>Quality</b></td><td><b>Meaning</b><br>
+<tr class="midrule"><td colspan="99"></td></tr>
+<p>Clear</td><td>Non-technical, jargon-free</td></tr><tr><td>Consistent</td><td>No contradictions</td></tr><tr><td>Correct</td><td>Each req must be correct</td></tr><tr><td>Complete</td><td>No gaps</td></tr><tr><td>Realistic</td><td>Satisfiable</td></tr><tr><td>Verifiable</td><td>Testable</td></tr><tr><td>Traceable</td><td>Each req ↔ feature</td></tr><tr><td><tr class="bottomrule"><td colspan="99"></td></tr></td></tr></table></div></p>
+<p>}<br>[-2pt]</p>
+<b>Sources:</b> interview, observe, stated+implied. <b>Iterative</b> — show prototypes; customers don't always know what they want. <b>I18N</b> (Internationalization, 18 letters) — design for multiple locales. <b>L10N</b> (Localization, 10 letters) — adapt language, dates, monetary, encoding. <b>V&amp;amp;V:</b> Validate=building right app (customer confirms); Verify=building app right (developers test).<br>
+<hr>
+<span class="hd">UML DIAGRAMS</span><br>[-2pt]
+<b>Class:</b> class name; member vars (+pub/-priv/#prot); member fns. <b>6 relationships:</b> dependency, transient dependency, aggregation (has vector of), composition (part cannot exist outside container), generalization (superclass), realization (implements interface — dashed arrow). <b>Multiplicity</b> notation on arrows.<br>
+<b>Use Case:</b> oval=use case; stick figure=actor (external agent: person or system); rectangle=system boundary.<br>
+<b>State:</b> rounded boxes=states; arrows=transitions+events; filled circle=start; circle-in-circle=end; [conditions] in brackets.<br>
+<b>Sequence:</b> lifelines (dashed vertical); active rectangles; labeled horizontal arrows=method calls; time top→bottom.<br>
+<hr>
+<span class="hd">USE CASE DESCRIPTION (10 fields)</span><br>[-2pt]
+<b>Name</b> (verb-noun); <b>Goal</b>; <b>Summary</b> (1–2 sent.); <b>Actors</b>; <b>Preconditions</b> (what must be true before); <b>Trigger</b> (actor action to start); <b>Primary sequence</b> (≤10 steps); <b>Alternate sequences</b> (exception paths); <b>Postconditions</b>; <b>Nonfunctional requirements</b>; <b>Glossary</b>. Focus on WHAT not HOW; ``black box'' view; no GUI/impl details.<br>
+<hr>
+<span class="hd">FUNCTIONAL SPEC &amp;amp; DESIGN SPEC</span><br>[-2pt]
+<b>Functional Spec</b> (External Ref Spec): product name, problem statement, objectives, functional reqs, nonfunctional reqs, use cases. No impl details. Customer reads/approves ⇒ <b>validates</b> (building right app). <b>Design Spec</b> (Internal Maintenance Spec): technical, impl details, UML class/state/sequence. Developers <b>verify</b> (building app right).<br>
+<hr>
+<span class="hd">REQUIREMENTS ANALYSIS (textual)</span><br>[-2pt]
+<b>Nouns→Classes</b> (member vars for state). <b>Verbs→Behaviors/Methods</b> (transitive verbs acting on objects → member fns; assign cohesively per SRP). <b>Noun-Class Table:</b> noun, class, states/vars. <b>Verb-Behavior Table:</b> verb, class, member fn.<br>
+<hr>
+<span class="hd">LAMBDA EXPRESSIONS</span><br>[-2pt]
+<p>Syntax: <code>[capture](params)->ret\{body\</code>}. No capture: <code>[](const T&amp;amp; x)\{...\</code>}. Capture by ref: <code>[&amp;amp;var]</code>; by value: <code>[var]</code>. <code>std::function&lt; bool(const T&amp;amp;)&gt;</code> for lambdas with capture. <b>Predicate:</b> bool function whose return depends on params. Use with STL: <code>sort</code>, <code>find\_if</code>, etc. <code>auto f = [](int x)\{return x*2;\</code>;}<br>[-2pt]</p>
+<hr>
+<span class="hd">FUNCTORS (Function Objects)</span><br>[-2pt]
+<p>Class overloading <code>operator()()</code>. Stores state across calls in member vars. Can be stored, passed, returned. <code>RandomInt ri(5,12); ri();</code> — next random int. <code>Summation adder; adder(3);</code> — accumulates sum. <code>()(){</code>} syntax: first <code>()</code> = operator name, second <code>()</code> = params.<br></p>
+<div class="cb"></div>
+<span class="hd">MOVE SEMANTICS &amp;amp; BIG FIVE</span><br>[-2pt]
+<b>lvalue:</b> named variable (can be left of assignment). <b>rvalue:</b> temporary, about to be destroyed. Moving rvalue = ``steal'' resources O(1) vs copy O(n). <code>std::move(x):</code> force lvalue to behave as rvalue. <b>Rule of Big Five:</b> if define any one → define all: destructor, copy ctor, copy assign, move ctor, move assign. Move ctor/assign steal and set source to valid empty state (nullptr). Avoids costly copies of temporary objects (e.g., <code>push\_back(first+" "+last)</code>).<br>
+<hr>
+<span class="hd">SMART POINTERS</span><br>[-2pt]
+<b>Raw ptrs:</b> memory leak risk, double delete, no ownership clarity. <b>unique\_ptr&lt; T&gt;:</b> exclusive ownership; auto-deleted on scope exit/reset; cannot copy (only move via <code>std::move</code>); source set to <code>nullptr</code>. <b>shared\_ptr&lt; T&gt;:</b> shared ownership via ref count; auto-deleted when count=0; copy increments count; <code>reset()</code> decrements; deleted exactly once.<br>
+<hr>
+<span class="hd">VECTORS &amp;amp; PERFORMANCE</span><br>[-2pt]
+<p>Growing copies all elements O(n). Use <code>reserve()</code> to pre-allocate. Store <code>T*</code> not <code>T</code> to avoid copy overhead on insert/remove (only pointer copies). Remove shifts all following elements.<br></p>
+<hr>
+<span class="hd">MVC ARCHITECTURE</span><br>[-2pt]
+<b>Model:</b> persistent data (memory/files/DB). <b>View:</b> UI components (fields, buttons, menus). <b>Controller:</b> coordinates model+view; dispatches user input to model. Qt6 framework; inversion of control; loose coupling among 3 types. User cannot directly modify model.<br>
+<hr>
+<span class="hd">DESIGN PATTERNS — CLASSIFICATION</span><br>[-2pt]
+<div class="sm"><table class="ct"><tr><td>}
+<tr class="toprule"><td colspan="99"></td></tr>
+<b>Creational</b></td><td><b>Structural</b></td><td><b>Behavioral</b><br>
+<tr class="midrule"><td colspan="99"></td></tr>
+<p>Factory Method</td><td>Adapter</td><td>Template Method</td></tr><tr><td>Abstract Factory</td><td>Facade</td><td>Strategy</td></tr><tr><td>Singleton</td><td>Composite</td><td>Iterator</td></tr><tr><td></td><td>Decorator</td><td>Visitor</td></tr><tr><td></td><td></td><td>Observer</td></tr><tr><td></td><td></td><td>State</td></tr><tr><td><tr class="bottomrule"><td colspan="99"></td></tr></td></tr></table></div></p>
+<p>}<br>[-2pt]</p>
+<hr>
+<span class="hd">TEMPLATE METHOD DP</span><br>[-2pt]
+<b>Intent:</b> fixed algorithm skeleton in base class (<em>template method}); varying steps as abstract methods in subclasses. <b>Structure:</b> superclass (<code>GameReport</code>) has <code>generate\_report()</code> calling steps in order; implements common steps (<code>print\_header/footer</code>); abstract steps (<code>acquire\_data, analyze\_data, print\_report</code>) in subclasses (<code>BaseballReport, VolleyballReport</code>). <b>Mechanism:</b> Inheritance. <b>Keywords:</b> ``algorithm outline'', ``fixed sequence'', ``outline of steps''. <b>vs. Strategy:</b> TM=inheritance+fixed outline with varying steps; Strategy=composition+entire algorithm swapped.<br>
+<hr>
+<span class="hd">STRATEGY DP</span><br>[-2pt]
+<b>Intent:</b> family of interchangeable algorithms; interface per family; concrete classes implement; context has-a strategy ptr set at runtime. <b>Structure:</b> <code>Sport</code> has <code>player\_strategy</code> and <code>venue\_strategy</code> ptrs to interfaces <code>PlayerStrategy</code> and <code>VenueStrategy</code>; concrete classes (<code>BaseballPlayers, Stadium, OpenField</code>) implement interfaces. <b>Mechanism:</b> Composition. <b>Keywords:</b> ``interchangeable'', ``runtime selection'', ``family of algorithms''. <b>vs. TM:</b> Strategy swaps entire algorithm; TM varies steps within fixed outline.<br>
+<hr>
+<span class="hd">FACTORY METHOD DP</span><br>[-2pt]
+<b>Intent:</b> creator superclass has abstract factory method; subclass decides which product to instantiate. <b>Structure:</b> Creator=<code>AthleticsDept</code>; ConcreteCreators=<code>VarsityDept, IntramuralDept</code>; factory method=<code>create\_sport()</code>; Product=<code>Sport</code>. Superclass delegates object creation to subclasses. <b>Mechanism:</b> Inheritance. <b>Keywords:</b> ``subclass decides'', ``single product type'', ``factory method''. <b>vs. Abstract Factory:</b> FM=single product type; AF=families of related products; AF prevents mixing families.<br>
+<hr>
+<span class="hd">ABSTRACT FACTORY DP</span><br>[-2pt]
+<b>Intent:</b> interface creates families of related objects; concrete factory creates one consistent family; prevents mixing families. <b>Structure:</b> AbstractFactory=<code>ProvisionsFactory</code>; ConcreteFactories=<code>VarsityFactory, IntramuralFactory</code>; each creates family (<code>make\_players(), make\_venue()</code>). <b>Mechanism:</b> Composition. <b>Keywords:</b> ``product family'', ``consistency'', ``prevents mixing''. <b>vs. FM:</b> AF ensures family consistency; FM just delegates single-type creation to subclass.<br>
+<hr>
+<span class="hd">ADAPTER DP (Object)</span><br>[-2pt]
+<b>Intent:</b> make incompatible interfaces work together; wrap legacy/external code. <b>Structure:</b> Target interface (<code>AttendanceData</code>); Adapter (<code>FootballData</code>) implements Target + aggregates Adaptee (<code>FootballInfo</code>); converts calls. <b>Class Adapter:</b> uses multiple inheritance instead of aggregation; can override adaptee methods. <b>Keywords:</b> ``incompatible interface'', ``legacy code'', ``wrapper''. <b>vs. Facade:</b> Adapter=make incompatible work; Facade=simplify complex.<br>
+<hr>
+<span class="hd">FACADE DP</span><br>[-2pt]
+<b>Intent:</b> simple high-level interface to complex subsystem; hide complexity. <b>Structure:</b> Facade class (<code>FundRaiser</code>) delegates to subsystem classes (<code>Alumni, BoosterClubs, Students</code>); clients (<code>AthleticsDept, Administration</code>) only call facade. <b>Keywords:</b> ``simplify'', ``hide complexity'', ``front door'', ``single interface''.<br>
+<hr>
+<span class="hd">SINGLETON DP</span><br>[-2pt]
+<b>Intent:</b> exactly one instance; global access point. <b>Structure:</b> private constructor; private static ptr <code>single\_instance</code>; public static <code>get\_singleton()</code> — lazy creation (creates if null); deleted copy ctor+assign. <b>Thread safety issue:</b> multiple threads may each create instance if <code>single\_instance==nullptr</code> simultaneously. <b>Keywords:</b> ``one instance'', ``global access'', ``private constructor'', ``lazy construction''.<br>
+<hr>
+<span class="hd">COMPOSITE DP</span><br>[-2pt]
+<b>Intent:</b> uniform treatment of leaf and composite; part-whole hierarchy. <b>Structure:</b> Component interface (<code>ProvisionItem</code>) + Leaf (e.g., <code>Ball, Bat</code>; no children) + Composite (<code>ProvisionGroup</code>: is-a <code>ProvisionItem</code> AND has-a <code>vector&lt; ProvisionItem*&gt;</code>); <code>get\_cost()</code> on composite sums children. Disable <code>add/remove</code> on leaves. <b>Keywords:</b> ``part-whole hierarchy'', ``tree structure'', ``recursive'', ``uniform treatment''.<br>
+<hr>
+<span class="hd">DECORATOR DP</span><br>[-2pt]
+<b>Intent:</b> add responsibilities dynamically; flexible alternative to subclassing. <b>Structure:</b> Component=<code>Ticket</code>; ConcreteComponent=<code>BaseTicket</code>; Decorator abstract (is-a <code>Ticket</code>, has-a <code>Ticket*</code> to next); ConcreteDecorators=<code>Party, VIP, Coupon</code>; chain: <code>get\_cost()=next->get\_cost()+my\_cost</code>. <b>Keywords:</b> ``add responsibilities dynamically'', ``wrap'', ``chain''. <b>vs. Composite:</b> Decorator=single child+add behavior; Composite=multiple children+aggregate.<br>
+<hr>
+<span class="hd">ITERATOR DP</span><br>[-2pt]
+<b>Intent:</b> traverse collection without exposing representation; decouple algorithm from collection type. <b>Structure:</b> Iterator interface (<code>has\_next(), next()</code>) + ConcreteIterators (<code>ArrayIterator, VectorIterator, MapIterator</code>) each with private cursor; Collection (<code>Team</code> subclasses) creates appropriate iterator; Client (<code>TeamReport</code>) uses only iterator interface. <b>Note:</b> C++ built-in iterators ≠ this pattern (not via common interface). <b>Keywords:</b> ``traverse'', ``decouple collection'', ``has\_next/next''.<br>
+<hr>
+<span class="hd">VISITOR DP</span><br>[-2pt]
+<b>Intent:</b> add operations without modifying structure; different algorithms on single tree. <b>Structure:</b> Node interface has <code>accept(Visitor&amp;amp;)</code>; <code>accept</code> impl: <code>v.visit\_X(this)</code> then propagate to children; Visitor interface has <code>visit\_NodeType()</code> per type; ConcreteVisitors (<code>ScoresReportVisitor</code>, etc.) encapsulate algorithms. <b>Double dispatch:</b> node type + visitor type determine behavior. <b>Analogy:</b> craftsmen (painter, plumber) visiting rooms — each craftsman does different task per room type. <b>Keywords:</b> ``new operations'', ``node hierarchy'', ``double dispatch'', ``craftsmen visiting rooms''. <b>vs. Iterator:</b> Visitor=multiple algorithms on tree; Iterator=single traversal.<br>
+<hr>
+<span class="hd">OBSERVER DP</span><br>[-2pt]
+<b>Intent:</b> publish-subscribe; 1-to-many; loose coupling. <b>Structure:</b> Subject has <code>vector&lt; Observer*&gt; observers</code>; <code>subscribe/unsubscribe/notify()</code> calls <code>update()</code> on each; Subject stores <code>current\_event</code>; Observer calls <code>get\_current\_event()</code> to pull data. <code>BaseballReporter</code> is Subject; <code>LogReport, GraphReport, TableReport</code> are Observers. <b>Keywords:</b> ``publish-subscribe'', ``notify'', ``1-to-many'', ``event-driven'', ``producer-consumer model''.<br>
+<hr>
+<span class="hd">STATE DP</span><br>[-2pt]
+<b>Intent:</b> state-dependent behavior; object appears to change class; encapsulated transitions. <b>Structure:</b> Context (<code>TicketMachine</code>) has <code>State* state</code> member; delegates actions to current state. State interface has action methods. ConcreteStates (<code>READY, VALIDATING, TICKET\_SOLD, SOLD\_OUT</code>) encapsulate actions+transitions and return next State. <code>StatesBlock</code> aggregates all states (loose coupling). Each action fn returns next <code>State*</code>. <b>UML state diagram</b> documents transitions. <b>Keywords:</b> ``state-dependent behavior'', ``state machine'', ``encapsulated transitions'', ``alter behavior when state changes''.<br>
+<div class="sm"><table class="ct"><tr><td>p{0.65in}p{0.65in}@{}}
+<tr class="toprule"><td colspan="99"></td></tr>
+<b>Pattern</b></td><td><b>Mechanism</b></td><td><b>Confused with</b><br>
+<tr class="midrule"><td colspan="99"></td></tr>
+<p>Template Method</td><td>Inheritance</td><td>Strategy</td></tr><tr><td>Strategy</td><td>Composition</td><td>Template Method</td></tr><tr><td>Factory Method</td><td>Inheritance</td><td>Abstract Factory</td></tr><tr><td>Abstract Factory</td><td>Composition</td><td>Factory Method</td></tr><tr><td>Adapter</td><td>Aggregation/MI</td><td>Facade</td></tr><tr><td>Facade</td><td>Delegation</td><td>Adapter</td></tr><tr><td>Singleton</td><td>Static field</td><td>—</td></tr><tr><td>Composite</td><td>Recursion</td><td>Decorator</td></tr><tr><td>Decorator</td><td>Chain</td><td>Composite</td></tr><tr><td>Iterator</td><td>Cursor</td><td>Visitor</td></tr><tr><td>Visitor</td><td>Double dispatch</td><td>Iterator</td></tr><tr><td>Observer</td><td>Notify/pull</td><td>—</td></tr><tr><td>State</td><td>Delegation</td><td>Strategy</td></tr><tr><td><tr class="bottomrule"><td colspan="99"></td></tr></td></tr></table></div></p>
+</div>
 </div>
 </body>
 </html>

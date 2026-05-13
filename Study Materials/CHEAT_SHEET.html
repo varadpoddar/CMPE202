@@ -199,6 +199,22 @@ b { color: #1a3a6b; }
           <div class="pat-rule">Fix: return a copy (<code>new Date(*birthdate)</code>).</div>
           <div class="pat-rule">Lab: Program5.7, 5.8, 5.9</div>
         </div>
+        <div class="pat">
+          <div class="pat-name">Design Smells (Program 1.x)</div>
+          <div class="pat-rule"><b>Tight Coupling</b>: A creates/calls B concrete directly → hard to swap/test. Fix: program to interface.</div>
+          <div class="pat-rule"><b>God Class</b>: one class owns driving + maintenance + cleaning → SRP violation. Fix: split.</div>
+          <div class="pat-rule"><b>Hardcoded Concrete</b>: <code>new Cat()</code> in client → can't extend without edit → OCP violation.</div>
+          <div class="pat-rule"><b>Least Surprise</b>: method name doesn't match behavior. Fix: name accurately.</div>
+          <div class="pat-rule">Lab: Program1.1 (coupling), 1.2 (god class), 1.3 (concrete), 1.4 (surprise)</div>
+        </div>
+        <div class="pat">
+          <div class="pat-name">Polymorphism &amp; Virtual Functions (Prog 5.10, 7.x)</div>
+          <div class="pat-rule"><code>virtual void f() = 0;</code> → pure virtual → class is <b>abstract</b> (can't instantiate).</div>
+          <div class="pat-rule"><code>override</code> in subclass → compiler verifies signature matches base.</div>
+          <div class="pat-rule"><code>virtual ~Base()</code> → always needed when deleting via base pointer.</div>
+          <div class="pat-rule">Abstract class: ≥1 pure virtual, may have data. Interface: all pure virtual, no data.</div>
+          <div class="pat-rule"><b>Rule of Five</b>: if you define any one of {dtor, copy ctor, copy=, move ctor, move=} define all five.</div>
+        </div>
       </div>
     </div>
 
@@ -802,11 +818,13 @@ v.push_back(move(s));// no copy — O(1) transfer
       <div class="sec-body">
         <table>
           <tr><th>Lab</th><th>Concept</th></tr>
+          <tr><td>1.1–1.4</td><td>Design Smells (coupling, god class, concrete, surprise)</td></tr>
           <tr><td>15.1–15.8</td><td>Recursion, Backtracking</td></tr>
           <tr><td>16.1–16.4 + DiningPhil</td><td>Threading (race, mutex, RW, PC, deadlock)</td></tr>
           <tr><td>2.1–2.5</td><td>SRP (Books)</td></tr>
           <tr><td>4.1–4.4</td><td>OCP (Vehicles)</td></tr>
-          <tr><td>5.7–5.9</td><td>Law of Demeter</td></tr>
+          <tr><td>5.7–5.9 + 5.10</td><td>Law of Demeter; Polymorphism/Abstract class (Mammals)</td></tr>
+          <tr><td>7.1–7.7</td><td>Polymorphism, virtual, override, Rule of Five (Taxes/Toys)</td></tr>
           <tr><td>8.1–8.2</td><td>Template Method (Reports)</td></tr>
           <tr><td>8.3–8.4</td><td>Strategy (Sports)</td></tr>
           <tr><td>9.2</td><td>Factory Method</td></tr>

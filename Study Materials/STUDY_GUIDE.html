@@ -324,9 +324,11 @@ tr:nth-child(even) td { background: #f8f9fa; }
     <li><a href="#s7">Producer-Consumer</a></li>
     <li><a href="#s8">Dining Philosophers / Deadlock</a></li>
     <li><a href="#suml">UML Class Diagrams</a></li>
+    <li><a href="#s_smells">Design Smells</a></li>
     <li><a href="#s9">Single Responsibility Principle</a></li>
     <li><a href="#s10">Open-Closed Principle</a></li>
     <li><a href="#s11">Law of Demeter</a></li>
+    <li><a href="#s_poly">Polymorphism &amp; Virtual Functions</a></li>
     <li><a href="#s12">Template Method Pattern</a></li>
     <li><a href="#s13">Strategy Pattern</a></li>
     <li><a href="#s14">Factory Method Pattern</a></li>
@@ -817,6 +819,69 @@ BaseballRpt  VolleyballRpt
 </pre>
 
 <!-- ═══════════════════════════════════════════════════
+     SECTION — DESIGN SMELLS
+═══════════════════════════════════════════════════ -->
+<h2 class="section orange" id="s_smells">Design Smells (Programs 1.x)</h2>
+
+<div class="explain orange">
+  <strong>What is a design smell?</strong>
+  A symptom in code that signals a deeper design problem. Ron Mak's Programs 1.1–1.4 each demonstrate one smell and motivate why good design matters.
+</div>
+
+<div class="compare">
+  <div class="col-bad">
+    <div class="col-label bad-label">Smell 1.1 — Tight Coupling</div>
+<pre>
+// Driver creates Car directly — impossible to
+// swap a different vehicle or mock in tests.
+class Driver {
+    Car my_car;    // hardwired to Car
+    void start_car() {
+        my_car.insert_key();
+        my_car.turn_key();
+    }
+};
+// Fix: program to an interface (OCP, Adapter DP)
+</pre>
+    <div class="col-label bad-label">Smell 1.3 — Hardcoded Concrete Type</div>
+<pre>
+Cat *pet = new Cat();  // inflexible!
+// Can't swap to Dog without editing this code.
+// Fix: use base pointer + factory
+Pet *pet = new Cat();  // or factory method
+</pre>
+  </div>
+  <div class="col-good">
+    <div class="col-label bad-label">Smell 1.2 — God Class</div>
+<pre>
+// AutomobileApp has 16 methods across
+// driving, maintenance, and cleaning.
+// One class → too many reasons to change (SRP).
+// Fix: split into Driver, Mechanic, CarWash.
+</pre>
+    <div class="col-label bad-label">Smell 1.4 — Principle of Least Surprise</div>
+<pre>
+// Date(2023, 9, 2) is intuitive.
+// A Date that stores string internally and
+// exposes date_string() — not just toString —
+// surprises the caller.
+// Fix: name methods to match caller expectations.
+</pre>
+  </div>
+</div>
+
+<div class="explain">
+  <strong>The four classic smells summarized</strong>
+  <table>
+    <tr><th>Smell</th><th>Symptom</th><th>Which principle it breaks</th></tr>
+    <tr><td>Tight Coupling</td><td>A directly creates/calls B concrete type</td><td>OCP, Dependency Inversion</td></tr>
+    <tr><td>God Class</td><td>One class has too many unrelated methods</td><td>SRP</td></tr>
+    <tr><td>Hardcoded Concrete</td><td><code>new Concrete()</code> embedded in client code</td><td>OCP, DI</td></tr>
+    <tr><td>Least Surprise</td><td>Method name doesn't match what it does</td><td>Law of Demeter, good naming</td></tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
      SECTION 9 — SRP
 ═══════════════════════════════════════════════════ -->
 <h2 class="section orange" id="s9">9. Single Responsibility Principle (SRP)</h2>
@@ -954,6 +1019,110 @@ Date* get_birthdate() {
 }
 </pre>
   </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION — POLYMORPHISM & VIRTUAL FUNCTIONS
+═══════════════════════════════════════════════════ -->
+<h2 class="section purple" id="s_poly">Polymorphism &amp; Virtual Functions (Programs 5.10, 7.x)</h2>
+
+<div class="explain purple">
+  <strong>Why polymorphism matters for design patterns</strong>
+  Every single one of the 13 GoF patterns in this course depends on polymorphism. A base pointer or reference calls the right derived-class method at runtime — this is the engine behind Template Method, Strategy, Factory, Observer, State, Visitor, Iterator, Adapter, Decorator, and Composite.
+</div>
+
+<div class="explain">
+  <strong>Key keywords</strong>
+  <table>
+    <tr><th>Keyword</th><th>Meaning</th><th>Rule</th></tr>
+    <tr><td><code>virtual</code></td><td>Enables dynamic dispatch (runtime binding)</td><td>Put on base class method</td></tr>
+    <tr><td><code>= 0</code></td><td>Pure virtual — subclass must override</td><td>Makes the class abstract</td></tr>
+    <tr><td><code>override</code></td><td>Compiler checks the signature matches base</td><td>Always use in derived class</td></tr>
+    <tr><td><code>virtual ~Dtor()</code></td><td>Virtual destructor</td><td>Required when deleting via base pointer</td></tr>
+  </table>
+</div>
+
+<div class="compare">
+  <div class="col-bad">
+    <div class="col-label bad-label">Abstract base class (Mammal)</div>
+<pre>
+class Mammal {
+public:
+    Mammal(double w, double h)
+        : weight(w), height(h) {}
+    virtual ~Mammal() {}          // virtual dtor!
+
+    virtual void eat()     = 0;   // pure virtual
+    virtual void perform() = 0;   // pure virtual
+
+    double get_weight() const { return weight; }
+
+protected:
+    void sleep() { snore(); }     // shared impl
+
+private:
+    double weight, height;
+    void snore() { ... }
+};
+// Cannot do: Mammal m;  — abstract!
+</pre>
+  </div>
+  <div class="col-good">
+    <div class="col-label good-label">Concrete subclasses</div>
+<pre>
+class Human : public Mammal {
+public:
+    Human(double w, double h, bool ng)
+        : Mammal(w, h), needs_glasses(ng) {}
+    ~Human() {}
+
+    void eat()     override { ... }  // must implement
+    void perform() override { read_book(); sleep(); }
+
+private:
+    bool needs_glasses;
+    void read_book() { ... }
+};
+
+class Cat : public Mammal {
+public:
+    void eat()     override { ... }
+    void perform() override { shed(); }
+private:
+    double fur_factor;
+    void shed() { ... }
+};
+
+// Polymorphic usage:
+Mammal *m = new Human(77, 1.85, true);
+m->perform();  // calls Human::perform() at runtime
+delete m;      // calls Human::~Human() — safe!
+</pre>
+  </div>
+</div>
+
+<div class="explain">
+  <strong>Abstract class vs. Interface (C++ terminology)</strong>
+  <table>
+    <tr><th>Concept</th><th>C++ form</th><th>UML notation</th></tr>
+    <tr><td>Abstract class</td><td>Has ≥1 pure virtual method; may have data members</td><td>Class name in <em>italics</em></td></tr>
+    <tr><td>Interface</td><td>All pure virtual, no data; typically prefixed <code>I</code></td><td>«interface» stereotype</td></tr>
+    <tr><td>Concrete class</td><td>Implements all inherited pure virtuals</td><td>Normal class box</td></tr>
+  </table>
+</div>
+
+<div class="explain">
+  <strong>Rule of Five (when you manage raw memory)</strong>
+  If a class defines any one of these, it should define all five:
+  <table>
+    <tr><th>#</th><th>Special member</th><th>Triggered by</th></tr>
+    <tr><td>1</td><td>Destructor</td><td><code>delete ptr;</code></td></tr>
+    <tr><td>2</td><td>Copy constructor</td><td><code>MyClass b = a;</code></td></tr>
+    <tr><td>3</td><td>Copy assignment</td><td><code>b = a;</code></td></tr>
+    <tr><td>4</td><td>Move constructor</td><td><code>MyClass b = std::move(a);</code></td></tr>
+    <tr><td>5</td><td>Move assignment</td><td><code>b = std::move(a);</code></td></tr>
+  </table>
+  Use <code>= delete</code> to forbid, <code>= default</code> to compiler-generate.
 </div>
 
 <!-- ═══════════════════════════════════════════════════

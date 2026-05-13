@@ -17,13 +17,12 @@ body {
 /* ── Page layout: two sides, letter size ── */
 .page {
   width: 8.5in;
-  height: 11in;
+  min-height: 10.5in;
   padding: 0.28in 0.3in;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: auto 1fr;
   column-gap: 6px;
-  overflow: hidden;
   page-break-after: always;
 }
 .page-header {
@@ -120,10 +119,13 @@ b { color: #1a3a6b; }
 
 /* ── Print ── */
 @media print {
-  body { font-size: 7.5px; }
-  .page { width: 8.5in; height: 11in; padding: 0.22in 0.25in; }
-  pre { font-size: 6.5px; }
-  @page { size: letter; margin: 0; }
+  @page { size: letter; margin: 0.25in 0.28in; }
+  body { font-size: 7px; }
+  .page { width: 100%; min-height: unset; padding: 0; page-break-after: always; }
+  pre { font-size: 6.2px; padding: 2px 4px; }
+  .sec-body { padding: 3px 5px; }
+  table { font-size: 6.5px; }
+  th, td { padding: 1px 3px; }
 }
 </style>
 </head>

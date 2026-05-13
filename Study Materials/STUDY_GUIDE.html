@@ -353,6 +353,87 @@ tr:nth-child(even) td { background: #f8f9fa; }
 </div>
 
 <!-- ═══════════════════════════════════════════════════
+     MIND MAP
+═══════════════════════════════════════════════════ -->
+<div style="column-span:all;page-break-before:always;page-break-after:always;text-align:center;padding:4px 0;">
+  <div style="font-size:13px;font-weight:bold;margin-bottom:6px;letter-spacing:1px;">CMPE 202 — COMPLETE TOPIC MIND MAP</div>
+  <svg viewBox="0 0 980 548" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:980px;font-family:sans-serif;">
+
+    <!-- ── CONNECTIONS ── -->
+    <path d="M390,264 C290,264 232,65 232,65"   stroke="#2d6a4f" stroke-width="2" fill="none"/>
+    <path d="M390,272 C280,272 192,263 192,263"  stroke="#155724" stroke-width="2" fill="none"/>
+    <path d="M390,280 C290,280 232,463 232,463"  stroke="#264653" stroke-width="2" fill="none"/>
+    <path d="M590,264 C690,264 752,65 752,65"    stroke="#7a3d00" stroke-width="2" fill="none"/>
+    <path d="M590,272 C700,272 792,263 792,263"  stroke="#4a1a7a" stroke-width="2" fill="none"/>
+    <path d="M590,280 C690,280 752,463 752,463"  stroke="#1a3a5c" stroke-width="2" fill="none"/>
+
+    <!-- ── CENTER NODE ── -->
+    <rect x="388" y="246" width="204" height="56" rx="9" fill="#1a1a2e"/>
+    <text x="490" y="270" text-anchor="middle" fill="white" font-size="17" font-weight="bold">CMPE 202</text>
+    <text x="490" y="290" text-anchor="middle" fill="#aaaaaa" font-size="10">Software Systems Engineering</text>
+
+    <!-- ═══ LEFT BRANCHES ═══ -->
+
+    <!-- 1. Recursion & Backtracking -->
+    <rect x="22" y="51" width="210" height="28" rx="5" fill="#2d6a4f"/>
+    <text x="127" y="69" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Recursion &amp; Backtracking</text>
+    <text x="24" y="91"  fill="#222" font-size="9">• Base case (solved directly) + Recursive case</text>
+    <text x="24" y="104" fill="#222" font-size="9">• Quicksort, Fibonacci, Towers of Hanoi</text>
+    <text x="24" y="117" fill="#222" font-size="9">• N-Queens, Sudoku — backtracking + pruning</text>
+    <text x="24" y="130" fill="#222" font-size="9">• Stack frames: each call has its own scope</text>
+
+    <!-- 2. Multithreading -->
+    <rect x="5"  y="249" width="185" height="28" rx="5" fill="#155724"/>
+    <text x="97"  y="267" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Multithreading</text>
+    <text x="7"  y="291" fill="#222" font-size="9">• Race condition → mutex + lock_guard (RAII)</text>
+    <text x="7"  y="304" fill="#222" font-size="9">• shared_mutex: multi-reader / one-writer</text>
+    <text x="7"  y="317" fill="#222" font-size="9">• condition_variable: producer-consumer</text>
+    <text x="7"  y="330" fill="#222" font-size="9">• Deadlock: Dining Philosophers, fix with order</text>
+    <text x="7"  y="343" fill="#222" font-size="9">• this_thread::yield(): voluntary CPU release</text>
+
+    <!-- 3. UML Class Diagrams -->
+    <rect x="22" y="449" width="210" height="28" rx="5" fill="#264653"/>
+    <text x="127" y="467" text-anchor="middle" fill="white" font-size="11" font-weight="bold">UML Class Diagrams</text>
+    <text x="24" y="491" fill="#222" font-size="9">• Noun → Class   Verb → Method   Adj → Attribute</text>
+    <text x="24" y="504" fill="#222" font-size="9">• Inheritance ——▷   Realization - -▷</text>
+    <text x="24" y="517" fill="#222" font-size="9">• Composition ◆——   Aggregation ◇——</text>
+    <text x="24" y="530" fill="#222" font-size="9">• Association ——→   Dependency - -→</text>
+
+    <!-- ═══ RIGHT BRANCHES ═══ -->
+
+    <!-- 4. OOP Principles -->
+    <rect x="752" y="51" width="222" height="28" rx="5" fill="#7a3d00"/>
+    <text x="863" y="69" text-anchor="middle" fill="white" font-size="11" font-weight="bold">OOP Principles</text>
+    <text x="754" y="91"  fill="#222" font-size="9">• SRP: one class, one reason to change</text>
+    <text x="754" y="104" fill="#222" font-size="9">• OCP: extend without modifying existing code</text>
+    <text x="754" y="117" fill="#222" font-size="9">• Law of Demeter: no a.getB().getC().doX()</text>
+    <text x="754" y="130" fill="#222" font-size="9">• Design Smells: coupling, god class, concrete</text>
+    <text x="754" y="143" fill="#222" font-size="9">• Polymorphism: virtual, override, abstract class</text>
+    <text x="754" y="156" fill="#222" font-size="9">• Constructors / Destructor / Rule of Five</text>
+
+    <!-- 5. Design Patterns (13) -->
+    <rect x="792" y="249" width="183" height="28" rx="5" fill="#4a1a7a"/>
+    <text x="883" y="267" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Design Patterns (13)</text>
+    <text x="794" y="291" fill="#4a1a7a" font-size="9" font-weight="bold">Behavioral (6):</text>
+    <text x="794" y="304" fill="#222" font-size="9">  Template Method, Strategy, Iterator</text>
+    <text x="794" y="317" fill="#222" font-size="9">  Visitor, Observer, State</text>
+    <text x="794" y="331" fill="#4a1a7a" font-size="9" font-weight="bold">Structural (4):</text>
+    <text x="794" y="344" fill="#222" font-size="9">  Adapter, Facade, Composite, Decorator</text>
+    <text x="794" y="358" fill="#4a1a7a" font-size="9" font-weight="bold">Creational (3):</text>
+    <text x="794" y="371" fill="#222" font-size="9">  Factory Method, Abstract Factory, Singleton</text>
+
+    <!-- 6. Modern C++ -->
+    <rect x="752" y="449" width="215" height="28" rx="5" fill="#1a3a5c"/>
+    <text x="859" y="467" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Modern C++</text>
+    <text x="754" y="491" fill="#222" font-size="9">• Lambdas: [capture](params){ body }</text>
+    <text x="754" y="504" fill="#222" font-size="9">• Functors: class with operator()(args)</text>
+    <text x="754" y="517" fill="#222" font-size="9">• unique_ptr (sole owner) / shared_ptr (ref count)</text>
+    <text x="754" y="530" fill="#222" font-size="9">• Move semantics: steal rvalue → O(1) vs O(n)</text>
+
+  </svg>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
      SECTION 1 — RECURSION
 ═══════════════════════════════════════════════════ -->
 <h2 class="section" id="s1">1. Recursion</h2>

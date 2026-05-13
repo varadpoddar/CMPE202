@@ -329,6 +329,7 @@ tr:nth-child(even) td { background: #f8f9fa; }
     <li><a href="#s10">Open-Closed Principle</a></li>
     <li><a href="#s11">Law of Demeter</a></li>
     <li><a href="#s_poly">Polymorphism &amp; Virtual Functions</a></li>
+    <li><a href="#s_ctor">Constructors, Destructors &amp; Rule of Five</a></li>
     <li><a href="#s12">Template Method Pattern</a></li>
     <li><a href="#s13">Strategy Pattern</a></li>
     <li><a href="#s14">Factory Method Pattern</a></li>
@@ -1123,6 +1124,152 @@ delete m;      // calls Human::~Human() — safe!
     <tr><td>5</td><td>Move assignment</td><td><code>b = std::move(a);</code></td></tr>
   </table>
   Use <code>= delete</code> to forbid, <code>= default</code> to compiler-generate.
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION — CONSTRUCTORS, DESTRUCTORS & RULE OF FIVE
+═══════════════════════════════════════════════════ -->
+<h2 class="section" id="s_ctor">Constructors, Destructors &amp; Rule of Five (MoveSemantics, Program 7.x)</h2>
+
+<div class="explain">
+  <strong>Every object has a lifecycle</strong>
+  Creation → use → destruction. C++ gives you hooks at each end. Understanding when each special member fires is essential for managing resources safely.
+</div>
+
+<div class="compare">
+  <div class="col-bad">
+    <div class="col-label" style="background:#333;color:#fff;padding:2px 6px;">Types of Constructors</div>
+<pre>
+class Date {
+public:
+    // 1. Default constructor (no args)
+    Date() : year(0), month(0), day(0) {
+        cout &lt;&lt; "Default ctor\n";
+    }
+
+    // 2. Parameterized constructor
+    Date(int y, int m, int d)
+        : year(y), month(m), day(d) {  // initializer list!
+        cout &lt;&lt; "Ctor " &lt;&lt; *this &lt;&lt; "\n";
+    }
+
+    // 3. Copy constructor (const lvalue ref)
+    Date(const Date&amp; other)
+        : year(other.year), month(other.month),
+          day(other.day) {
+        cout &lt;&lt; "Copy ctor\n";
+    }
+
+    // 4. Move constructor (rvalue ref, noexcept)
+    Date(Date&amp;&amp; other) noexcept
+        : year(other.year), month(other.month),
+          day(other.day) {
+        other.year = other.month = other.day = 0;
+        cout &lt;&lt; "Move ctor\n";
+    }
+
+    // 5. Copy assignment operator
+    Date&amp; operator=(const Date&amp; other) {
+        if (this != &amp;other) {
+            year = other.year;
+            month = other.month;
+            day = other.day;
+        }
+        return *this;
+    }
+
+    // 6. Move assignment operator
+    Date&amp; operator=(Date&amp;&amp; other) noexcept {
+        if (this != &amp;other) {
+            year = other.year; month = other.month;
+            day = other.day;
+            other.year = other.month = other.day = 0;
+        }
+        return *this;
+    }
+
+    // 7. Destructor
+    ~Date() {
+        cout &lt;&lt; "Dtor " &lt;&lt; *this &lt;&lt; "\n";
+    }
+
+private:
+    int year, month, day;
+};
+</pre>
+  </div>
+  <div class="col-good">
+    <div class="col-label" style="background:#333;color:#fff;padding:2px 6px;">When each fires</div>
+<pre>
+int main() {
+    Date d1;              // Default constructor
+    Date d2(2026, 5, 13); // Parameterized constructor
+    Date d3(d2);          // Copy constructor
+    Date d4 = d2;         // Also copy constructor (init)
+    d1 = d2;              // Copy assignment operator
+    Date d5(std::move(d2));  // Move constructor
+    d1 = std::move(d3);      // Move assignment operator
+}  // d5, d4, d3, d2, d1 — Destructor (reverse order)
+</pre>
+    <div class="col-label" style="background:#333;color:#fff;padding:2px 6px;margin-top:6px;">Initializer list vs body assignment</div>
+<pre>
+// Preferred: initializer list runs BEFORE body
+Date(int y, int m, int d)
+    : year(y), month(m), day(d) {}  // direct-init
+
+// Less efficient: default-init then assign in body
+Date(int y, int m, int d) {
+    year = y; month = m; day = d;   // two steps for objects
+}
+// For const members or references: MUST use init list
+</pre>
+    <div class="col-label" style="background:#333;color:#fff;padding:2px 6px;margin-top:6px;">= delete and = default</div>
+<pre>
+// Forbid copying entirely (Singleton):
+Singleton(const Singleton&amp;)            = delete;
+Singleton&amp; operator=(const Singleton&amp;) = delete;
+
+// Let compiler generate default behaviour:
+Date(const Date&amp;)            = default;
+Date&amp; operator=(const Date&amp;) = default;
+</pre>
+    <div class="col-label" style="background:#333;color:#fff;padding:2px 6px;margin-top:6px;">Virtual destructor rule</div>
+<pre>
+class Base {
+public:
+    virtual ~Base() {}  // MUST be virtual if subclasses exist
+};
+
+Base* ptr = new Derived();
+delete ptr;  // Without virtual ~Base(), ~Derived() NEVER runs
+             // → resource leak / undefined behaviour
+</pre>
+  </div>
+</div>
+
+<div class="explain">
+  <strong>Rule of Five — the complete table</strong>
+  <table>
+    <tr><th>#</th><th>Special member</th><th>Signature</th><th>When triggered</th></tr>
+    <tr><td>1</td><td>Destructor</td><td><code>~T()</code></td><td>Scope ends, <code>delete</code></td></tr>
+    <tr><td>2</td><td>Copy constructor</td><td><code>T(const T&amp;)</code></td><td><code>T b = a;</code> or pass by value</td></tr>
+    <tr><td>3</td><td>Copy assignment</td><td><code>T&amp; operator=(const T&amp;)</code></td><td><code>b = a;</code> (both already constructed)</td></tr>
+    <tr><td>4</td><td>Move constructor</td><td><code>T(T&amp;&amp;) noexcept</code></td><td><code>T b = std::move(a);</code> or return by value</td></tr>
+    <tr><td>5</td><td>Move assignment</td><td><code>T&amp; operator=(T&amp;&amp;) noexcept</code></td><td><code>b = std::move(a);</code></td></tr>
+  </table>
+  <strong>The rule:</strong> if your class owns a raw resource (heap memory, file handle, mutex) and you define <em>any one</em> of the five, define <em>all five</em> (or explicitly <code>= delete</code> / <code>= default</code> the ones you don't want). The compiler's generated defaults do shallow copies — dangerous when you have a raw pointer.
+</div>
+
+<div class="explain">
+  <strong>lvalue vs rvalue — quick reference</strong>
+  <table>
+    <tr><th>Term</th><th>Has a name / address?</th><th>Example</th></tr>
+    <tr><td>lvalue</td><td>Yes — persists beyond expression</td><td><code>Date d; d;</code></td></tr>
+    <tr><td>rvalue</td><td>No — temporary, about to be destroyed</td><td><code>Date(2026,5,13)</code>, <code>std::move(d)</code></td></tr>
+    <tr><td><code>T&amp;</code></td><td>lvalue reference</td><td>binds to named object</td></tr>
+    <tr><td><code>T&amp;&amp;</code></td><td>rvalue reference</td><td>binds to temporary; enables move</td></tr>
+  </table>
+  <strong>Move semantics purpose:</strong> instead of copying a large resource (deep copy), <em>steal</em> it from the temporary — O(1) transfer instead of O(n) copy. The moved-from object is left in a valid but unspecified state.
 </div>
 
 <!-- ═══════════════════════════════════════════════════

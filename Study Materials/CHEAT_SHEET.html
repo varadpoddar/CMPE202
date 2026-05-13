@@ -213,7 +213,22 @@ b { color: #1a3a6b; }
           <div class="pat-rule"><code>override</code> in subclass → compiler verifies signature matches base.</div>
           <div class="pat-rule"><code>virtual ~Base()</code> → always needed when deleting via base pointer.</div>
           <div class="pat-rule">Abstract class: ≥1 pure virtual, may have data. Interface: all pure virtual, no data.</div>
-          <div class="pat-rule"><b>Rule of Five</b>: if you define any one of {dtor, copy ctor, copy=, move ctor, move=} define all five.</div>
+        </div>
+        <div class="pat">
+          <div class="pat-name">Constructors, Destructors &amp; Rule of Five</div>
+          <table style="margin-top:2px;font-size:6px;">
+            <tr><th>#</th><th>Special member</th><th>Triggered by</th></tr>
+            <tr><td>1</td><td><code>~T()</code> Destructor</td><td>scope ends / <code>delete</code></td></tr>
+            <tr><td>2</td><td><code>T(const T&amp;)</code> Copy ctor</td><td><code>T b = a;</code> / pass by value</td></tr>
+            <tr><td>3</td><td><code>T&amp; op=(const T&amp;)</code> Copy assign</td><td><code>b = a;</code></td></tr>
+            <tr><td>4</td><td><code>T(T&amp;&amp;) noexcept</code> Move ctor</td><td><code>T b = move(a);</code></td></tr>
+            <tr><td>5</td><td><code>T&amp; op=(T&amp;&amp;) noexcept</code> Move assign</td><td><code>b = move(a);</code></td></tr>
+          </table>
+          <div class="pat-rule" style="margin-top:3px;"><b>Rule:</b> define any one → define all five (or <code>= delete</code> / <code>= default</code>).</div>
+          <div class="pat-rule"><b>Initializer list</b>: <code>: year(y), month(m), day(d)</code> — runs before body; required for <code>const</code>/ref members.</div>
+          <div class="pat-rule"><b>lvalue</b> = has name/address. <b>rvalue</b> = temporary (<code>move(x)</code>, return value). <code>T&amp;&amp;</code> binds rvalues.</div>
+          <div class="pat-rule"><b>Move semantics</b>: steal resource from temporary instead of deep-copy → O(1) vs O(n).</div>
+          <div class="pat-rule"><b>= delete</b>: forbid (Singleton). <b>= default</b>: compiler-generate.</div>
         </div>
       </div>
     </div>

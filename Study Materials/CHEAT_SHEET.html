@@ -758,6 +758,26 @@ v.push_back(move(s));// no copy — O(1) transfer
       </div>
     </div>
 
+    <!-- UML Class Diagrams -->
+    <div class="sec">
+      <div class="sec-head">UML CLASS DIAGRAMS</div>
+      <div class="sec-body">
+        <div class="pat-rule"><b>Noun→Class &nbsp; Verb→Method &nbsp; Adjective→Attribute</b></div>
+        <table style="margin-top:3px;">
+          <tr><th>Relationship</th><th>Arrow</th><th>Meaning</th></tr>
+          <tr><td>Inheritance</td><td>——▷</td><td>Child IS-A Parent (solid, open triangle)</td></tr>
+          <tr><td>Realization</td><td>- -▷</td><td>Class implements Interface (dashed, open triangle)</td></tr>
+          <tr><td>Composition</td><td>◆——</td><td>Whole owns Part; part can't exist alone</td></tr>
+          <tr><td>Aggregation</td><td>◇——</td><td>Container HAS-A Element; element can exist alone</td></tr>
+          <tr><td>Association</td><td>——→</td><td>A uses/knows B (solid, open arrow)</td></tr>
+          <tr><td>Dependency</td><td>- -→</td><td>A uses B temporarily (dashed, open arrow)</td></tr>
+        </table>
+        <div class="pat-rule" style="margin-top:3px;"><b>Multiplicity:</b> 1 &nbsp;|&nbsp; 0..1 &nbsp;|&nbsp; * (many) &nbsp;|&nbsp; 1..* &nbsp;|&nbsp; 2..5</div>
+        <div class="pat-rule"><b>Visibility:</b> + public &nbsp; - private &nbsp; # protected &nbsp; ~ package</div>
+        <div class="pat-rule"><b>Abstract/Interface:</b> name in <i>italics</i> or «interface» stereotype</div>
+      </div>
+    </div>
+
     <!-- Threading summary -->
     <div class="sec">
       <div class="sec-head green">THREADING SUMMARY</div>

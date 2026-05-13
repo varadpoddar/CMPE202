@@ -235,6 +235,7 @@ tr:nth-child(even) td { background: #f8f9fa; }
   }
   /* Only these major groups start a new page */
   h2.section#s3,
+  h2.section#suml,
   h2.section#s9,
   h2.section#s12,
   h2.section#s25 { break-before: page; column-span: all; }
@@ -322,6 +323,7 @@ tr:nth-child(even) td { background: #f8f9fa; }
     <li><a href="#s6">Reader-Writer Lock</a></li>
     <li><a href="#s7">Producer-Consumer</a></li>
     <li><a href="#s8">Dining Philosophers / Deadlock</a></li>
+    <li><a href="#suml">UML Class Diagrams</a></li>
     <li><a href="#s9">Single Responsibility Principle</a></li>
     <li><a href="#s10">Open-Closed Principle</a></li>
     <li><a href="#s11">Law of Demeter</a></li>
@@ -690,6 +692,129 @@ class Philosopher {
 </pre>
 
 <div class="tip">One classic solution: always acquire chopsticks in a fixed global order (e.g., lower-numbered first). This breaks circular wait.</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 8b — UML CLASS DIAGRAMS
+═══════════════════════════════════════════════════ -->
+<h2 class="section" id="suml">UML Class Diagrams</h2>
+
+<div class="explain">
+  <strong>What UML is</strong>
+  Unified Modeling Language — a standard visual notation for describing software structure and behavior. In CMPE 202 the main diagram type is the <b>class diagram</b>, which shows classes, their attributes and methods, and the relationships between them.
+</div>
+
+<h3 class="concept">Step 1 — Noun / Verb / Adjective Analysis</h3>
+<div class="explain">
+  <strong>How to extract a class diagram from a description</strong>
+  Read the requirements or problem statement and categorize every word:
+  <ul class="rules" style="margin-top:6px;">
+    <li><b>Nouns → candidate Classes</b> (things that exist in the domain)</li>
+    <li><b>Verbs → candidate Methods / Operations</b> (things objects do or messages they send)</li>
+    <li><b>Adjectives / state words → Attributes</b> (properties that describe an object)</li>
+    <li><b>Verbs between two nouns → Relationships</b> (associations, dependencies)</li>
+  </ul>
+</div>
+
+<h3 class="concept">Example — parsing a requirement</h3>
+<pre>
+"A Customer places an Order. Each Order contains one or more Products.
+ A Product has a name, a price, and a quantity in stock."
+
+Nouns   → Customer, Order, Product               (classes)
+Verbs   → places, contains                       (relationships / methods)
+Adjectives/state → name, price, quantity          (attributes of Product)
+
+Result:
+  class Customer  { void place_order(Order&); }
+  class Order     { vector&lt;Product*&gt; items; }
+  class Product   { string name; double price; int quantity; }
+</pre>
+
+<h3 class="concept">Step 2 — Class Box Anatomy</h3>
+<pre>
+┌─────────────────────────┐
+│      ClassName          │  ← Name compartment (bold; italic if abstract)
+├─────────────────────────┤
+│ - attribute : Type      │  ← Attributes (fields)
+│ # protected : Type      │
+│ + public_attr : Type    │
+├─────────────────────────┤
+│ + method(params) : Type │  ← Operations (methods)
+│ # hook() : void         │
+│ - helper() : bool       │
+└─────────────────────────┘
+
+Visibility: + public   - private   # protected   ~ package
+</pre>
+
+<h3 class="concept">Step 3 — Relationship Lines (the most-tested part)</h3>
+<table>
+  <tr><th>Relationship</th><th>Line style</th><th>ASCII / Symbol</th><th>Meaning</th><th>Example</th></tr>
+  <tr><td><b>Inheritance</b> (is-a)</td><td>Solid line + hollow triangle at parent</td><td><code>Child ——————▷ Parent</code></td><td>Child IS-A Parent</td><td>Car ——▷ Vehicle</td></tr>
+  <tr><td><b>Realization</b> (implements)</td><td>Dashed line + hollow triangle at interface</td><td><code>Class - - - -▷ &lt;&lt;interface&gt;&gt;</code></td><td>Class implements interface</td><td>Car - - ▷ Drivable</td></tr>
+  <tr><td><b>Composition</b> (owns, strong has-a)</td><td>Solid line + filled diamond at owner</td><td><code>Whole ◆—————— Part</code></td><td>Part cannot exist without Whole; Whole owns lifecycle</td><td>House ◆—— Room</td></tr>
+  <tr><td><b>Aggregation</b> (has-a, weak)</td><td>Solid line + hollow diamond at container</td><td><code>Container ◇—— Element</code></td><td>Element can exist independently</td><td>Team ◇—— Player</td></tr>
+  <tr><td><b>Association</b> (uses / knows)</td><td>Solid line, optional open arrow</td><td><code>A ————————→ B</code></td><td>A has a reference to B</td><td>Driver ——→ Car</td></tr>
+  <tr><td><b>Dependency</b> (uses temporarily)</td><td>Dashed line + open arrow</td><td><code>A - - - - → B</code></td><td>A uses B but doesn't hold a reference</td><td>Printer - → Document</td></tr>
+</table>
+
+<div class="tip">Memory trick — diamond = "container". Filled ◆ = strong (part dies with whole). Hollow ◇ = weak (part survives). Triangle = "inherits from" or "implements".</div>
+
+<h3 class="concept">Composition vs Aggregation vs Association — when to use each</h3>
+<table>
+  <tr><th>Question to ask</th><th>If YES →</th></tr>
+  <tr><td>Does the part die when the whole is destroyed?</td><td><b>Composition ◆</b> (e.g. Order ◆—— LineItem)</td></tr>
+  <tr><td>Can the part be shared or exist independently?</td><td><b>Aggregation ◇</b> (e.g. Course ◇—— Student)</td></tr>
+  <tr><td>Does A just hold a pointer/reference to B?</td><td><b>Association →</b> (e.g. Sport → PlayerStrategy)</td></tr>
+  <tr><td>Does A only use B as a parameter or local variable?</td><td><b>Dependency - -→</b> (e.g. Client uses Factory)</td></tr>
+</table>
+
+<h3 class="concept">Multiplicity Notation</h3>
+<pre>
+  A ——— 1      exactly one
+  A ——— 0..1   zero or one (optional)
+  A ——— *       zero or more
+  A ——— 1..*   one or more
+  A ——— 2..5   between 2 and 5
+
+Example:
+  Customer 1 ——— 0..* Order    (one customer has zero or more orders)
+  Order    1 ——— 1..* Product  (one order has one or more products)
+</pre>
+
+<h3 class="concept">UML for Design Patterns — what each looks like</h3>
+<table>
+  <tr><th>Pattern</th><th>Key UML relationships</th></tr>
+  <tr><td>Template Method</td><td>Concrete ——▷ AbstractBase (inheritance); abstract methods shown in italics</td></tr>
+  <tr><td>Strategy</td><td>Context ——→ Strategy (association); ConcreteStrategy ——▷ Strategy (inheritance)</td></tr>
+  <tr><td>Observer</td><td>Subject ◇—— Observer (aggregation, 0..*); ConcreteObserver ——▷ Observer</td></tr>
+  <tr><td>Decorator</td><td>Decorator ——▷ Component (inheritance) AND Decorator ——→ Component (association = holds wrapped)</td></tr>
+  <tr><td>Composite</td><td>Composite ——▷ Component; Composite ◆—— Component (self-referential composition, 0..*)</td></tr>
+  <tr><td>Factory Method</td><td>Creator - - -→ Product (dependency); ConcreteCreator ——▷ Creator; ConcreteProduct ——▷ Product</td></tr>
+  <tr><td>Adapter</td><td>Adapter ——▷ Target (inheritance); Adapter ——→ Adaptee (association)</td></tr>
+  <tr><td>Singleton</td><td>Single class with static self-reference; constructor marked private (−)</td></tr>
+  <tr><td>State</td><td>Context ——→ State (association); ConcreteState ——▷ State; State - -→ Context (optional back-ref)</td></tr>
+</table>
+
+<h3 class="concept">Abstract Classes and Interfaces in UML</h3>
+<pre>
+Abstract class:    «abstract» or class name in italics
+Interface:         «interface» stereotype above class name
+                   OR a circle (lollipop) notation
+
+// Abstract class — italicised name, abstract methods italicised
+┌─────────────────┐
+│  «abstract»     │
+│  GameReport     │    ← or write GameReport in italics
+├─────────────────┤
+│ + generate()    │    ← concrete (not italic)
+│ # acquire_data()│    ← abstract (italic or {abstract})
+└─────────────────┘
+         ▲
+    ┌────┴────┐
+    │         │
+BaseballRpt  VolleyballRpt
+</pre>
 
 <!-- ═══════════════════════════════════════════════════
      SECTION 9 — SRP
